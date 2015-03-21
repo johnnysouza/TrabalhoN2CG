@@ -65,6 +65,7 @@ public class Main implements GLEventListener, KeyListener {
 		gl.glEnd();
 
 		gl.glColor3f(0.0f, 1.0f, 1.0f); // Ciano
+		gl.glLineWidth(3.0f);
 		// Desenha o triângulo
 		gl.glBegin(GL.GL_LINE_LOOP);
 		// Usando line loop para ter apenas 3 pontos desenhados, deixando para o

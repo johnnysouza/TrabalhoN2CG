@@ -1,4 +1,4 @@
-package cg.exer2;
+package cg.exer4;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -18,6 +18,11 @@ public class Main implements GLEventListener, KeyListener {
 	private GLU glu;
 	private GLAutoDrawable glDrawable;
 	private int zoom = 100;
+	final double ang1 = 0;
+	double ang2 = 45;
+	final double raio1 = 0;
+	double raio2 = 100;
+	double movLat = 0;
 
 	public void init(GLAutoDrawable drawable) {
 		System.out.println(" --- init ---");
@@ -41,16 +46,20 @@ public class Main implements GLEventListener, KeyListener {
 
 		// seu desenho ...
 		gl.glColor3f(0.0f, 0.0f, 0.0f);
-		gl.glPointSize(2.0f);
+		gl.glLineWidth(3.0f);
 
-		double x = 0;
-		double y = 0;
-		gl.glBegin(GL.GL_POINTS);
-		for (int ang = 0; ang < 360; ang = ang + 5) {
-			x = CircleUtils.RetornaX(ang, 100);
-			y = CircleUtils.RetornaY(ang, 100);
-			gl.glVertex2d(x, y);
-		}
+		double x1 = 0;
+		double x2 = 0;
+		double y1 = 0;
+		double y2 = 0;
+
+		gl.glBegin(GL.GL_LINES);
+		x1 = CircleUtils.RetornaX(ang1, raio1) + movLat;
+		y1 = CircleUtils.RetornaY(ang1, raio1);
+		x2 = CircleUtils.RetornaX(ang2, raio2) + movLat;
+		y2 = CircleUtils.RetornaY(ang2, raio2);
+		gl.glVertex2d(x1, y1);
+		gl.glVertex2d(x2, y2);
 		gl.glEnd();
 	}
 
@@ -89,6 +98,30 @@ public class Main implements GLEventListener, KeyListener {
 		case KeyEvent.VK_B: // Move para baixo
 			ortho2D_maxY++;
 			ortho2D_minY++;
+			break;
+		case KeyEvent.VK_Q: // Move reta para esquerda
+			movLat--;
+			break;
+		case KeyEvent.VK_W: // Move reta para esquerda
+			movLat++;
+			break;
+		case KeyEvent.VK_A: // Diminui raio
+			raio2--;
+			break;
+		case KeyEvent.VK_S: // Aumenta raio
+			raio2++;
+			break;
+		case KeyEvent.VK_Z: // Diminui ângulo
+			if (ang2 == 0) {
+				ang2 = 360;
+			}
+			ang2--;
+			break;
+		case KeyEvent.VK_X: // Aumenta ângulo
+			if (ang2 == 360) {
+				ang2 = 0;
+			}
+			ang2++;
 			break;
 		}
 		glDrawable.display(); // redesenhar ...
