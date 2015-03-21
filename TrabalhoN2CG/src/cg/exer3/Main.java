@@ -1,4 +1,4 @@
-package cg.exer1;
+package cg.exer3;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -25,7 +25,7 @@ public class Main implements GLEventListener, KeyListener {
 		glu = new GLU();
 		glDrawable.setGL(new DebugGL(gl));
 		System.out.println("Espaco de desenho com tamanho: " + drawable.getWidth() + " x " + drawable.getHeight());
-		gl.glClearColor(0.85f, 0.85f, 0.85f, 1.0f); //Cinza claro de fundo
+		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Branco de fundo
 	}
 
 	public void display(GLAutoDrawable arg0) {
@@ -39,17 +39,39 @@ public class Main implements GLEventListener, KeyListener {
 		SRU();
 
 		// seu desenho ...
-		gl.glColor3f(0.0f, 0.0f, 1.0f);
+		gl.glColor3f(0.0f, 0.0f, 0.0f); // Preto
 		gl.glPointSize(2.0f);
 
 		double x = 0;
 		double y = 0;
+
+		// Desenha os 3 circulos com raios 100
 		gl.glBegin(GL.GL_POINTS);
-		for (int ang = 0; ang < 360; ang = ang + 5) {
-			x = CircleUtils.RetornaX(ang, 100);
-			y = CircleUtils.RetornaY(ang, 100);
+		for (int ang = 0; ang < 360; ang = ang + 1) {
+			x = CircleUtils.RetornaX(ang, 100) - 100;
+			y = CircleUtils.RetornaY(ang, 100) + 100;
 			gl.glVertex2d(x, y);
 		}
+		for (int ang = 0; ang < 360; ang = ang + 1) {
+			x = CircleUtils.RetornaX(ang, 100) + 100;
+			y = CircleUtils.RetornaY(ang, 100) + 100;
+			gl.glVertex2d(x, y);
+		}
+		for (int ang = 0; ang < 360; ang = ang + 1) {
+			x = CircleUtils.RetornaX(ang, 100);
+			y = CircleUtils.RetornaY(ang, 100) - 100;
+			gl.glVertex2d(x, y);
+		}
+		gl.glEnd();
+
+		gl.glColor3f(0.0f, 1.0f, 1.0f); // Ciano
+		// Desenha o triângulo
+		gl.glBegin(GL.GL_LINE_LOOP);
+		// Usando line loop para ter apenas 3 pontos desenhados, deixando para o
+		// openGl ligar o último ponto ao primeiro
+		gl.glVertex2d(-100, 100);
+		gl.glVertex2d(100, 100);
+		gl.glVertex2d(0, -100);
 		gl.glEnd();
 	}
 

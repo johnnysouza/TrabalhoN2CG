@@ -50,7 +50,6 @@ public class Main implements GLEventListener, KeyListener {
 			x = CircleUtils.RetornaX(ang, 100);
 			y = CircleUtils.RetornaY(ang, 100);
 			gl.glVertex2d(x, y);
-			gl.glVertex2d(x, y);
 		}
 		gl.glEnd();
 	}
