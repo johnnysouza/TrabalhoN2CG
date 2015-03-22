@@ -22,6 +22,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private int pontoSelecionado;
 	private int antigoX;
 	private int antigoY;
+	private int zoom = 100;
 
 	public Main() {
 		pontos[0] = new Ponto2D(-100, -100);
@@ -54,13 +55,13 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		gl.glPointSize(10.0f);
 		gl.glLineWidth(3.0f);
 
-		//Ponto selecionado
+		// Ponto selecionado
 		gl.glBegin(GL.GL_POINTS);
 		gl.glColor3f(1.0f, 0.0f, 0.0f); // Vermelho
 		gl.glVertex2f(pontos[pontoSelecionado].getX(), pontos[pontoSelecionado].getY());
 		gl.glEnd();
 
-		//Poliedro
+		// Poliedro
 		gl.glBegin(GL.GL_LINE_STRIP);
 		gl.glColor3f(0.0f, 1.0f, 1.0f); // Ciano
 		for (int i = 0; i < pontos.length; i++) {
@@ -68,11 +69,68 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		}
 		gl.glEnd();
 
-		//TODO Spline
+		//Spline
+		gl.glBegin(GL.GL_LINE_STRIP);
+
+		gl.glColor3f(1.0f, 1.0f, 0.0f); // Amarelo
+		for (float t = 0.0f; t < 1.001f; t = t + 0.05f) {
+			Ponto2D p0p1 = calculaPontoSpline(pontos[0], pontos[1], t);
+			Ponto2D p1p2 = calculaPontoSpline(pontos[1], pontos[2], t);
+			Ponto2D p2p3 = calculaPontoSpline(pontos[2], pontos[3], t);
+			
+			Ponto2D p0p1p2 = calculaPontoSpline(p0p1, p1p2, t);
+			Ponto2D p1p2p3 = calculaPontoSpline(p1p2, p2p3, t);
+			
+			Ponto2D p0p1p2p3 = calculaPontoSpline(p0p1p2, p1p2p3, t);
+			gl.glVertex2f(p0p1p2p3.getX(), p0p1p2p3.getY());
+		}
+		
+		gl.glEnd();
+	}
+
+	private Ponto2D calculaPontoSpline(Ponto2D ponto1, Ponto2D ponto2, float t) {
+		float x = ponto1.getX() + (ponto2.getX() - ponto1.getX()) * t;
+		float y = ponto1.getY() + (ponto2.getY() - ponto1.getY()) * t;
+
+		return new Ponto2D(x, y);
 	}
 
 	public void keyPressed(KeyEvent e) {
 		switch (e.getKeyCode()) {
+		case KeyEvent.VK_I: // Mais zoom
+			if (zoom < 400) {
+				zoom++;
+				ortho2D_minX++;
+				ortho2D_minY++;
+				ortho2D_maxX--;
+				ortho2D_maxY--;
+			}
+			break;
+		case KeyEvent.VK_O: // Menos zoom
+			if (zoom > -300) {
+				zoom--;
+				ortho2D_minX--;
+				ortho2D_minY--;
+				ortho2D_maxX++;
+				ortho2D_maxY++;
+			}
+			break;
+		case KeyEvent.VK_E: // Move para esquerda
+			ortho2D_maxX++;
+			ortho2D_minX++;
+			break;
+		case KeyEvent.VK_D: // Move para direita
+			ortho2D_maxX--;
+			ortho2D_minX--;
+			break;
+		case KeyEvent.VK_C: // Move para cima
+			ortho2D_maxY--;
+			ortho2D_minY--;
+			break;
+		case KeyEvent.VK_B: // Move para baixo
+			ortho2D_maxY++;
+			ortho2D_minY++;
+			break;
 		case KeyEvent.VK_1: // Ponto 1
 			pontoSelecionado = 0;
 			break;
