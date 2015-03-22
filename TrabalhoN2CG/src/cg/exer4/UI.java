@@ -16,7 +16,7 @@ public class UI extends JFrame {
 
 	public UI() {
 		// Cria o frame.
-		super("CG-N2_BBox");
+		super("CG-N2_Exer4");
 		setBounds(300, 250, janelaLargura, janelaAltura + 22); // 500 + 22 da borda do título da janela
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());

@@ -1,4 +1,4 @@
-package cg.exer1;
+package cg.exer6;
 
 import java.awt.BorderLayout;
 
@@ -16,7 +16,7 @@ public class UI extends JFrame {
 
 	public UI() {
 		// Cria o frame.
-		super("CG-N2_Exer1");
+		super("CG-N2_Exer6");
 		setBounds(300, 250, janelaLargura, janelaAltura + 22); // 500 + 22 da borda do título da janela
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
@@ -39,6 +39,8 @@ public class UI extends JFrame {
 		add(canvas, BorderLayout.CENTER);
 		canvas.addGLEventListener(renderer);
 		canvas.addKeyListener(renderer);
+		canvas.addMouseListener(renderer);
+		canvas.addMouseMotionListener(renderer);
 		canvas.requestFocus();
 	}
 
