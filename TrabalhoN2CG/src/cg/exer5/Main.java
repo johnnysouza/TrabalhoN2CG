@@ -41,49 +41,7 @@ public class Main implements GLEventListener, KeyListener {
 		gl.glLineWidth(5.0f);
 
 		// seu desenho ...
-		switch (primitiva) {
-		case 0:
-			System.out.println("GL_POINTS");
-			gl.glBegin(GL.GL_POINTS);
-			break;
-		case 1:
-			System.out.println("GL_LINES");
-			gl.glBegin(GL.GL_LINES);
-			break;
-		case 2:
-			System.out.println("GL_LINE_LOOP");
-			gl.glBegin(GL.GL_LINE_LOOP);
-			break;
-		case 3:
-			System.out.println("GL_LINE_STRIP");
-			gl.glBegin(GL.GL_LINE_STRIP);
-			break;
-		case 4:
-			System.out.println("GL_TRIANGLES");
-			gl.glBegin(GL.GL_TRIANGLES);
-			break;
-		case 5:
-			System.out.println("GL_TRIANGLE_FAN");
-			gl.glBegin(GL.GL_TRIANGLE_FAN);
-			break;
-		case 6:
-			System.out.println("GL_TRIANGLE_STRIP");
-			gl.glBegin(GL.GL_TRIANGLE_STRIP);
-			break;
-		case 7:
-			System.out.println("GL_QUADS");
-			gl.glBegin(GL.GL_QUADS);
-			break;
-		case 8:
-			System.out.println("GL_QUAD_STRIP");
-			gl.glBegin(GL.GL_QUAD_STRIP);
-			break;
-		case 9:
-			System.out.println("GL_POLYGON");
-			gl.glBegin(GL.GL_POLYGON);
-			break;
-		}
-		
+		gl.glBegin(primitiva);
 		gl.glColor3f(1.0f, 0.0f, 0.0f); // Vermelho
 		gl.glVertex2f(200.0f, -200.0f);
 		gl.glColor3f(0.0f, 1.0f, 0.0f); // Verde

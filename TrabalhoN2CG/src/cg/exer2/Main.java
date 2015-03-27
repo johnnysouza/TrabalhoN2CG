@@ -46,7 +46,7 @@ public class Main implements GLEventListener, KeyListener {
 		double x = 0;
 		double y = 0;
 		gl.glBegin(GL.GL_POINTS);
-		for (int ang = 0; ang < 360; ang = ang + 5) {
+		for (int ang = 0; ang < 360; ang += 5) {
 			x = CircleUtils.RetornaX(ang, 100);
 			y = CircleUtils.RetornaY(ang, 100);
 			gl.glVertex2d(x, y);

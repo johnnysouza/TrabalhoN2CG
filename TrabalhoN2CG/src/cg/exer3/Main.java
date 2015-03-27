@@ -47,17 +47,17 @@ public class Main implements GLEventListener, KeyListener {
 
 		// Desenha os 3 circulos com raios 100
 		gl.glBegin(GL.GL_POINTS);
-		for (int ang = 0; ang < 360; ang = ang + 1) {
+		for (int ang = 0; ang < 360; ang += 1) {
 			x = CircleUtils.RetornaX(ang, 100) - 100;
 			y = CircleUtils.RetornaY(ang, 100) + 100;
 			gl.glVertex2d(x, y);
 		}
-		for (int ang = 0; ang < 360; ang = ang + 1) {
+		for (int ang = 0; ang < 360; ang += 1) {
 			x = CircleUtils.RetornaX(ang, 100) + 100;
 			y = CircleUtils.RetornaY(ang, 100) + 100;
 			gl.glVertex2d(x, y);
 		}
-		for (int ang = 0; ang < 360; ang = ang + 1) {
+		for (int ang = 0; ang < 360; ang += 1) {
 			x = CircleUtils.RetornaX(ang, 100);
 			y = CircleUtils.RetornaY(ang, 100) - 100;
 			gl.glVertex2d(x, y);
