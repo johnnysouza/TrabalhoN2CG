@@ -12,6 +12,8 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
+import cg.util.Ponto2D;
+
 public class Main implements GLEventListener, KeyListener, MouseListener, MouseMotionListener {
 
 	private float ortho2D_minX = -400.0f, ortho2D_maxX = 400.0f, ortho2D_minY = -400.0f, ortho2D_maxY = 400.0f;
@@ -58,14 +60,14 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		// Ponto selecionado
 		gl.glBegin(GL.GL_POINTS);
 		gl.glColor3f(1.0f, 0.0f, 0.0f); // Vermelho
-		gl.glVertex2f(pontos[pontoSelecionado].getX(), pontos[pontoSelecionado].getY());
+		gl.glVertex2d(pontos[pontoSelecionado].getX(), pontos[pontoSelecionado].getY());
 		gl.glEnd();
 
 		// Poliedro
 		gl.glBegin(GL.GL_LINE_STRIP);
 		gl.glColor3f(0.0f, 1.0f, 1.0f); // Ciano
 		for (int i = 0; i < pontos.length; i++) {
-			gl.glVertex2f(pontos[i].getX(), pontos[i].getY());
+			gl.glVertex2d(pontos[i].getX(), pontos[i].getY());
 		}
 		gl.glEnd();
 
@@ -82,15 +84,15 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			Ponto2D p1p2p3 = calculaPontoSpline(p1p2, p2p3, t);
 			
 			Ponto2D p0p1p2p3 = calculaPontoSpline(p0p1p2, p1p2p3, t);
-			gl.glVertex2f(p0p1p2p3.getX(), p0p1p2p3.getY());
+			gl.glVertex2d(p0p1p2p3.getX(), p0p1p2p3.getY());
 		}
 		
 		gl.glEnd();
 	}
 
 	private Ponto2D calculaPontoSpline(Ponto2D ponto1, Ponto2D ponto2, float t) {
-		float x = ponto1.getX() + (ponto2.getX() - ponto1.getX()) * t;
-		float y = ponto1.getY() + (ponto2.getY() - ponto1.getY()) * t;
+		double x = ponto1.getX() + (ponto2.getX() - ponto1.getX()) * t;
+		double y = ponto1.getY() + (ponto2.getY() - ponto1.getY()) * t;
 
 		return new Ponto2D(x, y);
 	}

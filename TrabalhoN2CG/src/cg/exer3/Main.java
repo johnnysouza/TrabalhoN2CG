@@ -17,6 +17,7 @@ public class Main implements GLEventListener, KeyListener {
 	private GL gl;
 	private GLU glu;
 	private GLAutoDrawable glDrawable;
+	private int zoom = 100;
 
 	public void init(GLAutoDrawable drawable) {
 		System.out.println(" --- init ---");
@@ -77,6 +78,43 @@ public class Main implements GLEventListener, KeyListener {
 	}
 
 	public void keyPressed(KeyEvent e) {
+		switch (e.getKeyCode()) {
+		case KeyEvent.VK_I: // Mais zoom
+			if (zoom < 400) {
+				zoom++;
+				ortho2D_minX++;
+				ortho2D_minY++;
+				ortho2D_maxX--;
+				ortho2D_maxY--;
+			}
+			break;
+		case KeyEvent.VK_O: // Menos zoom
+			if (zoom > -300) {
+				zoom--;
+				ortho2D_minX--;
+				ortho2D_minY--;
+				ortho2D_maxX++;
+				ortho2D_maxY++;
+			}
+			break;
+		case KeyEvent.VK_E: // Move para esquerda
+			ortho2D_maxX++;
+			ortho2D_minX++;
+			break;
+		case KeyEvent.VK_D: // Move para direita
+			ortho2D_maxX--;
+			ortho2D_minX--;
+			break;
+		case KeyEvent.VK_C: // Move para cima
+			ortho2D_maxY--;
+			ortho2D_minY--;
+			break;
+		case KeyEvent.VK_B: // Move para baixo
+			ortho2D_maxY++;
+			ortho2D_minY++;
+			break;
+		}
+		glDrawable.display(); // redesenhar ...
 	}
 
 	public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
