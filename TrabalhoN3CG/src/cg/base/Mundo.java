@@ -13,15 +13,18 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
+/**
+ * Representa o mundo com o espaço gráfico e todos seus os objetos gráficos.
+ */
 public class Mundo implements GLEventListener, KeyListener, MouseListener, MouseMotionListener {
 
-	private final float			ortho2D_minX	= -400.0f, ortho2D_maxX = 400.0f, ortho2D_minY = -400.0f, ortho2D_maxY = 400.0f;
 	private GL					gl;
 	private GLU					glu;
 	private GLAutoDrawable		glDrawable;
 	private Camera				camera;
 	private List<ObjetoGrafico>	objetos;
 	private ObjetoGrafico		emCriacao;
+	private Cor corAtual;
 
 	void adicionarObjetoGráfico(final ObjetoGrafico objetoGrafico) {
 		if (objetoGrafico != null) {
@@ -42,6 +45,9 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		glDrawable.setGL(new DebugGL(gl));
 		System.out.println("Espaco de desenho com tamanho: " + drawable.getWidth() + " x " + drawable.getHeight());
 		gl.glClearColor(0.85f, 0.85f, 0.85f, 1.0f); // Cinza claro de fundo
+		
+		camera = new Camera(-400, 400, -400, 400);
+		corAtual = Cor.AZUL;
 	}
 
 	@Override
@@ -53,12 +59,21 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	@Override
 	public void keyPressed(final KeyEvent e) {
 		switch (e.getKeyCode()) {
-		case KeyEvent.VK_ESCAPE:
-			objetos.add(emCriacao);
-			emCriacao.calcularBBox();
-			emCriacao = null;
+//		case KeyEvent.VK_ESCAPE:
+//			objetos.add(emCriacao);
+//			emCriacao.calcularBBox();
+//			emCriacao = null;
+		case KeyEvent.VK_C:
+			if (corAtual.equals(Cor.AZUL)) {
+				corAtual = Cor.VERDE;
+			} else if (corAtual.equals(Cor.VERDE)) {
+				corAtual = Cor.VERMELHO;
+			} else {
+				corAtual = Cor.AZUL;
+			}
+		default: 
+			//Nada
 		}
-
 	}
 
 	@Override
@@ -72,7 +87,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluOrtho2D(ortho2D_minX, ortho2D_maxX, ortho2D_minY, ortho2D_maxY);
+		glu.gluOrtho2D(camera.getxMinOrtho2D(), camera.getxMaxOrtho2D(), camera.getyMinOrtho2D(), camera.getyMaxOrtho2D());
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		SRU();
@@ -121,27 +136,27 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 	@Override
 	public void mouseMoved(final MouseEvent e) {
-		if (emCriacao != null) {
-			Ponto ponto = new Ponto(e.getX(), e.getY());
-			emCriacao.addPonto(ponto);
-			try {
-				glDrawable.display();
-			} finally {
-				emCriacao.removePonto(ponto);
-			}
-		}
+//		if (emCriacao != null) {
+//			Ponto ponto = new Ponto(e.getX(), e.getY());
+//			emCriacao.addPonto(ponto);
+//			try {
+//				glDrawable.display();
+//			} finally {
+//				emCriacao.removePonto(ponto);
+//			}
+//		}
 	}
 
 	@Override
 	public void mouseClicked(final MouseEvent e) {
-		if ((emCriacao == null) || !selecionouObjeto()) {
-			Ponto ponto = new Ponto(e.getX(), e.getY(), 0, 0);
-			if (emCriacao == null) {
-				emCriacao = new ObjetoGrafico();
-			}
-			emCriacao.addPonto(ponto);
-			glDrawable.display();
-		}
+//		if ((emCriacao == null) || !selecionouObjeto()) {
+//			Ponto ponto = new Ponto(e.getX(), e.getY());
+//			if (emCriacao == null) {
+//				emCriacao = new ObjetoGrafico();
+//			}
+//			emCriacao.addPonto(ponto);
+//			glDrawable.display();
+//		}
 	}
 
 	@Override

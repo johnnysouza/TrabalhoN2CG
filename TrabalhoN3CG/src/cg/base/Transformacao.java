@@ -1,5 +1,8 @@
 package cg.base;
 
+/**
+ * Responsável por definir a matriz de transformação global de um objeto gráfico.
+ */
 public class Transformacao {
 	
 	private double[][] matriz;

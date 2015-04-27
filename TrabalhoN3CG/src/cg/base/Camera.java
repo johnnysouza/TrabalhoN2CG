@@ -1,5 +1,8 @@
 package cg.base;
 
+/**
+ * Classe responsável pela manipulação da câmera do espaço gráfico.
+ */
 public class Camera {
 	
 	private double xMinOrtho2D;
