@@ -25,6 +25,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	private List<ObjetoGrafico>	objetos;
 	private ObjetoGrafico		emCriacao;
 	private Cor corAtual;
+	private boolean modoEdicao = false;
 
 	void adicionarObjetoGráfico(final ObjetoGrafico objetoGrafico) {
 		if (objetoGrafico != null) {
@@ -56,6 +57,19 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 	}
 
+	/**
+	 * Atalhos:
+	 * 
+	 * C = alterar cor entre azul, verde e vermelho
+	 * E = alterna entre modo de criação e edição
+	 * W = move câmera para cima
+	 * S = move câmera para baixo
+	 * A = move câmera para esquerda
+	 * D = move câmera para direita
+	 * I = aumenta zoom
+	 * O = diminui zoom
+	 * P = altera primitiva gráfica entre LineLoop e LineStrip
+	 */
 	@Override
 	public void keyPressed(final KeyEvent e) {
 		switch (e.getKeyCode()) {
@@ -64,15 +78,34 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 //			emCriacao.calcularBBox();
 //			emCriacao = null;
 		case KeyEvent.VK_C:
-			if (corAtual.equals(Cor.AZUL)) {
-				corAtual = Cor.VERDE;
-			} else if (corAtual.equals(Cor.VERDE)) {
-				corAtual = Cor.VERMELHO;
-			} else {
-				corAtual = Cor.AZUL;
-			}
+			alterarCor();
+			break;
+		case KeyEvent.VK_E:
+			alternarModoEdicao();
+			break;
+		case KeyEvent.VK_W:
+			camera.pan(Camera.MovimentoCamera.MOVER_PARA_CIMA);
+			break;
+		case KeyEvent.VK_S:
+			camera.pan(Camera.MovimentoCamera.MOVER_PARA_BAIXO);
+			break;
+		case KeyEvent.VK_A:
+			camera.pan(Camera.MovimentoCamera.MOVER_PARA_ESQUERDA);
+			break;
+		case KeyEvent.VK_D:
+			camera.pan(Camera.MovimentoCamera.MOVER_PARA_DIREITA);
+			break;
+		case KeyEvent.VK_I:
+			camera.zomm(Camera.ZoomCamera.MAIS_ZOOM);
+			break;
+		case KeyEvent.VK_O:
+			camera.zomm(Camera.ZoomCamera.MENOS_ZOOM);
+			break;
+		case KeyEvent.VK_P:
+			//TODO alterar primitiva para desenho de um polígono
+			break;
 		default: 
-			//Nada
+			//Atalho não suportado
 		}
 	}
 
@@ -183,4 +216,21 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 	}
 
+	private void alterarCor() {
+		if (corAtual.equals(Cor.AZUL)) {
+			corAtual = Cor.VERDE;
+		} else if (corAtual.equals(Cor.VERDE)) {
+			corAtual = Cor.VERMELHO;
+		} else {
+			corAtual = Cor.AZUL;
+		}
+	}
+
+	private void alternarModoEdicao() {
+		if (modoEdicao) {
+			modoEdicao = false;
+		} else {
+			modoEdicao = true;
+		}
+	}
 }
