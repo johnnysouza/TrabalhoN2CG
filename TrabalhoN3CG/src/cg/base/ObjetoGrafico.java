@@ -95,6 +95,7 @@ public class ObjetoGrafico {
 	 * @param gl a instância para desenhar no mundo.
 	 */
 	public void desenhar(final GL gl) {
+		//TODO preparar o método de desenho para as transformação com o grafo de cena
 		gl.glBegin(primitivaGrafica);
 		for (Ponto ponto : pontos) {
 			gl.glVertex3d(ponto.getX(), ponto.getY(), ponto.getZ());
@@ -124,4 +125,39 @@ public class ObjetoGrafico {
 		}
 		bBox.calcularBBox(pontos);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cor == null) ? 0 : cor.hashCode());
+		result = prime * result + ((pontos == null) ? 0 : pontos.hashCode());
+		result = prime * result + primitivaGrafica;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ObjetoGrafico other = (ObjetoGrafico) obj;
+		if (cor == null) {
+			if (other.cor != null)
+				return false;
+		} else if (!cor.equals(other.cor))
+			return false;
+		if (pontos == null) {
+			if (other.pontos != null)
+				return false;
+		} else if (!pontos.equals(other.pontos))
+			return false;
+		if (primitivaGrafica != other.primitivaGrafica)
+			return false;
+		return true;
+	}
+
 }

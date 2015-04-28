@@ -26,6 +26,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	private ObjetoGrafico		emCriacao;
 	private Cor corAtual;
 	private boolean modoEdicao = false;
+	private int primitivaGrafica = GL.GL_LINE_LOOP;
 
 	void adicionarObjetoGráfico(final ObjetoGrafico objetoGrafico) {
 		if (objetoGrafico != null) {
@@ -53,8 +54,6 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 	@Override
 	public void keyTyped(final KeyEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -69,50 +68,60 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	 * I = aumenta zoom
 	 * O = diminui zoom
 	 * P = altera primitiva gráfica entre LineLoop e LineStrip
+	 * Delete = deleta o polígono ou vértice selecionado (se houver)
+	 * Escape = retirar seleção do polígono e vertice (se houver)
+	 * T = terminar criação do objeto em criação atual (se houver)
 	 */
 	@Override
 	public void keyPressed(final KeyEvent e) {
 		switch (e.getKeyCode()) {
-//		case KeyEvent.VK_ESCAPE:
-//			objetos.add(emCriacao);
-//			emCriacao.calcularBBox();
-//			emCriacao = null;
-		case KeyEvent.VK_C:
-			alterarCor();
-			break;
-		case KeyEvent.VK_E:
-			alternarModoEdicao();
-			break;
-		case KeyEvent.VK_W:
-			camera.pan(Camera.MovimentoCamera.MOVER_PARA_CIMA);
-			break;
-		case KeyEvent.VK_S:
-			camera.pan(Camera.MovimentoCamera.MOVER_PARA_BAIXO);
-			break;
-		case KeyEvent.VK_A:
-			camera.pan(Camera.MovimentoCamera.MOVER_PARA_ESQUERDA);
-			break;
-		case KeyEvent.VK_D:
-			camera.pan(Camera.MovimentoCamera.MOVER_PARA_DIREITA);
-			break;
-		case KeyEvent.VK_I:
-			camera.zomm(Camera.ZoomCamera.MAIS_ZOOM);
-			break;
-		case KeyEvent.VK_O:
-			camera.zomm(Camera.ZoomCamera.MENOS_ZOOM);
-			break;
-		case KeyEvent.VK_P:
-			//TODO alterar primitiva para desenho de um polígono
-			break;
-		default: 
-			//Atalho não suportado
+			case KeyEvent.VK_C:
+				alterarCor();
+				break;
+			case KeyEvent.VK_E:
+				alternarModoEdicao();
+				break;
+			case KeyEvent.VK_W:
+				camera.pan(Camera.MovimentoCamera.MOVER_PARA_CIMA);
+				break;
+			case KeyEvent.VK_S:
+				camera.pan(Camera.MovimentoCamera.MOVER_PARA_BAIXO);
+				break;
+			case KeyEvent.VK_A:
+				camera.pan(Camera.MovimentoCamera.MOVER_PARA_ESQUERDA);
+				break;
+			case KeyEvent.VK_D:
+				camera.pan(Camera.MovimentoCamera.MOVER_PARA_DIREITA);
+				break;
+			case KeyEvent.VK_I:
+				camera.zomm(Camera.ZoomCamera.MAIS_ZOOM);
+				break;
+			case KeyEvent.VK_O:
+				camera.zomm(Camera.ZoomCamera.MENOS_ZOOM);
+				break;
+			case KeyEvent.VK_P:
+				alterarPrimitivaGrafica();
+				break;
+			case KeyEvent.VK_DELETE:
+				if (modoEdicao) { //Apenas no modo de edição pode deletar
+					deletarItem();
+				}
+				break;
+			case KeyEvent.VK_ESCAPE:
+				if (modoEdicao) { //Apenas no modo de edição pode haver seleção
+					retirarSelecao();
+				}
+				break;
+			case KeyEvent.VK_T:
+				terminarCriacaoObjeto();
+				break;
+			default: 
+				//Atalho não suportado
 		}
 	}
 
 	@Override
 	public void keyReleased(final KeyEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -135,14 +144,12 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 	@Override
 	public void displayChanged(final GLAutoDrawable arg0, final boolean arg1, final boolean arg2) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void reshape(final GLAutoDrawable arg0, final int arg1, final int arg2, final int arg3, final int arg4) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	public void SRU() {
@@ -164,7 +171,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -182,38 +189,44 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 	@Override
 	public void mouseClicked(final MouseEvent e) {
-//		if ((emCriacao == null) || !selecionouObjeto()) {
-//			Ponto ponto = new Ponto(e.getX(), e.getY());
-//			if (emCriacao == null) {
-//				emCriacao = new ObjetoGrafico();
-//			}
-//			emCriacao.addPonto(ponto);
-//			glDrawable.display();
-//		}
+		if (modoEdicao) {
+			//TODO 
+			//verifica se existe objeto selecionado
+			// se tiver verifica se selecionou um vértice dele
+			// senão verifica se selecionou algum objeto
+		} else {
+			//TODO
+			// verifica se está adicionando um objeto filho 
+				//se sim então verifica se tem um objeto selecionado para ser o pai
+					//se sim então verifica se já começou a criação do objeto filho 
+						// se sim então adiciona um novo vértice para o filho
+						// senão cria um novo filho
+					//senão verifica se selecionou algum objeto para ser o pai
+
+				// senão verifica se existe objeto em criação
+					// se tiver adiciona mais um vértice para ele
+					// senão cria um novo objeto em criação
+		}
 	}
 
 	@Override
 	public void mousePressed(final MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void mouseReleased(final MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void mouseEntered(final MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void mouseExited(final MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	private void alterarCor() {
@@ -232,5 +245,29 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		} else {
 			modoEdicao = true;
 		}
+	}
+	
+	private void alterarPrimitivaGrafica() {
+		if (primitivaGrafica == GL.GL_LINE_LOOP) {
+			primitivaGrafica = GL.GL_LINE_STRIP;
+		} else {
+			primitivaGrafica = GL.GL_LINE_LOOP;
+		}
+	}
+	
+	private void retirarSelecao() {
+		// TODO retirar referências ao polígono e vertice se houver
+	}
+	
+	private void deletarItem() {
+		// TODO primeiro tenta deletar o vértice selecionado se houver, senão tenta deletar o polígono selecionado se houver
+	}
+	
+	private void terminarCriacaoObjeto() {
+		// TODO termina edição do objeto atual
+		// verifica se tem um objeto em criação
+			// verifica se tem um objeto pai para o objeto
+			// se tiver adiciona o objeto como filho do objeto pai
+			// senão adiciona o objeto na lista de objetos do mundo
 	}
 }
