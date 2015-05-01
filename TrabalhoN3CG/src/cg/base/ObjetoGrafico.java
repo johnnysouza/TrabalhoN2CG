@@ -1,5 +1,6 @@
 package cg.base;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.media.opengl.GL;
@@ -10,11 +11,20 @@ import javax.media.opengl.GL;
 public class ObjetoGrafico {
 
 	private Cor cor;
-	private int primitivaGrafica = GL.GL_LINE_STRIP;
+	private int primitivaGrafica;
 	private List<Ponto> pontos;
 	private Transformacao transformacao;
 	private BBox bBox;
 	private List<ObjetoGrafico> objetosFilhos;
+	
+	public ObjetoGrafico(Cor cor) {
+		this.cor = new Cor(cor.getR(), cor.getG(), cor.getB());
+		primitivaGrafica = GL.GL_LINE_STRIP; //por defaut na criação do objeto será usado GL_LINE_STRIP, alterar apenas na finalização da criação do objeto
+		pontos = new ArrayList<Ponto>();
+		transformacao = new Transformacao();
+		bBox = new BBox();
+		objetosFilhos = new ArrayList<ObjetoGrafico>();
+	}
 
 	public Cor getCor() {
 		return cor;
@@ -96,6 +106,7 @@ public class ObjetoGrafico {
 	 */
 	public void desenhar(final GL gl) {
 		//TODO preparar o método de desenho para as transformação com o grafo de cena
+		gl.glColor3d(cor.getR(), cor.getG(), cor.getB());
 		gl.glBegin(primitivaGrafica);
 		for (Ponto ponto : pontos) {
 			gl.glVertex3d(ponto.getX(), ponto.getY(), ponto.getZ());

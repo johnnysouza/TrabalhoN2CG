@@ -7,6 +7,16 @@ public class Transformacao {
 	
 	private double[][] matriz;
 	
+	public Transformacao() {
+		//criar matriz identidade como padrão
+		matriz = new double[][]{
+				{1, 0, 0, 0},
+				{0, 1, 0, 0},
+				{0, 0, 1, 0},
+				{0, 0, 0, 1}
+		};
+	}
+	
 	public Transformacao(double[][] matriz) {
 		this.matriz = matriz;
 	}

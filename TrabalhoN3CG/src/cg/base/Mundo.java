@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.media.opengl.DebugGL;
@@ -23,11 +24,21 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	private GLAutoDrawable		glDrawable;
 	private Camera				camera;
 	private List<ObjetoGrafico>	objetos;
-	private ObjetoGrafico		emCriacao;
+	private ObjetoGrafico		objetoEmCriacao;
 	private Cor corAtual;
 	private boolean modoEdicao = false;
 	private int primitivaGrafica = GL.GL_LINE_LOOP;
-
+	private boolean objetoFilho = false;
+	private Ponto inicioRastro;
+	private Ponto fimRastro;
+	private ObjetoGrafico objetoSelecionado;
+	
+	public Mundo() {
+		camera = new Camera(-400, 400, -400, 400);
+		corAtual = Cor.AZUL;
+		objetos = new ArrayList<ObjetoGrafico>();
+	}
+ 
 	void adicionarObjetoGráfico(final ObjetoGrafico objetoGrafico) {
 		if (objetoGrafico != null) {
 			objetos.add(objetoGrafico);
@@ -47,9 +58,6 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		glDrawable.setGL(new DebugGL(gl));
 		System.out.println("Espaco de desenho com tamanho: " + drawable.getWidth() + " x " + drawable.getHeight());
 		gl.glClearColor(0.85f, 0.85f, 0.85f, 1.0f); // Cinza claro de fundo
-		
-		camera = new Camera(-400, 400, -400, 400);
-		corAtual = Cor.AZUL;
 	}
 
 	@Override
@@ -71,6 +79,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	 * Delete = deleta o polígono ou vértice selecionado (se houver)
 	 * Escape = retirar seleção do polígono e vertice (se houver)
 	 * T = terminar criação do objeto em criação atual (se houver)
+	 * Q = adicionar objeto filho
 	 */
 	@Override
 	public void keyPressed(final KeyEvent e) {
@@ -115,9 +124,15 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 			case KeyEvent.VK_T:
 				terminarCriacaoObjeto();
 				break;
+			case KeyEvent.VK_Q:
+				if (objetos.size() > 0) { //Apenas pode-se criar um objeto filho, se já existir algum para ser o pai
+					objetoFilho = true;
+				}
 			default: 
 				//Atalho não suportado
 		}
+		
+		glDrawable.display();
 	}
 
 	@Override
@@ -134,11 +149,26 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		gl.glLoadIdentity();
 		SRU();
 
-		if (emCriacao != null) {
-			emCriacao.desenhar(gl);
+		if (objetoEmCriacao != null) {
+			objetoEmCriacao.desenhar(gl);
 		}
+		desenharRastro();
+		
 		for (ObjetoGrafico objetoGrafico : objetos) {
 			objetoGrafico.desenhar(gl);
+		}
+	}
+	
+	private void desenharRastro() {
+		if (!modoEdicao && objetoEmCriacao != null && inicioRastro != null && fimRastro != null) {
+			Cor cor = objetoEmCriacao.getCor();
+			
+			gl.glColor3d(cor.getR(), cor.getG(), cor.getB());
+			
+			gl.glBegin(GL.GL_LINE_STRIP);
+			gl.glVertex2d(inicioRastro.getX(), inicioRastro.getY());
+			gl.glVertex2d(fimRastro.getX(), fimRastro.getY());
+			gl.glEnd();
 		}
 	}
 
@@ -176,15 +206,12 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 	@Override
 	public void mouseMoved(final MouseEvent e) {
-//		if (emCriacao != null) {
-//			Ponto ponto = new Ponto(e.getX(), e.getY());
-//			emCriacao.addPonto(ponto);
-//			try {
-//				glDrawable.display();
-//			} finally {
-//				emCriacao.removePonto(ponto);
-//			}
-//		}
+		if (!modoEdicao && objetoEmCriacao != null) { 
+			//se estiver no modo de criação e já existir um objeto gráfico em criação então atualiza o final do rastro da nova aresta
+			fimRastro = new Ponto(e.getX(), e.getY());
+		}
+		
+		glDrawable.display();
 	}
 
 	@Override
@@ -196,17 +223,28 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 			// senão verifica se selecionou algum objeto
 		} else {
 			//TODO
-			// verifica se está adicionando um objeto filho 
+			
+			if (objetoFilho) { // verifica se está adicionando um objeto filho 
+				
 				//se sim então verifica se tem um objeto selecionado para ser o pai
 					//se sim então verifica se já começou a criação do objeto filho 
 						// se sim então adiciona um novo vértice para o filho
 						// senão cria um novo filho
 					//senão verifica se selecionou algum objeto para ser o pai
 
-				// senão verifica se existe objeto em criação
-					// se tiver adiciona mais um vértice para ele
-					// senão cria um novo objeto em criação
+			} else {
+				if (objetoEmCriacao == null) { // verifica se não existe objeto em criação então cria
+					objetoEmCriacao = new ObjetoGrafico(corAtual);
+				}
+
+				
+				inicioRastro = new Ponto(e.getX(), e.getY());
+				Ponto ponto = new Ponto(e.getX(), e.getY());
+				objetoEmCriacao.addPonto(ponto);
+			}
 		}
+		
+		glDrawable.display();
 	}
 
 	@Override
@@ -256,7 +294,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	}
 	
 	private void retirarSelecao() {
-		// TODO retirar referências ao polígono e vertice se houver
+		// TODO retirar referências ao polígono e vertice selecionados se houver
 	}
 	
 	private void deletarItem() {
@@ -264,10 +302,16 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	}
 	
 	private void terminarCriacaoObjeto() {
-		// TODO termina edição do objeto atual
-		// verifica se tem um objeto em criação
-			// verifica se tem um objeto pai para o objeto
-			// se tiver adiciona o objeto como filho do objeto pai
-			// senão adiciona o objeto na lista de objetos do mundo
+		if (!modoEdicao && objetoEmCriacao != null) { //tem um objeto em criação
+			
+			if (objetoFilho && objetoSelecionado == null) { // verifica se é um objeto filho e se tem um objeto selecionado para ser pai dele
+				//TODO encontrar onde na lista de objetos qual é o pai e então inserir um filho para ele
+				objetoFilho = false; //desmarca a flag que indica que o objeto gráfico em criação será um filho
+			} else {
+				// senão adiciona o objeto na lista de objetos do mundo
+				objetos.add(objetoEmCriacao);
+				objetoEmCriacao = null;
+			}
+		}
 	}
 }
