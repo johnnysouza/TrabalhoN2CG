@@ -14,6 +14,7 @@ public class Camera {
 	public Camera(double xMinOrtho2D, double xMaxOrtho2D, double yMinOrtho2D,
 			double yMaxOrtho2D) {
 		super();
+		valorZoom = 100;
 		this.xMinOrtho2D = xMinOrtho2D;
 		this.xMaxOrtho2D = xMaxOrtho2D;
 		this.yMinOrtho2D = yMinOrtho2D;
@@ -97,7 +98,7 @@ public class Camera {
 			}
 			break;
 		case MENOS_ZOOM:
-			if (valorZoom > -300) {
+			if (valorZoom > -200) {
 				valorZoom--;
 				xMinOrtho2D--;
 				yMinOrtho2D--;
@@ -108,6 +109,7 @@ public class Camera {
 		default:
 			//Operação não suportada
 		}
+		System.out.println("zoom:" + valorZoom);
 	}
 	
 	public enum MovimentoCamera {

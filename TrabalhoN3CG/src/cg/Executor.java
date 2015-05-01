@@ -14,12 +14,12 @@ public class Executor extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private Mundo renderer = new Mundo();
 
-	private int janelaLargura = 400, janelaAltura = 400;
+	public static final int LARGURA_JANELA = 400, ALTURA_JANELA = 400;
 
 	public Executor() {
 		// Cria o frame.
 		super("CG-N3");
-		setBounds(300, 250, janelaLargura, janelaAltura + 22); // 500 + 22 da borda do título da janela
+		setBounds(300, 250, LARGURA_JANELA, ALTURA_JANELA + 22); // 500 + 22 da borda do título da janela
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
 

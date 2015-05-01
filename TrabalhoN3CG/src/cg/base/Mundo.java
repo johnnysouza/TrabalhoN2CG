@@ -14,6 +14,8 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
+import cg.Executor;
+
 /**
  * Representa o mundo com o espaço gráfico e todos seus os objetos gráficos.
  */
@@ -208,7 +210,9 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	public void mouseMoved(final MouseEvent e) {
 		if (!modoEdicao && objetoEmCriacao != null) { 
 			//se estiver no modo de criação e já existir um objeto gráfico em criação então atualiza o final do rastro da nova aresta
-			fimRastro = new Ponto(e.getX(), e.getY());
+			int x = (e.getX() - (Executor.LARGURA_JANELA / 2)) * 2;
+			int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -2;
+			fimRastro = new Ponto(x, y);
 		}
 		
 		glDrawable.display();
@@ -236,10 +240,12 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 				if (objetoEmCriacao == null) { // verifica se não existe objeto em criação então cria
 					objetoEmCriacao = new ObjetoGrafico(corAtual);
 				}
-
 				
-				inicioRastro = new Ponto(e.getX(), e.getY());
-				Ponto ponto = new Ponto(e.getX(), e.getY());
+				int x = (e.getX() - (Executor.LARGURA_JANELA / 2)) * 2;
+				int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -2;
+				
+				inicioRastro = new Ponto(x, y);
+				Ponto ponto = new Ponto(x, y);
 				objetoEmCriacao.addPonto(ponto);
 			}
 		}
@@ -303,7 +309,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	
 	private void terminarCriacaoObjeto() {
 		if (!modoEdicao && objetoEmCriacao != null) { //tem um objeto em criação
-			
+			objetoEmCriacao.setPrimitivaGrafica(primitivaGrafica);
 			if (objetoFilho && objetoSelecionado == null) { // verifica se é um objeto filho e se tem um objeto selecionado para ser pai dele
 				//TODO encontrar onde na lista de objetos qual é o pai e então inserir um filho para ele
 				objetoFilho = false; //desmarca a flag que indica que o objeto gráfico em criação será um filho
