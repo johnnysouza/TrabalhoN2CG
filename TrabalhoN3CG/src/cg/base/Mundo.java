@@ -310,6 +310,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	private void terminarCriacaoObjeto() {
 		if (!modoEdicao && objetoEmCriacao != null) { //tem um objeto em criação
 			objetoEmCriacao.setPrimitivaGrafica(primitivaGrafica);
+			objetoEmCriacao.calcularBBox();
 			if (objetoFilho && objetoSelecionado == null) { // verifica se é um objeto filho e se tem um objeto selecionado para ser pai dele
 				//TODO encontrar onde na lista de objetos qual é o pai e então inserir um filho para ele
 				objetoFilho = false; //desmarca a flag que indica que o objeto gráfico em criação será um filho

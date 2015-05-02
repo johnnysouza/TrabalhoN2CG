@@ -105,17 +105,19 @@ public class ObjetoGrafico {
 	 * @param gl a instância para desenhar no mundo.
 	 */
 	public void desenhar(final GL gl) {
-		//TODO preparar o método de desenho para as transformação com o grafo de cena
-		gl.glColor3d(cor.getR(), cor.getG(), cor.getB());
-		gl.glBegin(primitivaGrafica);
-		for (Ponto ponto : pontos) {
-			gl.glVertex3d(ponto.getX(), ponto.getY(), ponto.getZ());
-		}
-		gl.glEnd();
+		gl.glPushMatrix();
+			gl.glMultMatrixd(transformacao.getMatriz(), 0);
+			gl.glColor3d(cor.getR(), cor.getG(), cor.getB());
+			gl.glBegin(primitivaGrafica);
+			for (Ponto ponto : pontos) {
+				gl.glVertex3d(ponto.getX(), ponto.getY(), ponto.getZ());
+			}
+			gl.glEnd();
 
-		for (ObjetoGrafico objetoGrafico : objetosFilhos) {
-			objetoGrafico.desenhar(gl);
-		}
+			for (ObjetoGrafico objetoGrafico : objetosFilhos) {
+				objetoGrafico.desenhar(gl);
+			}
+		gl.glPopMatrix();
 	}
 
 	/**
