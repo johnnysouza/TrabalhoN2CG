@@ -16,10 +16,10 @@ public class ObjetoGrafico {
 	private Transformacao transformacao;
 	private BBox bBox;
 	private List<ObjetoGrafico> objetosFilhos;
-	
-	public ObjetoGrafico(Cor cor) {
+
+	public ObjetoGrafico(final Cor cor) {
 		this.cor = new Cor(cor.getR(), cor.getG(), cor.getB());
-		primitivaGrafica = GL.GL_LINE_STRIP; //por defaut na criação do objeto será usado GL_LINE_STRIP, alterar apenas na finalização da criação do objeto
+		primitivaGrafica = GL.GL_LINE_STRIP; // por defaut na criação do objeto será usado GL_LINE_STRIP, alterar apenas na finalização da criação do objeto
 		pontos = new ArrayList<Ponto>();
 		transformacao = new Transformacao();
 		bBox = new BBox();
@@ -80,8 +80,9 @@ public class ObjetoGrafico {
 
 	/**
 	 * Adiciona um objeto gráfico filho.
-	 * 
-	 * @param objeto o obejto gráfico a ser adicionados aos filhos.
+	 *
+	 * @param objeto
+	 *            o obejto gráfico a ser adicionados aos filhos.
 	 */
 	public void addObjetoGraficoFilho(final ObjetoGrafico objeto) {
 		if (objeto != null) {
@@ -91,8 +92,9 @@ public class ObjetoGrafico {
 
 	/**
 	 * Remove um objeto gráfico filho.
-	 * 
-	 * @param i a posição do objeto gráfico filho a ser removido.
+	 *
+	 * @param i
+	 *            a posição do objeto gráfico filho a ser removido.
 	 * @return o objeto gráfico removido.
 	 */
 	public ObjetoGrafico removerObjetoGraficoFilho(final int i) {
@@ -101,29 +103,31 @@ public class ObjetoGrafico {
 
 	/**
 	 * Desenha o objeto gráfico, assim como seus filhos, no espaço gráfico do mundo.
-	 * 
-	 * @param gl a instância para desenhar no mundo.
+	 *
+	 * @param gl
+	 *            a instância para desenhar no mundo.
 	 */
 	public void desenhar(final GL gl) {
 		gl.glPushMatrix();
-			gl.glMultMatrixd(transformacao.getMatriz(), 0);
-			gl.glColor3d(cor.getR(), cor.getG(), cor.getB());
-			gl.glBegin(primitivaGrafica);
-			for (Ponto ponto : pontos) {
-				gl.glVertex3d(ponto.getX(), ponto.getY(), ponto.getZ());
-			}
-			gl.glEnd();
+		gl.glMultMatrixd(transformacao.getMatriz(), 0);
+		gl.glColor3d(cor.getR(), cor.getG(), cor.getB());
+		gl.glBegin(primitivaGrafica);
+		for (Ponto ponto : pontos) {
+			gl.glVertex3d(ponto.getX(), ponto.getY(), ponto.getZ());
+		}
+		gl.glEnd();
 
-			for (ObjetoGrafico objetoGrafico : objetosFilhos) {
-				objetoGrafico.desenhar(gl);
-			}
+		for (ObjetoGrafico objetoGrafico : objetosFilhos) {
+			objetoGrafico.desenhar(gl);
+		}
 		gl.glPopMatrix();
 	}
 
 	/**
 	 * Remove um ponto da lista de ponto que representam o objeto gráfico.
-	 * 
-	 * @param ponto o ponto a ser removido
+	 *
+	 * @param ponto
+	 *            o ponto a ser removido
 	 */
 	public void removePonto(final Ponto ponto) {
 		pontos.remove(ponto);
@@ -143,34 +147,101 @@ public class ObjetoGrafico {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((cor == null) ? 0 : cor.hashCode());
-		result = prime * result + ((pontos == null) ? 0 : pontos.hashCode());
-		result = prime * result + primitivaGrafica;
+		result = (prime * result) + ((cor == null) ? 0 : cor.hashCode());
+		result = (prime * result) + ((pontos == null) ? 0 : pontos.hashCode());
+		result = (prime * result) + primitivaGrafica;
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(final Object obj) {
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ObjetoGrafico other = (ObjetoGrafico) obj;
 		if (cor == null) {
-			if (other.cor != null)
+			if (other.cor != null) {
 				return false;
-		} else if (!cor.equals(other.cor))
-			return false;
+			}
+		} else
+			if (!cor.equals(other.cor)) {
+				return false;
+			}
 		if (pontos == null) {
-			if (other.pontos != null)
+			if (other.pontos != null) {
 				return false;
-		} else if (!pontos.equals(other.pontos))
+			}
+		} else
+			if (!pontos.equals(other.pontos)) {
+				return false;
+			}
+		if (primitivaGrafica != other.primitivaGrafica) {
 			return false;
-		if (primitivaGrafica != other.primitivaGrafica)
-			return false;
+		}
 		return true;
 	}
 
+	/**
+	 * Verifica se selecionou o objeto Grafico ou algum filho
+	 *
+	 * @param x
+	 *            - Ponto X clicado
+	 * @param y
+	 *            - Ponto Y clicado
+	 * @return Objeto Grafico selecionado, podendo ser um filho ou this
+	 */
+	public ObjetoGrafico verificarSelecao(final int x, final int y) {
+		ObjetoGrafico obj = null;
+		int i = 0;
+		while ((obj == null) && (i < objetosFilhos.size())) {
+			obj = objetosFilhos.get(i).verificarSelecao(x, y);
+			i++;
+		}
+		if (obj == null) {
+			if (bBox.pontoInterno(x, y) && (scanLine(x, y))) {
+				return this;
+			}
+		}
+		return obj;
+	}
+
+	private boolean scanLine(final int x, final int y) {
+		int count = 0;
+		for(int i = x; i < bBox.getxMaxBBox(); i++){
+			boolean achouPonto = false;
+			int j = 0;
+			while((!achouPonto) && (j < pontos.size())){
+				achouPonto = (pontos.get(j).getX() == i) && (pontos.get(j).getY() == y);
+				j++;
+			}
+			if(achouPonto){
+				count++;
+			}
+		}
+		return !((count % 2) == 0);
+	}
+
+	/**
+	 * @param remover
+	 *            - objeto a ser removido
+	 * @return - se removeu ou não o objeto
+	 */
+	public boolean removerObjetoGraficoFilho(final ObjetoGrafico remover) {
+		boolean result = false;
+		int i = 0;
+		while (!result && (i < objetosFilhos.size())) {
+			result = objetosFilhos.get(i).removerObjetoGraficoFilho(remover);
+			i++;
+		}
+		if (result) {
+			objetosFilhos.remove(i - 1);
+		}
+		return result;
+	}
 }

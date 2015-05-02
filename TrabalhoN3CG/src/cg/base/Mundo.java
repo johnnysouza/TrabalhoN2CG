@@ -21,6 +21,7 @@ import cg.Executor;
  */
 public class Mundo implements GLEventListener, KeyListener, MouseListener, MouseMotionListener {
 
+	private static final int MARGEMSELECAOPONTO = 5; // margem de erro para seleção de pontos, em pixels
 	private GL					gl;
 	private GLU					glu;
 	private GLAutoDrawable		glDrawable;
@@ -34,13 +35,14 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	private Ponto inicioRastro;
 	private Ponto fimRastro;
 	private ObjetoGrafico objetoSelecionado;
-	
+	private Ponto pontoSelecionado;
+
 	public Mundo() {
 		camera = new Camera(-400, 400, -400, 400);
 		corAtual = Cor.AZUL;
 		objetos = new ArrayList<ObjetoGrafico>();
 	}
- 
+
 	void adicionarObjetoGráfico(final ObjetoGrafico objetoGrafico) {
 		if (objetoGrafico != null) {
 			objetos.add(objetoGrafico);
@@ -203,7 +205,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		
+
 	}
 
 	@Override
@@ -221,10 +223,22 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	@Override
 	public void mouseClicked(final MouseEvent e) {
 		if (modoEdicao) {
-			//TODO 
-			//verifica se existe objeto selecionado
-			// se tiver verifica se selecionou um vértice dele
-			// senão verifica se selecionou algum objeto
+			ObjetoGrafico obj = null;
+			int i = 0;
+			final int x = e.getX();
+			final int y = e.getY();
+			while ((obj == null) && (i < objetos.size())) {
+				obj = objetos.get(i).verificarSelecao(x, y);
+				i++;
+			}
+			if (obj != null) {
+				for (Ponto p : obj.getPontos()) {
+					if ((x > (p.getX() - MARGEMSELECAOPONTO)) && (x < (p.getX() + MARGEMSELECAOPONTO)) && (y > (p.getY() - MARGEMSELECAOPONTO)) && (y < (p.getY() + MARGEMSELECAOPONTO))) {
+						pontoSelecionado = p;
+					}
+				}
+				objetoSelecionado = obj;
+			}
 		} else {
 			//TODO
 			
@@ -304,7 +318,20 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	}
 	
 	private void deletarItem() {
-		// TODO primeiro tenta deletar o vértice selecionado se houver, senão tenta deletar o polígono selecionado se houver
+		if (pontoSelecionado != null) {
+			objetoSelecionado.removePonto(pontoSelecionado);
+		} else {
+			if (objetos.contains(objetoSelecionado)) {
+				objetos.remove(objetoSelecionado);
+			} else {
+				boolean result = false;
+				int i = 0;
+				while (!result && (i < objetos.size())) {
+					result = objetos.get(i).removerObjetoGraficoFilho(objetoSelecionado);
+					i++;
+				}
+			}
+		}
 	}
 	
 	private void terminarCriacaoObjeto() {
