@@ -213,15 +213,14 @@ public class ObjetoGrafico {
 
 	private boolean scanLine(final int x, final int y) {
 		int count = 0;
-		for(int i = x; i < bBox.getxMaxBBox(); i++){
-			boolean achouPonto = false;
-			int j = 0;
-			while((!achouPonto) && (j < pontos.size())){
-				achouPonto = (pontos.get(j).getX() == i) && (pontos.get(j).getY() == y);
-				j++;
-			}
-			if(achouPonto){
-				count++;
+		double value;
+		for(int i = 0; i < (pontos.size()-1); i++){
+			value = (y-pontos.get(i).getY()) / (pontos.get(i+1).getY() - pontos.get(i).getY());
+			if((value > 0) && (value < 1)){
+				value = pontos.get(i).getX() + ((pontos.get(i+1).getX()-pontos.get(i).getX())*value);
+				if((value < pontos.get(i).getX()) && (value > pontos.get(i+1).getX())){
+					count++;
+				}
 			}
 		}
 		return !((count % 2) == 0);
@@ -244,26 +243,26 @@ public class ObjetoGrafico {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Realiza a translação de um objeto gráfico de acordo os valores para mover em x, y e z.
-	 * 
+	 *
 	 * @param x o valor para mover em x.
 	 * @param y o valor para mover em y.
 	 * @param z o valor para mover em z.
 	 */
-	public void transladarObjeto(double x, double y, double z) {
+	public void transladarObjeto(final double x, final double y, final double z) {
 		Transformacao matrizTranslate = new Transformacao();
 		matrizTranslate.transladar(x, y, z);
-		transformacao = matrizTranslate.transformarMatrix(transformacao);		
+		transformacao = matrizTranslate.transformarMatrix(transformacao);
 	}
-	
+
 	/**
 	 * Realiza a alteração na escala do objeto gráfico.
-	 * 
+	 *
 	 * @param escala a escala a ser aplicada no objeto gráfico.
 	 */
-	public void escalaXYZPtoFixo(double escala) {
+	public void escalaXYZPtoFixo(final double escala) {
 		Ponto pontoCentral = new Ponto(bBox.getCentroXBBox(), bBox.getCentroYBBox());
 		Transformacao matrizGlobal = new Transformacao();
 		matrizGlobal.atribuirIdentidade();
@@ -283,13 +282,13 @@ public class ObjetoGrafico {
 
 		transformacao = transformacao.transformarMatrix(matrizGlobal);
 	}
-	
+
 	/**
 	 * Realiza a rotação de um obejto gráfico de acordo com um ângulo.
-	 * 
+	 *
 	 * @param angulo o ângulo para a rotação do objeto gráfico.
 	 */
-	public void rotacaoZPtoFixo(double angulo) {
+	public void rotacaoZPtoFixo(final double angulo) {
 		Ponto pontoCentral = new Ponto(bBox.getCentroXBBox(), bBox.getCentroYBBox());
 		Transformacao matrizGlobal = new Transformacao();
 		matrizGlobal.atribuirIdentidade();
