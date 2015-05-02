@@ -212,18 +212,24 @@ public class ObjetoGrafico {
 	}
 
 	private boolean scanLine(final int x, final int y) {
-		int count = 0;
+		int paridade = 0;
 		double value;
-		for(int i = 0; i < (pontos.size()-1); i++){
-			value = (y-pontos.get(i).getY()) / (pontos.get(i+1).getY() - pontos.get(i).getY());
+		int j;
+		for(int i = 0; i < (pontos.size()); i++){
+			if (i == (pontos.size() - 1)){
+				j = 0;
+			}else{
+				j = i + 1;
+			}
+			value = (y-pontos.get(i).getY()) / (pontos.get(j).getY() - pontos.get(i).getY());
 			if((value > 0) && (value < 1)){
-				value = pontos.get(i).getX() + ((pontos.get(i+1).getX()-pontos.get(i).getX())*value);
-				if((value < pontos.get(i).getX()) && (value > pontos.get(i+1).getX())){
-					count++;
+				value = pontos.get(i).getX() + ((pontos.get(j).getX()-pontos.get(i).getX())*value);
+				if(value > x){
+					paridade++;
 				}
 			}
 		}
-		return !((count % 2) == 0);
+		return !((paridade % 2) == 0);
 	}
 
 	/**
