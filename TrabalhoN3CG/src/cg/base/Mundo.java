@@ -225,8 +225,8 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		if (modoEdicao) {
 			ObjetoGrafico obj = null;
 			int i = 0;
-			final int x = e.getX();
-			final int y = e.getY();
+			final int x = (e.getX() - (Executor.LARGURA_JANELA / 2)) * 2;
+			final int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -2;
 			while ((obj == null) && (i < objetos.size())) {
 				obj = objetos.get(i).verificarSelecao(x, y);
 				i++;
