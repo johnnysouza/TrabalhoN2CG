@@ -53,6 +53,12 @@ public class Ponto {
 	public void setW(final double w) {
 		this.w = w;
 	}
+	
+	public void inverterSinal() {
+		setX(getX() * -1);
+		setY(getY() * -1);
+		setZ(getZ() * -1);
+	}
 
 	@Override
 	public int hashCode() {

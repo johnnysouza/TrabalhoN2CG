@@ -244,4 +244,69 @@ public class ObjetoGrafico {
 		}
 		return result;
 	}
+	
+	/**
+	 * Realiza a translação de um objeto gráfico de acordo os valores para mover em x, y e z.
+	 * 
+	 * @param x o valor para mover em x.
+	 * @param y o valor para mover em y.
+	 * @param z o valor para mover em z.
+	 */
+	public void transladarObjeto(double x, double y, double z) {
+		Transformacao matrizTranslate = new Transformacao();
+		matrizTranslate.transladar(x, y, z);
+		transformacao = matrizTranslate.transformarMatrix(transformacao);		
+	}
+	
+	/**
+	 * Realiza a alteração na escala do objeto gráfico.
+	 * 
+	 * @param escala a escala a ser aplicada no objeto gráfico.
+	 */
+	public void escalaXYZPtoFixo(double escala) {
+		Ponto pontoCentral = new Ponto(bBox.getCentroXBBox(), bBox.getCentroYBBox());
+		Transformacao matrizGlobal = new Transformacao();
+		matrizGlobal.atribuirIdentidade();
+
+		Transformacao matrizTmpTranslacao = new Transformacao();
+		matrizTmpTranslacao.transladar(pontoCentral.getX(),pontoCentral.getY(),pontoCentral.getZ());
+		matrizGlobal = matrizTmpTranslacao.transformarMatrix(matrizGlobal);
+
+		Transformacao matrizTmpEscala = new Transformacao();
+		matrizTmpEscala.escalar(escala, escala, 1.0);
+		matrizGlobal = matrizTmpEscala.transformarMatrix(matrizGlobal);
+
+		pontoCentral.inverterSinal();
+		Transformacao matrizTmpTranslacaoInversa = new Transformacao();
+		matrizTmpTranslacaoInversa.transladar(pontoCentral.getX(),pontoCentral.getY(),pontoCentral.getZ());
+		matrizGlobal = matrizTmpTranslacaoInversa.transformarMatrix(matrizGlobal);
+
+		transformacao = transformacao.transformarMatrix(matrizGlobal);
+	}
+	
+	/**
+	 * Realiza a rotação de um obejto gráfico de acordo com um ângulo.
+	 * 
+	 * @param angulo o ângulo para a rotação do objeto gráfico.
+	 */
+	public void rotacaoZPtoFixo(double angulo) {
+		Ponto pontoCentral = new Ponto(bBox.getCentroXBBox(), bBox.getCentroYBBox());
+		Transformacao matrizGlobal = new Transformacao();
+		matrizGlobal.atribuirIdentidade();
+
+		Transformacao matrizTmpTranslacao = new Transformacao();
+		matrizTmpTranslacao.transladar(pontoCentral.getX(),pontoCentral.getY(),pontoCentral.getZ());
+		matrizGlobal = matrizTmpTranslacao.transformarMatrix(matrizGlobal);
+
+		Transformacao matrizTmpRotacao = new Transformacao();
+		matrizTmpRotacao.rotacionarZ(angulo);
+		matrizGlobal = matrizTmpRotacao.transformarMatrix(matrizGlobal);
+
+		pontoCentral.inverterSinal();
+		Transformacao matrizTmpTranslacaoInversa = new Transformacao();
+		matrizTmpTranslacaoInversa.transladar(pontoCentral.getX(),pontoCentral.getY(),pontoCentral.getZ());
+		matrizGlobal = matrizTmpTranslacaoInversa.transformarMatrix(matrizGlobal);
+
+		transformacao = transformacao.transformarMatrix(matrizGlobal);
+	}
 }
