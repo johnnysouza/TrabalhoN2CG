@@ -16,6 +16,7 @@ public class ObjetoGrafico {
 	private Transformacao transformacao;
 	private BBox bBox;
 	private List<ObjetoGrafico> objetosFilhos;
+	private boolean selecionado;
 
 	public ObjetoGrafico(final Cor cor) {
 		this.cor = new Cor(cor.getR(), cor.getG(), cor.getB());
@@ -73,6 +74,14 @@ public class ObjetoGrafico {
 	public List<ObjetoGrafico> getObjetosFilhos() {
 		return objetosFilhos;
 	}
+	
+	public boolean isSelecionado() {
+		return selecionado;
+	}
+	
+	public void setSelecionado(boolean selecionado) {
+		this.selecionado = selecionado;
+	}
 
 	public void setObjetosFilhos(final List<ObjetoGrafico> objetosFilhos) {
 		this.objetosFilhos = objetosFilhos;
@@ -121,6 +130,18 @@ public class ObjetoGrafico {
 			objetoGrafico.desenhar(gl);
 		}
 		gl.glPopMatrix();
+		
+		if (selecionado) {
+			gl.glPointSize(Mundo.MARGEMSELECAOPONTO);
+			
+			gl.glBegin(GL.GL_POINTS);
+			for (Ponto ponto : pontos) {
+				gl.glVertex3d(ponto.getX(), ponto.getY(), ponto.getZ());
+			}
+			gl.glEnd();
+			
+			bBox.desenharBBox(gl);
+		}
 	}
 
 	/**
@@ -238,6 +259,7 @@ public class ObjetoGrafico {
 	 * @return - se removeu ou não o objeto
 	 */
 	public boolean removerObjetoGraficoFilho(final ObjetoGrafico remover) {
+		//TODO nunca deleta o filho
 		boolean result = false;
 		int i = 0;
 		while (!result && (i < objetosFilhos.size())) {
@@ -268,8 +290,9 @@ public class ObjetoGrafico {
 	 *
 	 * @param escala a escala a ser aplicada no objeto gráfico.
 	 */
-	public void escalaXYZPtoFixo(final double escala) {
+	public void escalarObjeto(final double escala) {
 		Ponto pontoCentral = new Ponto(bBox.getCentroXBBox(), bBox.getCentroYBBox());
+		pontoCentral.inverterSinal();
 		Transformacao matrizGlobal = new Transformacao();
 		matrizGlobal.atribuirIdentidade();
 
@@ -294,8 +317,9 @@ public class ObjetoGrafico {
 	 *
 	 * @param angulo o ângulo para a rotação do objeto gráfico.
 	 */
-	public void rotacaoZPtoFixo(final double angulo) {
+	public void rotacionarObjeto(final double angulo) {
 		Ponto pontoCentral = new Ponto(bBox.getCentroXBBox(), bBox.getCentroYBBox());
+		pontoCentral.inverterSinal();
 		Transformacao matrizGlobal = new Transformacao();
 		matrizGlobal.atribuirIdentidade();
 
@@ -313,5 +337,15 @@ public class ObjetoGrafico {
 		matrizGlobal = matrizTmpTranslacaoInversa.transformarMatrix(matrizGlobal);
 
 		transformacao = transformacao.transformarMatrix(matrizGlobal);
+	}
+	
+	/**
+	 * Limpa as transformações do objeto selecionado e dos seus filhos
+	 */
+	public void limparTransformações() {
+		transformacao.atribuirIdentidade();
+		for (ObjetoGrafico objetoGrafico : objetosFilhos) {
+			objetoGrafico.limparTransformações();
+		}
 	}
 }

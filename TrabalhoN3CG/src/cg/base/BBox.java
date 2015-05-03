@@ -2,6 +2,8 @@ package cg.base;
 
 import java.util.List;
 
+import javax.media.opengl.GL;
+
 /**
  * Representa a BBox de um objeto gráfico.
  */
@@ -116,5 +118,22 @@ public class BBox {
 	 */
 	public boolean pontoInterno(final int x, final int y) {
 		return ((x < xMaxBBox) && (x > xMinBBox) && (y < yMaxBBox) && (y > yMinBBox));
+	}
+	
+	/**
+	 * Desenha a BBox.
+	 * 
+	 * @param gl a instância para desenhar no mundo.
+	 */
+	public void desenharBBox(GL gl) {
+		gl.glColor3d(0.0, 0.0, 0.0);
+		gl.glBegin(GL.GL_LINE_LOOP);
+		
+		gl.glVertex3d(xMinBBox, yMaxBBox, 0);
+		gl.glVertex3d(xMaxBBox, yMaxBBox, 0);
+		gl.glVertex3d(xMaxBBox, yMinBBox, 0);
+		gl.glVertex3d(xMinBBox, yMinBBox, 0);
+		
+		gl.glEnd();
 	}
 }

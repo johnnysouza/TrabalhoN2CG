@@ -21,7 +21,7 @@ import cg.Executor;
  */
 public class Mundo implements GLEventListener, KeyListener, MouseListener, MouseMotionListener {
 
-	private static final int MARGEMSELECAOPONTO = 5; // margem de erro para seleção de pontos, em pixels
+	public static final int MARGEMSELECAOPONTO = 15; // margem de erro para seleção de pontos, em pixels
 	private GL					gl;
 	private GLU					glu;
 	private GLAutoDrawable		glDrawable;
@@ -36,6 +36,9 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	private Ponto fimRastro;
 	private ObjetoGrafico objetoSelecionado;
 	private Ponto pontoSelecionado;
+	
+	private int antigoX;
+	private int antigoY;
 
 	public Mundo() {
 		camera = new Camera(-400, 400, -400, 400);
@@ -84,6 +87,10 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	 * Escape = retirar seleção do polígono e vertice (se houver)
 	 * T = terminar criação do objeto em criação atual (se houver)
 	 * Q = adicionar objeto filho
+	 * M = aumentar a escala do objeto gráfico selecionado
+	 * N = diminuir a escala do objeto gráfico selecionado
+	 * G = rotacionar o objeto no sentido anti-horário
+	 * H = rotacionar o objeto no sentido horário
 	 */
 	@Override
 	public void keyPressed(final KeyEvent e) {
@@ -132,6 +139,27 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 				if (objetos.size() > 0) { //Apenas pode-se criar um objeto filho, se já existir algum para ser o pai
 					objetoFilho = true;
 				}
+				break;
+			case KeyEvent.VK_M:
+				if (modoEdicao && objetoSelecionado != null) { //Está no modo de edição e possui objeto selecionado
+					objetoSelecionado.escalarObjeto(1.2);
+				}
+				break;
+			case KeyEvent.VK_N:
+				if (modoEdicao && objetoSelecionado != null) { //Está no modo de edição e possui objeto selecionado
+					objetoSelecionado.escalarObjeto(0.8);
+				}
+				break;
+			case KeyEvent.VK_G:
+				if (modoEdicao && objetoSelecionado != null) { //Está no modo de edição e possui objeto selecionado
+					objetoSelecionado.rotacionarObjeto(10);
+				}
+				break;
+			case KeyEvent.VK_H:
+				if (modoEdicao && objetoSelecionado != null) { //Está no modo de edição e possui objeto selecionado
+					objetoSelecionado.rotacionarObjeto(-10);
+				}
+				break;
 			default: 
 				//Atalho não suportado
 		}
@@ -205,7 +233,25 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
+		if (modoEdicao) {
+			int movimentoX = (e.getX() - antigoX) * 2;
+			int movimentoY = (e.getY() - antigoY) * -2;
+			
+			if (objetoSelecionado != null) {
+				if (pontoSelecionado != null) {
+					pontoSelecionado.setX(pontoSelecionado.getX() + movimentoX);
+					pontoSelecionado.setY(pontoSelecionado.getY() + movimentoY);
+					objetoSelecionado.calcularBBox();
+				} else {
+					objetoSelecionado.transladarObjeto(movimentoX, movimentoY, 0);
+				}
+			}
+			
+			antigoX = e.getX();
+			antigoY = e.getY();
+		}
 
+		glDrawable.display();
 	}
 
 	@Override
@@ -223,22 +269,23 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	@Override
 	public void mouseClicked(final MouseEvent e) {
 		if (modoEdicao) {
-			ObjetoGrafico obj = null;
 			int i = 0;
 			final int x = (e.getX() - (Executor.LARGURA_JANELA / 2)) * 2;
 			final int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -2;
+			ObjetoGrafico obj = null;
+
 			while ((obj == null) && (i < objetos.size())) {
 				obj = objetos.get(i).verificarSelecao(x, y);
+				if (obj != null) {
+					if (objetoSelecionado != null) {
+						objetoSelecionado.setSelecionado(false);
+					}
+					objetoSelecionado = obj;
+					objetoSelecionado.setSelecionado(true);
+				}
 				i++;
 			}
-			if (obj != null) {
-				for (Ponto p : obj.getPontos()) {
-					if ((x > (p.getX() - MARGEMSELECAOPONTO)) && (x < (p.getX() + MARGEMSELECAOPONTO)) && (y > (p.getY() - MARGEMSELECAOPONTO)) && (y < (p.getY() + MARGEMSELECAOPONTO))) {
-						pontoSelecionado = p;
-					}
-				}
-				objetoSelecionado = obj;
-			}
+			
 		} else {
 			//TODO
 			
@@ -255,6 +302,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 					objetoEmCriacao = new ObjetoGrafico(corAtual);
 				}
 				
+				System.out.println("x = " + e.getX() + ", y = " + e.getY());
 				int x = (e.getX() - (Executor.LARGURA_JANELA / 2)) * 2;
 				int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -2;
 				
@@ -269,7 +317,22 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 	@Override
 	public void mousePressed(final MouseEvent e) {
-		
+		if (modoEdicao) {
+			//Pontos de referência para a movimentoção do objetos gráficos/vértices
+			antigoX = e.getX();
+			antigoY = e.getY();
+			
+			if (objetoSelecionado != null) {
+				final int x = (e.getX() - (Executor.LARGURA_JANELA / 2)) * 2;
+				final int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -2;
+				
+				for (Ponto p : objetoSelecionado.getPontos()) {
+					if ((x > (p.getX() - MARGEMSELECAOPONTO)) && (x < (p.getX() + MARGEMSELECAOPONTO)) && (y > (p.getY() - MARGEMSELECAOPONTO)) && (y < (p.getY() + MARGEMSELECAOPONTO))) {
+						pontoSelecionado = p;
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -300,6 +363,10 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	private void alternarModoEdicao() {
 		if (modoEdicao) {
 			modoEdicao = false;
+			for (ObjetoGrafico objetoGrafico : objetos) {
+				objetoGrafico.limparTransformações();
+			}
+			retirarSelecao();
 		} else {
 			modoEdicao = true;
 		}
@@ -314,7 +381,11 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	}
 	
 	private void retirarSelecao() {
-		// TODO retirar referências ao polígono e vertice selecionados se houver
+		if (objetoSelecionado != null) {
+			objetoSelecionado.setSelecionado(false);
+			objetoSelecionado = null;
+		}
+		pontoSelecionado = null;
 	}
 	
 	private void deletarItem() {
@@ -323,12 +394,16 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		} else {
 			if (objetos.contains(objetoSelecionado)) {
 				objetos.remove(objetoSelecionado);
+				objetoSelecionado = null;
 			} else {
 				boolean result = false;
 				int i = 0;
 				while (!result && (i < objetos.size())) {
 					result = objetos.get(i).removerObjetoGraficoFilho(objetoSelecionado);
 					i++;
+					if (result) {
+						objetoSelecionado = null;
+					}
 				}
 			}
 		}
