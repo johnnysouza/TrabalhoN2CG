@@ -86,7 +86,7 @@ public class Camera {
 	 * 
 	 * @param zoom o zoom a ser aplicado na câmera.
 	 */
-	public void zomm(ZoomCamera zoom) {
+	public void zoom(ZoomCamera zoom) {
 		switch(zoom) {
 		case MAIS_ZOOM:
 			if (valorZoom < 400) {

@@ -122,10 +122,10 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 				camera.pan(Camera.MovimentoCamera.MOVER_PARA_DIREITA);
 				break;
 			case KeyEvent.VK_I:
-				camera.zomm(Camera.ZoomCamera.MAIS_ZOOM);
+				camera.zoom(Camera.ZoomCamera.MAIS_ZOOM);
 				break;
 			case KeyEvent.VK_O:
-				camera.zomm(Camera.ZoomCamera.MENOS_ZOOM);
+				camera.zoom(Camera.ZoomCamera.MENOS_ZOOM);
 				break;
 			case KeyEvent.VK_P:
 				alterarPrimitivaGrafica();
