@@ -78,6 +78,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	/**
 	 * Atalhos:
 	 * 
+	 * F1 = Ajuda - abre a tela com a lista dos atalhos
 	 * C = alterar cor entre azul, verde e vermelho
 	 * E = alterna entre modo de criação e edição
 	 * W = move câmera para cima
@@ -384,6 +385,9 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		
 	}
 
+	/**
+	 * Altera a cor do objeto selecionado e cor que os próximos objeto criados irão ter.
+	 */
 	private void alterarCor() {
 		if (corAtual.equals(Cor.AZUL)) {
 			corAtual = Cor.VERDE;
@@ -398,6 +402,9 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		}
 	}
 
+	/**
+	 * Alterna entre o modo de edição e criação.
+	 */
 	private void alternarModoEdicao() {
 		if (modoEdicao) {
 			modoEdicao = false;
@@ -409,7 +416,10 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		}
 		retirarSelecao();
 	}
-	
+
+	/**
+	 * Alterar entre as primitivas gráfica Line Loop e Line Strip.
+	 */
 	private void alterarPrimitivaGrafica() {
 		if (primitivaGrafica == GL.GL_LINE_LOOP) {
 			primitivaGrafica = GL.GL_LINE_STRIP;
@@ -417,7 +427,10 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 			primitivaGrafica = GL.GL_LINE_LOOP;
 		}
 	}
-	
+
+	/**
+	 * Retirar a seleção do objeto e vértices selecionados.
+	 */
 	private void retirarSelecao() {
 		if (objetoSelecionado != null) {
 			objetoSelecionado.setSelecionado(false);
@@ -426,6 +439,9 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		pontoSelecionado = null;
 	}
 	
+	/**
+	 * Deleta um item selecionado, se for um objeto gráfico, deleta também os seus filhos.
+	 */
 	private void deletarItem() {
 		if (pontoSelecionado != null) {
 			objetoSelecionado.removePonto(pontoSelecionado);
@@ -447,7 +463,10 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 			}
 		}
 	}
-	
+
+	/**
+	 * Finaliza a criação do objeto em criação.
+	 */
 	private void terminarCriacaoObjeto() {
 		if (!modoEdicao && objetoEmCriacao != null) { //tem um objeto em criação
 			objetoEmCriacao.setPrimitivaGrafica(primitivaGrafica);
@@ -467,13 +486,16 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 			}
 		}
 	}
-	
+
+	/**
+	 * Exibe uma janela de ajuda com uma lista dos atalhos disponíveis.
+	 */
 	private void imprimirAtalhos() {
-		JFrame janelaAjuda = new JFrame("Atalhos");
+		JFrame janelaAjuda = new JFrame("Atalhos e ajuda");
 		janelaAjuda.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		janelaAjuda.setBounds(720, 100, 300, 300);
+		janelaAjuda.setBounds(720, 100, 400, 340);
 		
-		JPanel painelAtalhos = new JPanel(new GridLayout(17, 1));
+		JPanel painelAtalhos = new JPanel(new GridLayout(19, 1));
 		
 		JLabel c = new JLabel("C = alterar cor", JLabel.LEFT);
 		painelAtalhos.add(c);
@@ -509,6 +531,11 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		painelAtalhos.add(g);
 		JLabel h = new JLabel("H = rotacionar no sentido horário", JLabel.LEFT);
 		painelAtalhos.add(h);
+		JLabel objetoFilho = new JLabel("Ajuda: Para adicionar um objeto filho, pressionar Q no modo de ", JLabel.CENTER);
+		painelAtalhos.add(objetoFilho);
+		JLabel objetoFilho2 = new JLabel("criação, selecionar um objeto para ser o pai e criar o objeto filho", JLabel.CENTER);
+		painelAtalhos.add(objetoFilho2);
+		
 		
 		janelaAjuda.getContentPane().add(painelAtalhos, BorderLayout.SOUTH);
 		janelaAjuda.setResizable(false);

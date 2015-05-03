@@ -1,5 +1,8 @@
 package cg.base;
 
+/**
+ * Representa um ponto no espaço gráfico.
+ */
 public class Ponto {
 
 	private double	x;
@@ -54,6 +57,9 @@ public class Ponto {
 		this.w = w;
 	}
 	
+	/**
+	 * Inverte o sinal das coordenadas do ponto.
+	 */
 	public void inverterSinal() {
 		setX(getX() * -1);
 		setY(getY() * -1);

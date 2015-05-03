@@ -90,8 +90,7 @@ public class ObjetoGrafico {
 	/**
 	 * Adiciona um objeto gráfico filho.
 	 *
-	 * @param objeto
-	 *            o obejto gráfico a ser adicionados aos filhos.
+	 * @param objeto o obejto gráfico a ser adicionados aos filhos.
 	 */
 	public void addObjetoGraficoFilho(final ObjetoGrafico objeto) {
 		if (objeto != null) {
@@ -102,8 +101,7 @@ public class ObjetoGrafico {
 	/**
 	 * Remove um objeto gráfico filho.
 	 *
-	 * @param i
-	 *            a posição do objeto gráfico filho a ser removido.
+	 * @param i a posição do objeto gráfico filho a ser removido.
 	 * @return o objeto gráfico removido.
 	 */
 	public ObjetoGrafico removerObjetoGraficoFilho(final int i) {
@@ -113,8 +111,7 @@ public class ObjetoGrafico {
 	/**
 	 * Desenha o objeto gráfico, assim como seus filhos, no espaço gráfico do mundo.
 	 *
-	 * @param gl
-	 *            a instância para desenhar no mundo.
+	 * @param gl a instância para desenhar no mundo.
 	 */
 	public void desenhar(final GL gl) {
 		gl.glPushMatrix();
@@ -132,7 +129,7 @@ public class ObjetoGrafico {
 		
 		if (selecionado) {
 			gl.glPointSize(Mundo.MARGEMSELECAOPONTO);
-			
+			gl.glColor3d(cor.getR(), cor.getG(), cor.getB());
 			gl.glBegin(GL.GL_POINTS);
 			for (Ponto ponto : pontos) {
 				gl.glVertex3d(ponto.getX(), ponto.getY(), ponto.getZ());
@@ -148,8 +145,7 @@ public class ObjetoGrafico {
 	/**
 	 * Remove um ponto da lista de ponto que representam o objeto gráfico.
 	 *
-	 * @param ponto
-	 *            o ponto a ser removido
+	 * @param ponto o ponto a ser removido
 	 */
 	public void removePonto(final Ponto ponto) {
 		pontos.remove(ponto);
@@ -213,10 +209,8 @@ public class ObjetoGrafico {
 	/**
 	 * Verifica se selecionou o objeto Grafico ou algum filho
 	 *
-	 * @param x
-	 *            - Ponto X clicado
-	 * @param y
-	 *            - Ponto Y clicado
+	 * @param x - Ponto X clicado
+	 * @param y - Ponto Y clicado
 	 * @return Objeto Grafico selecionado, podendo ser um filho ou this
 	 */
 	public ObjetoGrafico verificarSelecao(Ponto ponto, Transformacao transformacao) {
@@ -309,8 +303,7 @@ public class ObjetoGrafico {
 	}
 
 	/**
-	 * @param remover
-	 *            - objeto a ser removido
+	 * @param remover - objeto a ser removido
 	 * @return - se removeu ou não o objeto
 	 */
 	public boolean removerObjetoGraficoFilho(final ObjetoGrafico remover) {

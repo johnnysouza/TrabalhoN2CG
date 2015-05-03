@@ -87,8 +87,8 @@ public class Transformacao {
 	/**
 	 * Realiza a multiplicação de matrizes de transformação.
 	 * 
-	 * @param t a matriz de transformação a ser multiplicada
-	 * @return o resultado da multiplicação das matrizes de transformação
+	 * @param t a matriz de transformação a ser multiplicada.
+	 * @return o resultado da multiplicação das matrizes de transformação.
 	 */
 	public Transformacao transformarMatrix(Transformacao t) {
 		Transformacao matrizTrans = new Transformacao();

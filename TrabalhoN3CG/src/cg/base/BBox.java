@@ -110,11 +110,11 @@ public class BBox {
 	}
 
 	/**
-	 * Verifica se os pontos passados por parâmetro estão dentro da BBOx ou não
+	 * Verifica se os pontos passados por parâmetro estão dentro da BBOx ou não.
 	 *
 	 * @param x - X do Ponto
 	 * @param y - Y do Ponto
-	 * @return -está dentro da bbox
+	 * @return - está dentro da bbox.
 	 */
 	public boolean pontoInterno(Ponto ponto, Transformacao transformacao) {
 		double x = ponto.getX();
