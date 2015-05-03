@@ -18,8 +18,8 @@ public class Executor extends JFrame{
 
 	public Executor() {
 		// Cria o frame.
-		super("CG-N3");
-		setBounds(300, 250, LARGURA_JANELA, ALTURA_JANELA + 22); // 500 + 22 da borda do título da janela
+		super("CG-N3 - Pressione F1 para exibir atalhos");
+		setBounds(300, 100, LARGURA_JANELA, ALTURA_JANELA + 22); // 500 + 22 da borda do título da janela
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
 
@@ -44,6 +44,10 @@ public class Executor extends JFrame{
 		canvas.addMouseListener(renderer);
 		canvas.addMouseMotionListener(renderer);
 		canvas.requestFocus();
+		
+		System.out.println("Pressione F1 para exibir ajuda dos atalhos");
+		
+		setResizable(false);
 	}
 
 	public static void main(String[] args) {

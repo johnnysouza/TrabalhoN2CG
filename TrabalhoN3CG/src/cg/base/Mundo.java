@@ -1,5 +1,7 @@
 package cg.base;
 
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -13,6 +15,10 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import cg.Executor;
 
@@ -41,7 +47,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	private int antigoY;
 
 	public Mundo() {
-		camera = new Camera(-400, 400, -400, 400);
+		camera = new Camera(-200, 200, -200, 200);
 		corAtual = Cor.AZUL;
 		objetos = new ArrayList<ObjetoGrafico>();
 	}
@@ -58,12 +64,10 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 	@Override
 	public void init(final GLAutoDrawable drawable) {
-		System.out.println(" --- init ---");
 		glDrawable = drawable;
 		gl = drawable.getGL();
 		glu = new GLU();
 		glDrawable.setGL(new DebugGL(gl));
-		System.out.println("Espaco de desenho com tamanho: " + drawable.getWidth() + " x " + drawable.getHeight());
 		gl.glClearColor(0.85f, 0.85f, 0.85f, 1.0f); // Cinza claro de fundo
 	}
 
@@ -95,6 +99,9 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	@Override
 	public void keyPressed(final KeyEvent e) {
 		switch (e.getKeyCode()) {
+			case KeyEvent.VK_F1:
+				imprimirAtalhos();
+				break;
 			case KeyEvent.VK_C:
 				alterarCor();
 				break;
@@ -220,22 +227,22 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 		gl.glColor3f(1.0f, 0.0f, 0.0f);
 		gl.glBegin(GL.GL_LINES);
-		gl.glVertex2f(-200.0f, 0.0f);
-		gl.glVertex2f(200.0f, 0.0f);
+		gl.glVertex2f(-150.0f, 0.0f);
+		gl.glVertex2f(150.0f, 0.0f);
 		gl.glEnd();
 		// eixo y
 		gl.glColor3f(0.0f, 1.0f, 0.0f);
 		gl.glBegin(GL.GL_LINES);
-		gl.glVertex2f(0.0f, -200.0f);
-		gl.glVertex2f(0.0f, 200.0f);
+		gl.glVertex2f(0.0f, -150.0f);
+		gl.glVertex2f(0.0f, 150.0f);
 		gl.glEnd();
 	}
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
 		if (modoEdicao) {
-			int movimentoX = (e.getX() - antigoX) * 2;
-			int movimentoY = (e.getY() - antigoY) * -2;
+			int movimentoX = (e.getX() - antigoX);
+			int movimentoY = (e.getY() - antigoY) * -1;
 			
 			if (objetoSelecionado != null) {
 				if (pontoSelecionado != null) {
@@ -258,20 +265,22 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	public void mouseMoved(final MouseEvent e) {
 		if (!modoEdicao && objetoEmCriacao != null) { 
 			//se estiver no modo de criação e já existir um objeto gráfico em criação então atualiza o final do rastro da nova aresta
-			int x = (e.getX() - (Executor.LARGURA_JANELA / 2)) * 2;
-			int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -2;
+			int x = (e.getX() - (Executor.LARGURA_JANELA / 2));
+			int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -1;
 			fimRastro = new Ponto(x, y);
 		}
 		
-		glDrawable.display();
+		if (gl != null) { //Evitar excessão ao mover o mouse antes de terminar a inicialização do JOGL
+			glDrawable.display();
+		}
 	}
 
 	@Override
 	public void mouseClicked(final MouseEvent e) {
 		if (modoEdicao) {
 			int i = 0;
-			final int x = (e.getX() - (Executor.LARGURA_JANELA / 2)) * 2;
-			final int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -2;
+			final int x = (e.getX() - (Executor.LARGURA_JANELA / 2));
+			final int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -1;
 			ObjetoGrafico obj = null;
 
 			while ((obj == null) && (i < objetos.size())) {
@@ -287,24 +296,47 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 			}
 			
 		} else {
-			//TODO
-			
 			if (objetoFilho) { // verifica se está adicionando um objeto filho 
 				
-				//se sim então verifica se tem um objeto selecionado para ser o pai
-					//se sim então verifica se já começou a criação do objeto filho 
-						// se sim então adiciona um novo vértice para o filho
-						// senão cria um novo filho
-					//senão verifica se selecionou algum objeto para ser o pai
+				if (objetoSelecionado != null) {//se sim então verifica se tem um objeto selecionado para ser o pai
+
+					if (objetoEmCriacao == null) { 
+						objetoEmCriacao = new ObjetoGrafico(corAtual);
+					}
+					
+					int x = (e.getX() - (Executor.LARGURA_JANELA / 2));
+					int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -1;
+					
+					inicioRastro = new Ponto(x, y);
+					Ponto ponto = new Ponto(x, y);
+					objetoEmCriacao.addPonto(ponto);
+					
+				} else { //senão verifica se selecionou algum objeto para ser o pai
+					int i = 0;
+					final int x = (e.getX() - (Executor.LARGURA_JANELA / 2));
+					final int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -1;
+					ObjetoGrafico obj = null;
+
+					while ((obj == null) && (i < objetos.size())) {
+						obj = objetos.get(i).verificarSelecao(x, y);
+						if (obj != null) {
+							if (objetoSelecionado != null) {
+								objetoSelecionado.setSelecionado(false);
+							}
+							objetoSelecionado = obj;
+							objetoSelecionado.setSelecionado(true);
+						}
+						i++;
+					}
+				}
 
 			} else {
 				if (objetoEmCriacao == null) { // verifica se não existe objeto em criação então cria
 					objetoEmCriacao = new ObjetoGrafico(corAtual);
 				}
 				
-				System.out.println("x = " + e.getX() + ", y = " + e.getY());
-				int x = (e.getX() - (Executor.LARGURA_JANELA / 2)) * 2;
-				int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -2;
+				int x = (e.getX() - (Executor.LARGURA_JANELA / 2));
+				int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -1;
 				
 				inicioRastro = new Ponto(x, y);
 				Ponto ponto = new Ponto(x, y);
@@ -323,8 +355,8 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 			antigoY = e.getY();
 			
 			if (objetoSelecionado != null) {
-				final int x = (e.getX() - (Executor.LARGURA_JANELA / 2)) * 2;
-				final int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -2;
+				final int x = (e.getX() - (Executor.LARGURA_JANELA / 2));
+				final int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -1;
 				
 				for (Ponto p : objetoSelecionado.getPontos()) {
 					if ((x > (p.getX() - MARGEMSELECAOPONTO)) && (x < (p.getX() + MARGEMSELECAOPONTO)) && (y > (p.getY() - MARGEMSELECAOPONTO)) && (y < (p.getY() + MARGEMSELECAOPONTO))) {
@@ -366,10 +398,10 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 			for (ObjetoGrafico objetoGrafico : objetos) {
 				objetoGrafico.limparTransformações();
 			}
-			retirarSelecao();
 		} else {
 			modoEdicao = true;
 		}
+		retirarSelecao();
 	}
 	
 	private void alterarPrimitivaGrafica() {
@@ -391,6 +423,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	private void deletarItem() {
 		if (pontoSelecionado != null) {
 			objetoSelecionado.removePonto(pontoSelecionado);
+			objetoSelecionado.calcularBBox();
 		} else {
 			if (objetos.contains(objetoSelecionado)) {
 				objetos.remove(objetoSelecionado);
@@ -413,14 +446,66 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		if (!modoEdicao && objetoEmCriacao != null) { //tem um objeto em criação
 			objetoEmCriacao.setPrimitivaGrafica(primitivaGrafica);
 			objetoEmCriacao.calcularBBox();
-			if (objetoFilho && objetoSelecionado == null) { // verifica se é um objeto filho e se tem um objeto selecionado para ser pai dele
-				//TODO encontrar onde na lista de objetos qual é o pai e então inserir um filho para ele
+
+			if (objetoFilho && objetoSelecionado != null) { // verifica se é um objeto filho e se tem um objeto selecionado para ser pai dele
+				objetoSelecionado.setSelecionado(false);
 				objetoFilho = false; //desmarca a flag que indica que o objeto gráfico em criação será um filho
+
+				objetoSelecionado.addObjetoGraficoFilho(objetoEmCriacao);
+				objetoEmCriacao = null;
+				objetoSelecionado = null;
 			} else {
 				// senão adiciona o objeto na lista de objetos do mundo
 				objetos.add(objetoEmCriacao);
 				objetoEmCriacao = null;
 			}
 		}
+	}
+	
+	private void imprimirAtalhos() {
+		JFrame janelaAjuda = new JFrame("Atalhos");
+		janelaAjuda.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		janelaAjuda.setBounds(720, 100, 300, 300);
+		
+		JPanel painelAtalhos = new JPanel(new GridLayout(17, 1));
+		
+		JLabel c = new JLabel("C = alterar cor", JLabel.LEFT);
+		painelAtalhos.add(c);
+		JLabel e = new JLabel("E = alterar modo criação/edição", JLabel.LEFT);
+		painelAtalhos.add(e);
+		JLabel w = new JLabel("W = mover câmera para cima", JLabel.LEFT);
+		painelAtalhos.add(w);
+		JLabel s = new JLabel("S = mover câmera para baixo", JLabel.LEFT);
+		painelAtalhos.add(s);
+		JLabel a = new JLabel("A = mover câmera para esquerda", JLabel.LEFT);
+		painelAtalhos.add(a);
+		JLabel d = new JLabel("D = mover câmera para direita", JLabel.LEFT);
+		painelAtalhos.add(d);
+		JLabel i = new JLabel("I = aumentar zoom", JLabel.LEFT);
+		painelAtalhos.add(i);
+		JLabel o = new JLabel("O = diminuir zoom", JLabel.LEFT);
+		painelAtalhos.add(o);
+		JLabel p = new JLabel("P = alterar primitiva gráfica", JLabel.LEFT);
+		painelAtalhos.add(p);
+		JLabel delete = new JLabel("DELETE = deletar o polígono ou vértice", JLabel.LEFT);
+		painelAtalhos.add(delete);
+		JLabel esc = new JLabel("ESC = retirar seleção do polígono e vértice", JLabel.LEFT);
+		painelAtalhos.add(esc);
+		JLabel t = new JLabel("T = terminar criação do objeto", JLabel.LEFT);
+		painelAtalhos.add(t);
+		JLabel q = new JLabel("Q = adicionar objeto filho", JLabel.LEFT);
+		painelAtalhos.add(q);
+		JLabel m = new JLabel("M = aumentar escala", JLabel.LEFT);
+		painelAtalhos.add(m);
+		JLabel n = new JLabel("N = diminuir escala", JLabel.LEFT);
+		painelAtalhos.add(n);
+		JLabel g = new JLabel("G = rotacionar no sentido anti-horário", JLabel.LEFT);
+		painelAtalhos.add(g);
+		JLabel h = new JLabel("H = rotacionar no sentido horário", JLabel.LEFT);
+		painelAtalhos.add(h);
+		
+		janelaAjuda.getContentPane().add(painelAtalhos, BorderLayout.SOUTH);
+		janelaAjuda.setResizable(false);
+		janelaAjuda.setVisible(true);
 	}
 }

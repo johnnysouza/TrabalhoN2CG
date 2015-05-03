@@ -109,7 +109,6 @@ public class Camera {
 		default:
 			//Operação não suportada
 		}
-		System.out.println("zoom:" + valorZoom);
 	}
 	
 	public enum MovimentoCamera {
