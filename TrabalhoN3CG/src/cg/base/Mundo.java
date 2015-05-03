@@ -278,13 +278,13 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	@Override
 	public void mouseClicked(final MouseEvent e) {
 		if (modoEdicao) {
-			int i = 0;
 			final int x = (e.getX() - (Executor.LARGURA_JANELA / 2));
 			final int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -1;
+			Ponto ponto = new Ponto(x, y);
 			ObjetoGrafico obj = null;
 
-			while ((obj == null) && (i < objetos.size())) {
-				obj = objetos.get(i).verificarSelecao(x, y);
+			for (int i = 0; (obj == null) && (i < objetos.size()); i++) {
+				obj = objetos.get(i).verificarSelecao(ponto, objetos.get(i).getTransformacao());
 				if (obj != null) {
 					if (objetoSelecionado != null) {
 						objetoSelecionado.setSelecionado(false);
@@ -292,7 +292,6 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 					objetoSelecionado = obj;
 					objetoSelecionado.setSelecionado(true);
 				}
-				i++;
 			}
 			
 		} else {
@@ -312,13 +311,13 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 					objetoEmCriacao.addPonto(ponto);
 					
 				} else { //senão verifica se selecionou algum objeto para ser o pai
-					int i = 0;
 					final int x = (e.getX() - (Executor.LARGURA_JANELA / 2));
 					final int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -1;
+					Ponto ponto = new Ponto(x, y);
 					ObjetoGrafico obj = null;
 
-					while ((obj == null) && (i < objetos.size())) {
-						obj = objetos.get(i).verificarSelecao(x, y);
+					for (int i = 0; (obj == null) && (i < objetos.size()); i++) {
+						obj = objetos.get(i).verificarSelecao(ponto, objetos.get(i).getTransformacao());
 						if (obj != null) {
 							if (objetoSelecionado != null) {
 								objetoSelecionado.setSelecionado(false);
@@ -326,7 +325,6 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 							objetoSelecionado = obj;
 							objetoSelecionado.setSelecionado(true);
 						}
-						i++;
 					}
 				}
 
@@ -358,11 +356,15 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 				final int x = (e.getX() - (Executor.LARGURA_JANELA / 2));
 				final int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -1;
 				
-				for (Ponto p : objetoSelecionado.getPontos()) {
-					if ((x > (p.getX() - MARGEMSELECAOPONTO)) && (x < (p.getX() + MARGEMSELECAOPONTO)) && (y > (p.getY() - MARGEMSELECAOPONTO)) && (y < (p.getY() + MARGEMSELECAOPONTO))) {
-						pontoSelecionado = p;
+				Ponto pontoClique = new Ponto(x, y);
+				Ponto ponto = null;
+				for (int i = 0; (ponto == null) && (i < objetos.size()); i++) {
+					ponto = objetos.get(i).verificarSelecaoVertice(pontoClique, objetos.get(i).getTransformacao());
+					if (ponto != null) {
+						pontoSelecionado = ponto;
 					}
 				}
+				
 			}
 		}
 	}
@@ -389,6 +391,10 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 			corAtual = Cor.VERMELHO;
 		} else {
 			corAtual = Cor.AZUL;
+		}
+		
+		if (objetoSelecionado != null) {
+			objetoSelecionado.setCor(corAtual);
 		}
 	}
 

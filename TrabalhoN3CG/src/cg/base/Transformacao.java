@@ -1,5 +1,7 @@
 package cg.base;
 
+import java.util.Arrays;
+
 /**
  * Responsável por definir a matriz de transformação global de um objeto gráfico.
  */
@@ -95,6 +97,43 @@ public class Transformacao {
               matriz[i%4]    *t.matriz[i/4*4]  +matriz[(i%4)+4] *t.matriz[i/4*4+1]
             + matriz[(i%4)+8]*t.matriz[i/4*4+2]+matriz[(i%4)+12]*t.matriz[i/4*4+3];
 		return matrizTrans;
+	}
+
+	/**
+	 * Aplica as transformações da matriz no ponto informado.
+	 * 
+	 * @param ponto o ponto para aplicar as transformações.
+	 * @return o ponto com as transformações aplicadas.
+	 */
+	public Ponto transformarPonto(Ponto ponto) {
+		Ponto pointResult = new Ponto(
+				matriz[0]*ponto.getX()  + matriz[4]*ponto.getY() + matriz[8]*ponto.getZ()  + matriz[12]*ponto.getW(),
+				matriz[1]*ponto.getX()  + matriz[5]*ponto.getY() + matriz[9]*ponto.getZ()  + matriz[13]*ponto.getW(),
+				matriz[2]*ponto.getX()  + matriz[6]*ponto.getY() + matriz[10]*ponto.getZ() + matriz[14]*ponto.getW(),
+                matriz[3]*ponto.getX()  + matriz[7]*ponto.getY() + matriz[11]*ponto.getZ() + matriz[15]*ponto.getW());
+		return pointResult;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(matriz);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Transformacao other = (Transformacao) obj;
+		if (!Arrays.equals(matriz, other.matriz))
+			return false;
+		return true;
 	}
 
 }

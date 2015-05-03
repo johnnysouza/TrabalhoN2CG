@@ -129,7 +129,6 @@ public class ObjetoGrafico {
 		for (ObjetoGrafico objetoGrafico : objetosFilhos) {
 			objetoGrafico.desenhar(gl);
 		}
-		gl.glPopMatrix();
 		
 		if (selecionado) {
 			gl.glPointSize(Mundo.MARGEMSELECAOPONTO);
@@ -139,9 +138,11 @@ public class ObjetoGrafico {
 				gl.glVertex3d(ponto.getX(), ponto.getY(), ponto.getZ());
 			}
 			gl.glEnd();
-			
+
 			bBox.desenharBBox(gl);
 		}
+		gl.glPopMatrix();
+		
 	}
 
 	/**
@@ -161,6 +162,7 @@ public class ObjetoGrafico {
 		if (bBox == null) {
 			bBox = new BBox();
 		}
+
 		bBox.calcularBBox(pontos);
 	}
 
@@ -217,34 +219,87 @@ public class ObjetoGrafico {
 	 *            - Ponto Y clicado
 	 * @return Objeto Grafico selecionado, podendo ser um filho ou this
 	 */
-	public ObjetoGrafico verificarSelecao(final int x, final int y) {
+	public ObjetoGrafico verificarSelecao(Ponto ponto, Transformacao transformacao) {
 		ObjetoGrafico obj = null;
 		int i = 0;
+
+		Transformacao novaTransformacao = null;
+		if (transformacao.equals(this.transformacao)) {
+			novaTransformacao = transformacao;
+		} else {
+			novaTransformacao = transformacao.transformarMatrix(this.transformacao);
+		}
+
 		while ((obj == null) && (i < objetosFilhos.size())) {
-			obj = objetosFilhos.get(i).verificarSelecao(x, y);
+			obj = objetosFilhos.get(i).verificarSelecao(ponto, novaTransformacao);
 			i++;
 		}
+		
 		if (obj == null) {
-			if (bBox.pontoInterno(x, y) && (scanLine(x, y))) {
+			final double x = ponto.getX();
+			final double y = ponto.getY();
+			if (bBox.pontoInterno(ponto, novaTransformacao) && (scanLine(x, y, novaTransformacao))) {
 				return this;
 			}
 		}
 		return obj;
 	}
+	
+	/**
+	 * Verifica se selecionou o vértice de um objeto gráfico ou algum dele filho.
+	 *
+	 * @param x - Ponto X clicado
+	 * @param y - Ponto Y clicado
+	 * @return o ponto do objeto gráfico selecionado.
+	 */
+	public Ponto verificarSelecaoVertice(Ponto ponto, Transformacao transformacao) {
+		Ponto pontoSelecionado = null;
+		int i = 0;
 
-	private boolean scanLine(final int x, final int y) {
+		Transformacao novaTransformacao = null;
+		if (transformacao.equals(this.transformacao)) {
+			novaTransformacao = transformacao;
+		} else {
+			novaTransformacao = transformacao.transformarMatrix(this.transformacao);
+		}
+
+		while ((pontoSelecionado == null) && (i < objetosFilhos.size())) {
+			pontoSelecionado = objetosFilhos.get(i).verificarSelecaoVertice(ponto, novaTransformacao);
+			i++;
+		}
+
+		final double x = ponto.getX();
+		final double y = ponto.getY();
+		for (Ponto p : pontos) {
+			Ponto pTrans = novaTransformacao.transformarPonto(p);
+			if ((x > (pTrans.getX() - Mundo.MARGEMSELECAOPONTO)) && (x < (pTrans.getX() + Mundo.MARGEMSELECAOPONTO)) && 
+					(y > (pTrans.getY() - Mundo.MARGEMSELECAOPONTO)) && (y < (pTrans.getY() + Mundo.MARGEMSELECAOPONTO))) {
+				return p;
+			}
+		}
+
+		return pontoSelecionado;
+	}
+
+	private boolean scanLine(final double x, final double y, Transformacao transformacao) {
 		int paridade = 0;
 		double value;
 		int j;
-		for(int i = 0; i < (pontos.size()); i++){
-			if (i == (pontos.size() - 1)){
+		
+		List<Ponto> pontosTransformados = new ArrayList<Ponto>();
+		for (Ponto ponto : pontos) {
+			pontosTransformados.add(transformacao.transformarPonto(ponto));
+		}
+		
+		for(int i = 0; i < (pontosTransformados.size()); i++){
+			if (i == (pontosTransformados.size() - 1)){
 				j = 0;
 			}else{
 				j = i + 1;
 			}
-			value = (y-pontos.get(i).getY()) / (pontos.get(j).getY() - pontos.get(i).getY());
+			value = (y-pontosTransformados.get(i).getY()) / (pontosTransformados.get(j).getY() - pontosTransformados.get(i).getY());
 			if((value > 0) && (value < 1)){
-				value = pontos.get(i).getX() + ((pontos.get(j).getX()-pontos.get(i).getX())*value);
+				value = pontosTransformados.get(i).getX() + ((pontosTransformados.get(j).getX()-pontosTransformados.get(i).getX())*value);
 				if(value > x){
 					paridade++;
 				}
@@ -259,15 +314,16 @@ public class ObjetoGrafico {
 	 * @return - se removeu ou não o objeto
 	 */
 	public boolean removerObjetoGraficoFilho(final ObjetoGrafico remover) {
-		//TODO nunca deleta o filho
 		boolean result = false;
 		int i = 0;
 		while (!result && (i < objetosFilhos.size())) {
-			result = objetosFilhos.get(i).removerObjetoGraficoFilho(remover);
+			if (objetosFilhos.get(i).equals(remover)) {
+				objetosFilhos.remove(remover);
+				result = true;
+			} else {
+				result = objetosFilhos.get(i).removerObjetoGraficoFilho(remover);
+			}
 			i++;
-		}
-		if (result) {
-			objetosFilhos.remove(i - 1);
 		}
 		return result;
 	}

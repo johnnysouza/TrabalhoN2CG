@@ -116,8 +116,21 @@ public class BBox {
 	 * @param y - Y do Ponto
 	 * @return -está dentro da bbox
 	 */
-	public boolean pontoInterno(final int x, final int y) {
-		return ((x < xMaxBBox) && (x > xMinBBox) && (y < yMaxBBox) && (y > yMinBBox));
+	public boolean pontoInterno(Ponto ponto, Transformacao transformacao) {
+		double x = ponto.getX();
+		double y = ponto.getY();
+		
+		Ponto xMinyMax = new Ponto(xMinBBox, yMaxBBox);
+		Ponto xMinyMaxTransformado = transformacao.transformarPonto(xMinyMax);
+		double xMinBBoxTransformado = xMinyMaxTransformado.getX();
+		double yMaxBBoxTransformado = xMinyMaxTransformado.getY();
+		
+		Ponto xMaxyMin = new Ponto(xMaxBBox, yMinBBox);
+		Ponto xMaxyMinTransformado = transformacao.transformarPonto(xMaxyMin);
+		double xMaxBBoxTransformado = xMaxyMinTransformado.getX();
+		double yMinBBoxTransformado = xMaxyMinTransformado.getY();
+		
+		return ((x < xMaxBBoxTransformado) && (x > xMinBBoxTransformado) && (y < yMaxBBoxTransformado) && (y > yMinBBoxTransformado));
 	}
 	
 	/**
