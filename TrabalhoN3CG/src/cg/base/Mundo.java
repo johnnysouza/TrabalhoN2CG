@@ -18,21 +18,24 @@ import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
 import cg.Executor;
-
 /**
  * Representa o mundo com o espaço gráfico e todos seus os objetos gráficos.
  */
 public class Mundo implements GLEventListener, KeyListener, MouseListener, MouseMotionListener {
 
-	public static final int MARGEMSELECAOPONTO = 15; // margem de erro para seleção de pontos, em pixels
+	/**
+	 * margem de erro para seleção de pontos, em pixels
+	 */
+	public static final int MARGEMSELECAOPONTO = 15;
 	private GL					gl;
 	private GLU					glu;
 	private GLAutoDrawable		glDrawable;
-	private Camera				camera;
-	private List<ObjetoGrafico>	objetos;
+	private final Camera				camera;
+	private final List<ObjetoGrafico>	objetos;
 	private ObjetoGrafico		objetoEmCriacao;
 	private Cor corAtual;
 	private boolean modoEdicao = false;
@@ -42,23 +45,26 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	private Ponto fimRastro;
 	private ObjetoGrafico objetoSelecionado;
 	private Ponto pontoSelecionado;
-	
+
 	private int antigoX;
 	private int antigoY;
 
+	/**
+	 * Cria o mundo, cria a camera e define a cor atual como azul
+	 */
 	public Mundo() {
 		camera = new Camera(-200, 200, -200, 200);
 		corAtual = Cor.AZUL;
 		objetos = new ArrayList<ObjetoGrafico>();
 	}
 
-	void adicionarObjetoGráfico(final ObjetoGrafico objetoGrafico) {
+	void adicionarObjetoGrafico(final ObjetoGrafico objetoGrafico) {
 		if (objetoGrafico != null) {
 			objetos.add(objetoGrafico);
 		}
 	}
 
-	void removerObjetoGráfico(final ObjetoGrafico objetoGrafico) {
+	void removerObjetoGrafico(final ObjetoGrafico objetoGrafico) {
 		objetos.remove(objetoGrafico);
 	}
 
@@ -77,7 +83,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 	/**
 	 * Atalhos:
-	 * 
+	 *
 	 * F1 = Ajuda - abre a tela com a lista dos atalhos
 	 * C = alterar cor entre azul, verde e vermelho
 	 * E = alterna entre modo de criação e edição
@@ -100,78 +106,78 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	@Override
 	public void keyPressed(final KeyEvent e) {
 		switch (e.getKeyCode()) {
-			case KeyEvent.VK_F1:
-				imprimirAtalhos();
-				break;
-			case KeyEvent.VK_C:
-				alterarCor();
-				break;
-			case KeyEvent.VK_E:
-				alternarModoEdicao();
-				break;
-			case KeyEvent.VK_W:
-				camera.pan(Camera.MovimentoCamera.MOVER_PARA_CIMA);
-				break;
-			case KeyEvent.VK_S:
-				camera.pan(Camera.MovimentoCamera.MOVER_PARA_BAIXO);
-				break;
-			case KeyEvent.VK_A:
-				camera.pan(Camera.MovimentoCamera.MOVER_PARA_ESQUERDA);
-				break;
-			case KeyEvent.VK_D:
-				camera.pan(Camera.MovimentoCamera.MOVER_PARA_DIREITA);
-				break;
-			case KeyEvent.VK_I:
-				camera.zoom(Camera.ZoomCamera.MAIS_ZOOM);
-				break;
-			case KeyEvent.VK_O:
-				camera.zoom(Camera.ZoomCamera.MENOS_ZOOM);
-				break;
-			case KeyEvent.VK_P:
-				alterarPrimitivaGrafica();
-				break;
-			case KeyEvent.VK_DELETE:
-				if (modoEdicao) { //Apenas no modo de edição pode deletar
-					deletarItem();
-				}
-				break;
-			case KeyEvent.VK_ESCAPE:
-				if (modoEdicao) { //Apenas no modo de edição pode haver seleção
-					retirarSelecao();
-				}
-				break;
-			case KeyEvent.VK_T:
-				terminarCriacaoObjeto();
-				break;
-			case KeyEvent.VK_Q:
-				if (objetos.size() > 0) { //Apenas pode-se criar um objeto filho, se já existir algum para ser o pai
-					objetoFilho = true;
-				}
-				break;
-			case KeyEvent.VK_M:
-				if (modoEdicao && objetoSelecionado != null) { //Está no modo de edição e possui objeto selecionado
-					objetoSelecionado.escalarObjeto(1.2);
-				}
-				break;
-			case KeyEvent.VK_N:
-				if (modoEdicao && objetoSelecionado != null) { //Está no modo de edição e possui objeto selecionado
-					objetoSelecionado.escalarObjeto(0.8);
-				}
-				break;
-			case KeyEvent.VK_G:
-				if (modoEdicao && objetoSelecionado != null) { //Está no modo de edição e possui objeto selecionado
-					objetoSelecionado.rotacionarObjeto(10);
-				}
-				break;
-			case KeyEvent.VK_H:
-				if (modoEdicao && objetoSelecionado != null) { //Está no modo de edição e possui objeto selecionado
-					objetoSelecionado.rotacionarObjeto(-10);
-				}
-				break;
-			default: 
-				//Atalho não suportado
+		case KeyEvent.VK_F1:
+			imprimirAtalhos();
+			break;
+		case KeyEvent.VK_C:
+			alterarCor();
+			break;
+		case KeyEvent.VK_E:
+			alternarModoEdicao();
+			break;
+		case KeyEvent.VK_W:
+			camera.pan(Camera.MovimentoCamera.MOVER_PARA_CIMA);
+			break;
+		case KeyEvent.VK_S:
+			camera.pan(Camera.MovimentoCamera.MOVER_PARA_BAIXO);
+			break;
+		case KeyEvent.VK_A:
+			camera.pan(Camera.MovimentoCamera.MOVER_PARA_ESQUERDA);
+			break;
+		case KeyEvent.VK_D:
+			camera.pan(Camera.MovimentoCamera.MOVER_PARA_DIREITA);
+			break;
+		case KeyEvent.VK_I:
+			camera.zoom(Camera.ZoomCamera.MAIS_ZOOM);
+			break;
+		case KeyEvent.VK_O:
+			camera.zoom(Camera.ZoomCamera.MENOS_ZOOM);
+			break;
+		case KeyEvent.VK_P:
+			alterarPrimitivaGrafica();
+			break;
+		case KeyEvent.VK_DELETE:
+			if (modoEdicao) { //Apenas no modo de edição pode deletar
+				deletarItem();
+			}
+			break;
+		case KeyEvent.VK_ESCAPE:
+			if (modoEdicao) { //Apenas no modo de edição pode haver seleção
+				retirarSelecao();
+			}
+			break;
+		case KeyEvent.VK_T:
+			terminarCriacaoObjeto();
+			break;
+		case KeyEvent.VK_Q:
+			if (objetos.size() > 0) { //Apenas pode-se criar um objeto filho, se já existir algum para ser o pai
+				objetoFilho = true;
+			}
+			break;
+		case KeyEvent.VK_M:
+			if (modoEdicao && (objetoSelecionado != null)) { //Está no modo de edição e possui objeto selecionado
+				objetoSelecionado.escalarObjeto(1.2);
+			}
+			break;
+		case KeyEvent.VK_N:
+			if (modoEdicao && (objetoSelecionado != null)) { //Está no modo de edição e possui objeto selecionado
+				objetoSelecionado.escalarObjeto(0.8);
+			}
+			break;
+		case KeyEvent.VK_G:
+			if (modoEdicao && (objetoSelecionado != null)) { //Está no modo de edição e possui objeto selecionado
+				objetoSelecionado.rotacionarObjeto(10);
+			}
+			break;
+		case KeyEvent.VK_H:
+			if (modoEdicao && (objetoSelecionado != null)) { //Está no modo de edição e possui objeto selecionado
+				objetoSelecionado.rotacionarObjeto(-10);
+			}
+			break;
+		default:
+			//Atalho não suportado
 		}
-		
+
 		glDrawable.display();
 	}
 
@@ -193,18 +199,18 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 			objetoEmCriacao.desenhar(gl);
 		}
 		desenharRastro();
-		
+
 		for (ObjetoGrafico objetoGrafico : objetos) {
 			objetoGrafico.desenhar(gl);
 		}
 	}
-	
+
 	private void desenharRastro() {
-		if (!modoEdicao && objetoEmCriacao != null && inicioRastro != null && fimRastro != null) {
+		if (!modoEdicao && (objetoEmCriacao != null) && (inicioRastro != null) && (fimRastro != null)) {
 			Cor cor = objetoEmCriacao.getCor();
-			
+
 			gl.glColor3d(cor.getR(), cor.getG(), cor.getB());
-			
+
 			gl.glBegin(GL.GL_LINE_STRIP);
 			gl.glVertex2d(inicioRastro.getX(), inicioRastro.getY());
 			gl.glVertex2d(fimRastro.getX(), fimRastro.getY());
@@ -214,14 +220,17 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 	@Override
 	public void displayChanged(final GLAutoDrawable arg0, final boolean arg1, final boolean arg2) {
-		
+
 	}
 
 	@Override
 	public void reshape(final GLAutoDrawable arg0, final int arg1, final int arg2, final int arg3, final int arg4) {
-		
+
 	}
 
+	/**
+	 * desenha os eixos da matriz
+	 */
 	public void SRU() {
 		// eixo x
 		gl.glLineWidth(1.0f);
@@ -244,7 +253,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		if (modoEdicao) {
 			int movimentoX = (e.getX() - antigoX);
 			int movimentoY = (e.getY() - antigoY) * -1;
-			
+
 			if (objetoSelecionado != null) {
 				if (pontoSelecionado != null) {
 					pontoSelecionado.setX(pontoSelecionado.getX() + movimentoX);
@@ -254,7 +263,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 					objetoSelecionado.transladarObjeto(movimentoX, movimentoY, 0);
 				}
 			}
-			
+
 			antigoX = e.getX();
 			antigoY = e.getY();
 		}
@@ -264,13 +273,13 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 
 	@Override
 	public void mouseMoved(final MouseEvent e) {
-		if (!modoEdicao && objetoEmCriacao != null) { 
+		if (!modoEdicao && (objetoEmCriacao != null)) {
 			//se estiver no modo de criação e já existir um objeto gráfico em criação então atualiza o final do rastro da nova aresta
 			int x = (e.getX() - (Executor.LARGURA_JANELA / 2));
 			int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -1;
 			fimRastro = new Ponto(x, y);
 		}
-		
+
 		if (gl != null) { //Evitar excessão ao mover o mouse antes de terminar a inicialização do JOGL
 			glDrawable.display();
 		}
@@ -294,23 +303,23 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 					objetoSelecionado.setSelecionado(true);
 				}
 			}
-			
+
 		} else {
-			if (objetoFilho) { // verifica se está adicionando um objeto filho 
-				
+			if (objetoFilho) { // verifica se está adicionando um objeto filho
+
 				if (objetoSelecionado != null) {//se sim então verifica se tem um objeto selecionado para ser o pai
 
-					if (objetoEmCriacao == null) { 
+					if (objetoEmCriacao == null) {
 						objetoEmCriacao = new ObjetoGrafico(corAtual);
 					}
-					
+
 					int x = (e.getX() - (Executor.LARGURA_JANELA / 2));
 					int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -1;
-					
+
 					inicioRastro = new Ponto(x, y);
 					Ponto ponto = new Ponto(x, y);
 					objetoEmCriacao.addPonto(ponto);
-					
+
 				} else { //senão verifica se selecionou algum objeto para ser o pai
 					final int x = (e.getX() - (Executor.LARGURA_JANELA / 2));
 					final int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -1;
@@ -333,16 +342,16 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 				if (objetoEmCriacao == null) { // verifica se não existe objeto em criação então cria
 					objetoEmCriacao = new ObjetoGrafico(corAtual);
 				}
-				
+
 				int x = (e.getX() - (Executor.LARGURA_JANELA / 2));
 				int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -1;
-				
+
 				inicioRastro = new Ponto(x, y);
 				Ponto ponto = new Ponto(x, y);
 				objetoEmCriacao.addPonto(ponto);
 			}
 		}
-		
+
 		glDrawable.display();
 	}
 
@@ -352,11 +361,11 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 			//Pontos de referência para a movimentoção do objetos gráficos/vértices
 			antigoX = e.getX();
 			antigoY = e.getY();
-			
+
 			if (objetoSelecionado != null) {
 				final int x = (e.getX() - (Executor.LARGURA_JANELA / 2));
 				final int y = (e.getY() - (Executor.ALTURA_JANELA / 2)) * -1;
-				
+
 				Ponto pontoClique = new Ponto(x, y);
 				Ponto ponto = null;
 				for (int i = 0; (ponto == null) && (i < objetos.size()); i++) {
@@ -365,24 +374,24 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 						pontoSelecionado = ponto;
 					}
 				}
-				
+
 			}
 		}
 	}
 
 	@Override
 	public void mouseReleased(final MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mouseEntered(final MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mouseExited(final MouseEvent e) {
-		
+
 	}
 
 	/**
@@ -396,7 +405,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		} else {
 			corAtual = Cor.AZUL;
 		}
-		
+
 		if (objetoSelecionado != null) {
 			objetoSelecionado.setCor(corAtual);
 		}
@@ -438,7 +447,7 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		}
 		pontoSelecionado = null;
 	}
-	
+
 	/**
 	 * Deleta um item selecionado, se for um objeto gráfico, deleta também os seus filhos.
 	 */
@@ -468,11 +477,11 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 	 * Finaliza a criação do objeto em criação.
 	 */
 	private void terminarCriacaoObjeto() {
-		if (!modoEdicao && objetoEmCriacao != null) { //tem um objeto em criação
+		if (!modoEdicao && (objetoEmCriacao != null)) { //tem um objeto em criação
 			objetoEmCriacao.setPrimitivaGrafica(primitivaGrafica);
 			objetoEmCriacao.calcularBBox();
 
-			if (objetoFilho && objetoSelecionado != null) { // verifica se é um objeto filho e se tem um objeto selecionado para ser pai dele
+			if (objetoFilho && (objetoSelecionado != null)) { // verifica se é um objeto filho e se tem um objeto selecionado para ser pai dele
 				objetoSelecionado.setSelecionado(false);
 				objetoFilho = false; //desmarca a flag que indica que o objeto gráfico em criação será um filho
 
@@ -494,49 +503,48 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		JFrame janelaAjuda = new JFrame("Atalhos e ajuda");
 		janelaAjuda.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		janelaAjuda.setBounds(720, 100, 400, 340);
-		
+
 		JPanel painelAtalhos = new JPanel(new GridLayout(19, 1));
-		
-		JLabel c = new JLabel("C = alterar cor", JLabel.LEFT);
+		JLabel c = new JLabel("C = alterar cor", SwingConstants.LEFT);
 		painelAtalhos.add(c);
-		JLabel e = new JLabel("E = alterar modo criação/edição", JLabel.LEFT);
+		JLabel e = new JLabel("E = alterar modo criação/edição", SwingConstants.LEFT);
 		painelAtalhos.add(e);
-		JLabel w = new JLabel("W = mover câmera para cima", JLabel.LEFT);
+		JLabel w = new JLabel("W = mover câmera para cima", SwingConstants.LEFT);
 		painelAtalhos.add(w);
-		JLabel s = new JLabel("S = mover câmera para baixo", JLabel.LEFT);
+		JLabel s = new JLabel("S = mover câmera para baixo", SwingConstants.LEFT);
 		painelAtalhos.add(s);
-		JLabel a = new JLabel("A = mover câmera para esquerda", JLabel.LEFT);
+		JLabel a = new JLabel("A = mover câmera para esquerda", SwingConstants.LEFT);
 		painelAtalhos.add(a);
-		JLabel d = new JLabel("D = mover câmera para direita", JLabel.LEFT);
+		JLabel d = new JLabel("D = mover câmera para direita", SwingConstants.LEFT);
 		painelAtalhos.add(d);
-		JLabel i = new JLabel("I = aumentar zoom", JLabel.LEFT);
+		JLabel i = new JLabel("I = aumentar zoom", SwingConstants.LEFT);
 		painelAtalhos.add(i);
-		JLabel o = new JLabel("O = diminuir zoom", JLabel.LEFT);
+		JLabel o = new JLabel("O = diminuir zoom", SwingConstants.LEFT);
 		painelAtalhos.add(o);
-		JLabel p = new JLabel("P = alterar primitiva gráfica", JLabel.LEFT);
+		JLabel p = new JLabel("P = alterar primitiva gráfica", SwingConstants.LEFT);
 		painelAtalhos.add(p);
-		JLabel delete = new JLabel("DELETE = deletar o polígono ou vértice", JLabel.LEFT);
+		JLabel delete = new JLabel("DELETE = deletar o polígono ou vértice", SwingConstants.LEFT);
 		painelAtalhos.add(delete);
-		JLabel esc = new JLabel("ESC = retirar seleção do polígono e vértice", JLabel.LEFT);
+		JLabel esc = new JLabel("ESC = retirar seleção do polígono e vértice", SwingConstants.LEFT);
 		painelAtalhos.add(esc);
-		JLabel t = new JLabel("T = terminar criação do objeto", JLabel.LEFT);
+		JLabel t = new JLabel("T = terminar criação do objeto", SwingConstants.LEFT);
 		painelAtalhos.add(t);
-		JLabel q = new JLabel("Q = adicionar objeto filho", JLabel.LEFT);
+		JLabel q = new JLabel("Q = adicionar objeto filho", SwingConstants.LEFT);
 		painelAtalhos.add(q);
-		JLabel m = new JLabel("M = aumentar escala", JLabel.LEFT);
+		JLabel m = new JLabel("M = aumentar escala", SwingConstants.LEFT);
 		painelAtalhos.add(m);
-		JLabel n = new JLabel("N = diminuir escala", JLabel.LEFT);
+		JLabel n = new JLabel("N = diminuir escala", SwingConstants.LEFT);
 		painelAtalhos.add(n);
-		JLabel g = new JLabel("G = rotacionar no sentido anti-horário", JLabel.LEFT);
+		JLabel g = new JLabel("G = rotacionar no sentido anti-horário", SwingConstants.LEFT);
 		painelAtalhos.add(g);
-		JLabel h = new JLabel("H = rotacionar no sentido horário", JLabel.LEFT);
+		JLabel h = new JLabel("H = rotacionar no sentido horário", SwingConstants.LEFT);
 		painelAtalhos.add(h);
-		JLabel objetoFilho = new JLabel("Ajuda: Para adicionar um objeto filho, pressionar Q no modo de ", JLabel.CENTER);
+		JLabel objetoFilho = new JLabel("Ajuda: Para adicionar um objeto filho, pressionar Q no modo de ", SwingConstants.CENTER);
 		painelAtalhos.add(objetoFilho);
-		JLabel objetoFilho2 = new JLabel("criação, selecionar um objeto para ser o pai e criar o objeto filho", JLabel.CENTER);
+		JLabel objetoFilho2 = new JLabel("criação, selecionar um objeto para ser o pai e criar o objeto filho", SwingConstants.CENTER);
 		painelAtalhos.add(objetoFilho2);
-		
-		
+
+
 		janelaAjuda.getContentPane().add(painelAtalhos, BorderLayout.SOUTH);
 		janelaAjuda.setResizable(false);
 		janelaAjuda.setVisible(true);

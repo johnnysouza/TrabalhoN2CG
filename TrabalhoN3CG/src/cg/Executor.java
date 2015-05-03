@@ -10,12 +10,15 @@ import javax.swing.WindowConstants;
 import cg.base.Mundo;
 
 public class Executor extends JFrame{
-	
+
 	private static final long serialVersionUID = 1L;
-	private Mundo renderer = new Mundo();
+	private final Mundo renderer = new Mundo();
 
 	public static final int LARGURA_JANELA = 400, ALTURA_JANELA = 400;
 
+	/**
+	 * inicia a janela, cria o mundo e o inicia
+	 */
 	public Executor() {
 		// Cria o frame.
 		super("CG-N3 - Pressione F1 para exibir atalhos");
@@ -44,13 +47,13 @@ public class Executor extends JFrame{
 		canvas.addMouseListener(renderer);
 		canvas.addMouseMotionListener(renderer);
 		canvas.requestFocus();
-		
+
 		System.out.println("Pressione F1 para exibir ajuda dos atalhos");
-		
+
 		setResizable(false);
 	}
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		new Executor().setVisible(true);
 	}
 

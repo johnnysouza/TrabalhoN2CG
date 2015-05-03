@@ -110,43 +110,42 @@ public class BBox {
 	}
 
 	/**
-	 * Verifica se os pontos passados por parâmetro estão dentro da BBOx ou não.
-	 *
-	 * @param x - X do Ponto
-	 * @param y - Y do Ponto
+	 * Verifica se o ponto passado por parâmetro está dentro da BBox ou não.
+	 * @param ponto ponto a ser verificado
+	 * @param transformacao transformação que o ponto sofreu, será considerada na validação
 	 * @return - está dentro da bbox.
 	 */
-	public boolean pontoInterno(Ponto ponto, Transformacao transformacao) {
+	public boolean pontoInterno(final Ponto ponto, final Transformacao transformacao) {
 		double x = ponto.getX();
 		double y = ponto.getY();
-		
+
 		Ponto xMinyMax = new Ponto(xMinBBox, yMaxBBox);
 		Ponto xMinyMaxTransformado = transformacao.transformarPonto(xMinyMax);
 		double xMinBBoxTransformado = xMinyMaxTransformado.getX();
 		double yMaxBBoxTransformado = xMinyMaxTransformado.getY();
-		
+
 		Ponto xMaxyMin = new Ponto(xMaxBBox, yMinBBox);
 		Ponto xMaxyMinTransformado = transformacao.transformarPonto(xMaxyMin);
 		double xMaxBBoxTransformado = xMaxyMinTransformado.getX();
 		double yMinBBoxTransformado = xMaxyMinTransformado.getY();
-		
+
 		return ((x < xMaxBBoxTransformado) && (x > xMinBBoxTransformado) && (y < yMaxBBoxTransformado) && (y > yMinBBoxTransformado));
 	}
-	
+
 	/**
 	 * Desenha a BBox.
-	 * 
+	 *
 	 * @param gl a instância para desenhar no mundo.
 	 */
-	public void desenharBBox(GL gl) {
+	public void desenharBBox(final GL gl) {
 		gl.glColor3d(0.0, 0.0, 0.0);
 		gl.glBegin(GL.GL_LINE_LOOP);
-		
+
 		gl.glVertex3d(xMinBBox, yMaxBBox, 0);
 		gl.glVertex3d(xMaxBBox, yMaxBBox, 0);
 		gl.glVertex3d(xMaxBBox, yMinBBox, 0);
 		gl.glVertex3d(xMinBBox, yMinBBox, 0);
-		
+
 		gl.glEnd();
 	}
 }

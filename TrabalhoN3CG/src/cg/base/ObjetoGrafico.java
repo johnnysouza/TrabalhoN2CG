@@ -74,12 +74,12 @@ public class ObjetoGrafico {
 	public List<ObjetoGrafico> getObjetosFilhos() {
 		return objetosFilhos;
 	}
-	
+
 	public boolean isSelecionado() {
 		return selecionado;
 	}
-	
-	public void setSelecionado(boolean selecionado) {
+
+	public void setSelecionado(final boolean selecionado) {
 		this.selecionado = selecionado;
 	}
 
@@ -126,7 +126,7 @@ public class ObjetoGrafico {
 		for (ObjetoGrafico objetoGrafico : objetosFilhos) {
 			objetoGrafico.desenhar(gl);
 		}
-		
+
 		if (selecionado) {
 			gl.glPointSize(Mundo.MARGEMSELECAOPONTO);
 			gl.glColor3d(cor.getR(), cor.getG(), cor.getB());
@@ -139,7 +139,7 @@ public class ObjetoGrafico {
 			bBox.desenharBBox(gl);
 		}
 		gl.glPopMatrix();
-		
+
 	}
 
 	/**
@@ -207,13 +207,12 @@ public class ObjetoGrafico {
 	}
 
 	/**
-	 * Verifica se selecionou o objeto Grafico ou algum filho
-	 *
-	 * @param x - Ponto X clicado
-	 * @param y - Ponto Y clicado
+	 * Verifica se selecionou o objeto Grafico ou algum filho, considerando as transformações sofridas
+	 * @param ponto ponto a ser verificado
+	 * @param transformacao transformações sofridas pelo objeto
 	 * @return Objeto Grafico selecionado, podendo ser um filho ou this
 	 */
-	public ObjetoGrafico verificarSelecao(Ponto ponto, Transformacao transformacao) {
+	public ObjetoGrafico verificarSelecao(final Ponto ponto, final Transformacao transformacao) {
 		ObjetoGrafico obj = null;
 		int i = 0;
 
@@ -228,7 +227,7 @@ public class ObjetoGrafico {
 			obj = objetosFilhos.get(i).verificarSelecao(ponto, novaTransformacao);
 			i++;
 		}
-		
+
 		if (obj == null) {
 			final double x = ponto.getX();
 			final double y = ponto.getY();
@@ -238,15 +237,14 @@ public class ObjetoGrafico {
 		}
 		return obj;
 	}
-	
+
 	/**
 	 * Verifica se selecionou o vértice de um objeto gráfico ou algum dele filho.
-	 *
-	 * @param x - Ponto X clicado
-	 * @param y - Ponto Y clicado
+	 * @param ponto ponto a ser verificado
+	 * @param transformacao transformações sofridas pelo objeto
 	 * @return o ponto do objeto gráfico selecionado.
 	 */
-	public Ponto verificarSelecaoVertice(Ponto ponto, Transformacao transformacao) {
+	public Ponto verificarSelecaoVertice(final Ponto ponto, final Transformacao transformacao) {
 		Ponto pontoSelecionado = null;
 		int i = 0;
 
@@ -266,7 +264,7 @@ public class ObjetoGrafico {
 		final double y = ponto.getY();
 		for (Ponto p : pontos) {
 			Ponto pTrans = novaTransformacao.transformarPonto(p);
-			if ((x > (pTrans.getX() - Mundo.MARGEMSELECAOPONTO)) && (x < (pTrans.getX() + Mundo.MARGEMSELECAOPONTO)) && 
+			if ((x > (pTrans.getX() - Mundo.MARGEMSELECAOPONTO)) && (x < (pTrans.getX() + Mundo.MARGEMSELECAOPONTO)) &&
 					(y > (pTrans.getY() - Mundo.MARGEMSELECAOPONTO)) && (y < (pTrans.getY() + Mundo.MARGEMSELECAOPONTO))) {
 				return p;
 			}
@@ -275,16 +273,16 @@ public class ObjetoGrafico {
 		return pontoSelecionado;
 	}
 
-	private boolean scanLine(final double x, final double y, Transformacao transformacao) {
+	private boolean scanLine(final double x, final double y, final Transformacao transformacao) {
 		int paridade = 0;
 		double value;
 		int j;
-		
+
 		List<Ponto> pontosTransformados = new ArrayList<Ponto>();
 		for (Ponto ponto : pontos) {
 			pontosTransformados.add(transformacao.transformarPonto(ponto));
 		}
-		
+
 		for(int i = 0; i < (pontosTransformados.size()); i++){
 			if (i == (pontosTransformados.size() - 1)){
 				j = 0;
@@ -387,7 +385,7 @@ public class ObjetoGrafico {
 
 		transformacao = transformacao.transformarMatrix(matrizGlobal);
 	}
-	
+
 	/**
 	 * Limpa as transformações do objeto selecionado e dos seus filhos
 	 */
