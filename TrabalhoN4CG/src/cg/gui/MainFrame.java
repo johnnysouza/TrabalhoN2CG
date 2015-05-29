@@ -87,25 +87,25 @@ public class MainFrame extends JFrame {
 		JLabel lblpts_1 = new JLabel("0pts");
 		lblpts_1.setFont(defaultFont);
 		lblpts_1.setForeground(Color.GREEN);
-		lblpts_1.setBounds(140, 20, 46, 14);
+		lblpts_1.setBounds(140, 30, 46, 14);
 		info.add(lblpts_1);
 
 		JLabel lblpts_2 = new JLabel("0pts");
 		lblpts_2.setFont(defaultFont);
 		lblpts_2.setForeground(Color.RED);
-		lblpts_2.setBounds(140, 70, 46, 14);
+		lblpts_2.setBounds(140, 80, 46, 14);
 		info.add(lblpts_2);
 
 		JLabel lblpts_3 = new JLabel("4pts");
 		lblpts_3.setFont(defaultFont);
 		lblpts_3.setForeground(Color.BLUE);
-		lblpts_3.setBounds(140, 120, 46, 14);
+		lblpts_3.setBounds(140, 130, 46, 14);
 		info.add(lblpts_3);
 
 		JLabel lblpts_4 = new JLabel("3pts");
 		lblpts_4.setFont(defaultFont);
 		lblpts_4.setForeground(Color.YELLOW);
-		lblpts_4.setBounds(140, 170, 46, 14);
+		lblpts_4.setBounds(140, 180, 46, 14);
 		info.add(lblpts_4);
 
 		ImageIcon img = new ImageIcon("about16.gif");
