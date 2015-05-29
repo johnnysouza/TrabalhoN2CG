@@ -74,6 +74,8 @@ public class Mundo implements GLEventListener, KeyListener, MouseListener, Mouse
 		gl = drawable.getGL();
 		glu = new GLU();
 		glDrawable.setGL(new DebugGL(gl));
+		gl.glEnable(GL.GL_DEPTH_TEST);
+		gl.glEnable(GL.GL_CULL_FACE);
 		gl.glClearColor(0.85f, 0.85f, 0.85f, 1.0f); // Cinza claro de fundo
 	}
 
