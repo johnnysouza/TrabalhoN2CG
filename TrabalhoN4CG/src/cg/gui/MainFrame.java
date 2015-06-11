@@ -19,6 +19,8 @@ public class MainFrame extends JFrame {
 
 	private final JPanel contentPane;
 	private final Mundo renderer = new Mundo();
+	private final JLabel activePLayer;
+	private final int currentPlayer = 0;
 
 	/**
 	 * Launch the application.
@@ -108,9 +110,10 @@ public class MainFrame extends JFrame {
 		lblpts_4.setBounds(140, 180, 46, 14);
 		info.add(lblpts_4);
 
-		ImageIcon img = new ImageIcon("about16.gif");
-		JLabel activePLayer = new JLabel(img);
-		activePLayer.setBounds(0, 20, 30, 14);
+		ImageIcon img = new ImageIcon("resources\\seta.png");
+		activePLayer = new JLabel();
+		activePLayer.setIcon(img);
+		nextPlayer();
 		info.add(activePLayer);
 
 		JPanel game = new JPanel();
@@ -140,5 +143,9 @@ public class MainFrame extends JFrame {
 		canvas.requestFocus();
 
 		setResizable(false);
+	}
+
+	private void nextPlayer() {
+		activePLayer.setBounds(0, 30 + (currentPlayer * 50), 20, 14);
 	}
 }
