@@ -13,12 +13,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import cg.base.Mundo;
+import cg.mundos.Tabuleiro;
 
 public class MainFrame extends JFrame {
 
 	private final JPanel contentPane;
-	private final Mundo renderer = new Mundo();
+	private final Tabuleiro renderer = new Tabuleiro();
 	private final JLabel activePLayer;
 	private final int currentPlayer = 0;
 
@@ -52,6 +52,7 @@ public class MainFrame extends JFrame {
 
 		JPanel dado = new JPanel();
 		dado.setBounds(600, 400, 200, 200);
+		dado.setLayout(new BorderLayout());
 		contentPane.add(dado);
 
 		JPanel info = new JPanel();
@@ -98,13 +99,13 @@ public class MainFrame extends JFrame {
 		lblpts_2.setBounds(140, 80, 46, 14);
 		info.add(lblpts_2);
 
-		JLabel lblpts_3 = new JLabel("4pts");
+		JLabel lblpts_3 = new JLabel("0pts");
 		lblpts_3.setFont(defaultFont);
 		lblpts_3.setForeground(Color.BLUE);
 		lblpts_3.setBounds(140, 130, 46, 14);
 		info.add(lblpts_3);
 
-		JLabel lblpts_4 = new JLabel("3pts");
+		JLabel lblpts_4 = new JLabel("0pts");
 		lblpts_4.setFont(defaultFont);
 		lblpts_4.setForeground(Color.YELLOW);
 		lblpts_4.setBounds(140, 180, 46, 14);
@@ -118,6 +119,7 @@ public class MainFrame extends JFrame {
 
 		JPanel game = new JPanel();
 		game.setBounds(0, 0, 600, 600);
+		game.setLayout(new BorderLayout());
 		contentPane.add(game);
 
 		/*
@@ -135,7 +137,7 @@ public class MainFrame extends JFrame {
 		 * Gl, de mouse e teclado
 		 */
 		GLCanvas canvas = new GLCanvas(glCaps);
-		getContentPane().add(canvas, BorderLayout.CENTER);
+		game.add(canvas, BorderLayout.CENTER);
 		canvas.addGLEventListener(renderer);
 		canvas.addKeyListener(renderer);
 		canvas.addMouseListener(renderer);

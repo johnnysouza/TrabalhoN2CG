@@ -128,7 +128,7 @@ public class ObjetoGrafico {
 		}
 
 		if (selecionado) {
-			gl.glPointSize(Mundo.MARGEMSELECAOPONTO);
+//			gl.glPointSize(Mundo.MARGEMSELECAOPONTO);
 			gl.glColor3d(cor.getR(), cor.getG(), cor.getB());
 			gl.glBegin(GL.GL_POINTS);
 			for (Ponto ponto : pontos) {
@@ -264,10 +264,10 @@ public class ObjetoGrafico {
 		final double y = ponto.getY();
 		for (Ponto p : pontos) {
 			Ponto pTrans = novaTransformacao.transformarPonto(p);
-			if ((x > (pTrans.getX() - Mundo.MARGEMSELECAOPONTO)) && (x < (pTrans.getX() + Mundo.MARGEMSELECAOPONTO)) &&
-					(y > (pTrans.getY() - Mundo.MARGEMSELECAOPONTO)) && (y < (pTrans.getY() + Mundo.MARGEMSELECAOPONTO))) {
+//			if ((x > (pTrans.getX() - Mundo.MARGEMSELECAOPONTO)) && (x < (pTrans.getX() + Mundo.MARGEMSELECAOPONTO)) &&
+//					(y > (pTrans.getY() - Mundo.MARGEMSELECAOPONTO)) && (y < (pTrans.getY() + Mundo.MARGEMSELECAOPONTO))) {
 				return p;
-			}
+//			}
 		}
 
 		return pontoSelecionado;
