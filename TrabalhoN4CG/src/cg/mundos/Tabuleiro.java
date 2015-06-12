@@ -13,11 +13,12 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
 import cg.base.Cor;
+import cg.business.LudoBusiness;
 
 import com.sun.opengl.util.GLUT;
 
 public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
-		MouseMotionListener {
+MouseMotionListener {
 
 	private GL gl;
 	private GLU glu;
@@ -25,69 +26,93 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 	private GLAutoDrawable glDrawable;
 	private double xEye, yEye, zEye;
 	private double xCenter, yCenter, zCenter;
+	private final LudoBusiness ludo;
+	private boolean aguardandoSelecao;
+
+	public Tabuleiro(final LudoBusiness ludo) {
+		this.ludo = ludo;
+		ludo.setTabuleiro(this);
+	}
 
 	@Override
-	public void mouseDragged(MouseEvent arg0) {
+	public void mouseDragged(final MouseEvent arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent arg0) {
+	public void mouseMoved(final MouseEvent arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
+	public void mouseClicked(final MouseEvent arg0) {
+		Object pecaSelecionada = selecionarPeca(arg0);
+		if(pecaSelecionada != null){
+			movimentarPeca(pecaSelecionada);
+			terminouJogada();
+			JogadaComputador();
+		}
+	}
+
+	private void JogadaComputador() {
+		// TODO faz animação da movimentação dos dados e das peças dos players
+	}
+
+	private void movimentarPeca(final Object pecaSelecionada) {
+		// TODO faz animação da movimentação da peça
+	}
+
+	private Object selecionarPeca(final MouseEvent arg0) {
+		// TODO caso tenha selecinoado alguma peca do jogador, retorna ela, necessário alterar classe de retorno quando definir
+		return null;
+	}
+
+	@Override
+	public void mouseEntered(final MouseEvent arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
+	public void mouseExited(final MouseEvent arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
+	public void mousePressed(final MouseEvent arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
+	public void mouseReleased(final MouseEvent arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
+	public void keyPressed(final KeyEvent arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void keyPressed(KeyEvent arg0) {
+	public void keyReleased(final KeyEvent arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void keyReleased(KeyEvent arg0) {
+	public void keyTyped(final KeyEvent arg0) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void init(GLAutoDrawable drawable) {
+	public void init(final GLAutoDrawable drawable) {
 		glDrawable = drawable;
 		gl = drawable.getGL();
 		glu = new GLU();
@@ -112,15 +137,15 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 	}
 
 	@Override
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
-			int height) {
+	public void reshape(final GLAutoDrawable drawable, final int x, final int y, final int width,
+			final int height) {
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
 		gl.glViewport(0, 0, width, height);
 
 		// glu.gluOrtho2D(-30.0f, 30.0f, -30.0f, 30.0f);
 		glu.gluPerspective(60, width / height, 0.1, 100); // projecao Perpectiva
-															// 1 pto fuga 3D
+		// 1 pto fuga 3D
 		// gl.glFrustum (-5.0, 5.0, -5.0, 5.0, 10, 100); // projecao Perpectiva
 		// 1 pto fuga 3D
 		// gl.glOrtho(-30.0f, 30.0f, -30.0f, 30.0f, -30.0f, 30.0f); // projecao
@@ -129,7 +154,7 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 	}
 
 	@Override
-	public void display(GLAutoDrawable arg0) {
+	public void display(final GLAutoDrawable arg0) {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
 		gl.glMatrixMode(GL.GL_MODELVIEW);
@@ -149,7 +174,7 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		gl.glFlush();
 	}
 
-	private void drawCube(float translacao[], float escala[], Cor cor) {
+	private void drawCube(final float translacao[], final float escala[], final Cor cor) {
 		gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE, cor.toFloatArray(), 0);
 		gl.glEnable(GL.GL_LIGHTING);
 
@@ -190,9 +215,19 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 	}
 
 	@Override
-	public void displayChanged(GLAutoDrawable arg0, boolean arg1, boolean arg2) {
+	public void displayChanged(final GLAutoDrawable arg0, final boolean arg1, final boolean arg2) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void aguardarSelecao() {
+		aguardandoSelecao = true;
+		//TODO: animação de aguardando seleção de peça
+	}
+
+	private void terminouJogada() {
+		aguardandoSelecao = false;
+		//TODO: animação de fim de jogada
 	}
 
 }

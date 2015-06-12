@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLCapabilities;
 import javax.swing.ImageIcon;
@@ -14,12 +13,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import cg.business.LudoBusiness;
+import cg.mundos.Dado;
 import cg.mundos.Tabuleiro;
 
 public class MainFrame extends JFrame {
 
 	private final JPanel contentPane;
-	private final Tabuleiro renderer = new Tabuleiro();
+	private final Tabuleiro rendererTabuleiro;
+	private final Dado rendererDado;
 	private final JLabel activePLayer;
 	private final int currentPlayer = 0;
 
@@ -133,21 +135,31 @@ public class MainFrame extends JFrame {
 		glCaps.setGreenBits(8);
 		glCaps.setAlphaBits(8);
 
+		LudoBusiness ludo = new LudoBusiness();
+		rendererDado = new Dado(ludo);
+		rendererTabuleiro = new Tabuleiro(ludo);
+
 		/*
 		 * Cria um canvas, adiciona ao frame e objeto "ouvinte" para os eventos
 		 * Gl, de mouse e teclado
 		 */
 		GLCanvas canvas = new GLCanvas(glCaps);
 		game.add(canvas, BorderLayout.CENTER);
-		canvas.addGLEventListener(renderer);
-		canvas.addKeyListener(renderer);
-		canvas.addMouseListener(renderer);
-		canvas.addMouseMotionListener(renderer);
+		canvas.addGLEventListener(rendererTabuleiro);
+		canvas.addKeyListener(rendererTabuleiro);
+		canvas.addMouseListener(rendererTabuleiro);
+		canvas.addMouseMotionListener(rendererTabuleiro);
 		canvas.requestFocus();
+
+		GLCanvas canvas2 = new GLCanvas(glCaps);
+		dado.add(canvas2, BorderLayout.CENTER);
+		canvas2.addGLEventListener(rendererDado);
+		canvas2.addMouseListener(rendererDado);
+		canvas2.requestFocus();
 
 		setResizable(false);
 	}
-	
+
 	private void nextPlayer() {
 		activePLayer.setBounds(0, 30 + (currentPlayer * 50), 20, 14);
 	}
