@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 
+import javax.media.opengl.GL;
 import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLCapabilities;
 import javax.swing.ImageIcon;
@@ -146,7 +147,7 @@ public class MainFrame extends JFrame {
 
 		setResizable(false);
 	}
-
+	
 	private void nextPlayer() {
 		activePLayer.setBounds(0, 30 + (currentPlayer * 50), 20, 14);
 	}

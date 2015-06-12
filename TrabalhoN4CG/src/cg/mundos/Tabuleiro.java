@@ -12,6 +12,8 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
+import cg.base.Cor;
+
 import com.sun.opengl.util.GLUT;
 
 public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
@@ -100,6 +102,8 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		yCenter = 0.0f;
 		zCenter = 0.0f;
 
+		ligarLuz();
+
 		gl.glEnable(GL.GL_CULL_FACE);
 		// gl.glDisable(GL.GL_CULL_FACE);
 
@@ -127,27 +131,26 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 	@Override
 	public void display(GLAutoDrawable arg0) {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		gl.glMatrixMode(GL.GL_PROJECTION);
-		gl.glLoadIdentity();
+
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		glu.gluLookAt(xEye, yEye, zEye, xCenter, yCenter, zCenter, 0.0f, 1.0f,
 				0.0f);
 
+		drawAxis();
 		// SRU();
 		gl.glColor3f(1.0f, 0.0f, 0.0f);
-		
+
 		float translacaoCubo1[] = { 0.0f, 0.0f, 0.0f };
-		float escalaCubo1[]     = { 2.0f, 2.0f, 2.0f };
-		
-		drawCube(translacaoCubo1, escalaCubo1);
+		float escalaCubo1[] = { 2.0f, 2.0f, 2.0f };
+
+		drawCube(translacaoCubo1, escalaCubo1, Cor.AMARELO);
 
 		gl.glFlush();
 	}
 
-	private void drawCube(float translacao[], float escala[]) {
-		float corRed[] = { 1.0f, 0.0f, 0.0f, 1.0f };
-		gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE, corRed, 0);
+	private void drawCube(float translacao[], float escala[], Cor cor) {
+		gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE, cor.toFloatArray(), 0);
 		gl.glEnable(GL.GL_LIGHTING);
 
 		gl.glPushMatrix();
@@ -159,24 +162,31 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		gl.glDisable(GL.GL_LIGHTING);
 	}
 
-	/**
-	 * desenha os eixos da matriz
-	 */
-	public void SRU() {
-		// eixo x
-		gl.glLineWidth(1.0f);
-
+	public void drawAxis() {
+		// eixo X - Red
 		gl.glColor3f(1.0f, 0.0f, 0.0f);
 		gl.glBegin(GL.GL_LINES);
-		gl.glVertex2f(-150.0f, 0.0f);
-		gl.glVertex2f(150.0f, 0.0f);
+		gl.glVertex3f(0.0f, 0.0f, 0.0f);
+		gl.glVertex3f(10.0f, 0.0f, 0.0f);
 		gl.glEnd();
-		// eixo y
+		// eixo Y - Green
 		gl.glColor3f(0.0f, 1.0f, 0.0f);
 		gl.glBegin(GL.GL_LINES);
-		gl.glVertex2f(0.0f, -150.0f);
-		gl.glVertex2f(0.0f, 150.0f);
+		gl.glVertex3f(0.0f, 0.0f, 0.0f);
+		gl.glVertex3f(0.0f, 10.0f, 0.0f);
 		gl.glEnd();
+		// eixo Z - Blue
+		gl.glColor3f(0.0f, 0.0f, 1.0f);
+		gl.glBegin(GL.GL_LINES);
+		gl.glVertex3f(0.0f, 0.0f, 0.0f);
+		gl.glVertex3f(0.0f, 0.0f, 10.0f);
+		gl.glEnd();
+	}
+
+	private void ligarLuz() {
+		float posLight[] = { 5.0f, 5.0f, 10.0f, 0.0f };
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, posLight, 0);
+		gl.glEnable(GL.GL_LIGHT0);
 	}
 
 	@Override

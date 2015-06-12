@@ -8,34 +8,35 @@ public class Cor {
 	public static final Cor AZUL = new Cor(0, 0, 1);
 	public static final Cor VERDE = new Cor(0, 1, 0);
 	public static final Cor VERMELHO = new Cor(1, 0, 0);
+	public static final Cor AMARELO = new Cor(1, 1, 0);
 	
-	private double R;
-	private double G;
-	private double B;
+	private float R;
+	private float G;
+	private float B;
 	
-	public Cor(double r, double g, double b) {
+	public Cor(float r, float g, float b) {
 		super();
 		R = r;
 		G = g;
 		B = b;
 	}
 	
-	public double getR() {
+	public float getR() {
 		return R;
 	}
-	public void setR(double r) {
+	public void setR(float r) {
 		R = r;
 	}
-	public double getG() {
+	public float getG() {
 		return G;
 	}
-	public void setG(double g) {
+	public void setG(float g) {
 		G = g;
 	}
-	public double getB() {
+	public float getB() {
 		return B;
 	}
-	public void setB(double b) {
+	public void setB(float b) {
 		B = b;
 	}
 
@@ -69,6 +70,10 @@ public class Cor {
 		if (Double.doubleToLongBits(R) != Double.doubleToLongBits(other.R))
 			return false;
 		return true;
+	}
+	
+	public float[] toFloatArray() {
+		return new float[]{R, G, B};
 	}
 
 }
