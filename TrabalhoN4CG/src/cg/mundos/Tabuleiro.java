@@ -34,7 +34,6 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 
 	private GL gl;
 	private GLU glu;
-	private GLUT glut;
 	private GLAutoDrawable glDrawable;
 	private double xEye, yEye, zEye;
 	private double xCenter, yCenter, zCenter;
@@ -141,7 +140,6 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		glDrawable = drawable;
 		gl = drawable.getGL();
 		glu = new GLU();
-		glut = new GLUT();
 		glDrawable.setGL(new DebugGL(gl));
 
 		gl.glEnable(GL.GL_LIGHT0);
@@ -195,14 +193,7 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		gl.glLoadIdentity();
 		gl.glViewport(0, 0, width, height);
 
-		// glu.gluOrtho2D(-30.0f, 30.0f, -30.0f, 30.0f);
 		glu.gluPerspective(60, width / height, 0.1, 100); // projecao Perpectiva
-		// 1 pto fuga 3D
-		// gl.glFrustum (-5.0, 5.0, -5.0, 5.0, 10, 100); // projecao Perpectiva
-		// 1 pto fuga 3D
-		// gl.glOrtho(-30.0f, 30.0f, -30.0f, 30.0f, -30.0f, 30.0f); // projecao
-		// Ortogonal 3D
-
 	}
 
 	@Override
@@ -219,7 +210,6 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		defineIluminacao();
 
 		drawAxis();
-		// SRU();
 		gl.glColor3f(1.0f, 0.0f, 0.0f);
 
 		float translacaoCubo1[] = { 0.0f, 0.0f, 0.0f };
@@ -354,8 +344,7 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		try {
 			image = ImageIO.read(new File(fileName));
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Erro na leitura do arquivo "
-					+ fileName);
+			System.err.println("Erro na leitura do arquivo");
 		}
 
 		// Obtém largura e altura
