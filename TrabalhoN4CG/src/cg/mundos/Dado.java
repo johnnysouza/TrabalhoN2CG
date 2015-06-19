@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.media.opengl.DebugGL;
@@ -30,10 +31,20 @@ public class Dado implements GLEventListener, MouseListener {
 	private int width, height;
 	private final TextureData[] td = new TextureData[6];
 	private final ByteBuffer[] buffer = new ByteBuffer[6];
-
 	private final LudoBusiness ludo;
-
 	private MouseEvent mouse;
+	private int gear;
+	private int posicaoAtual = 1;
+	private int novaPosicao;
+	private boolean mudouPosicao;
+	private boolean firstTime = true;
+	private static int[][] rotates = new int[][]{
+		{100,30,50,20,70,80},
+		{100,30,50,20,70,80},
+		{100,30,50,20,10,80},
+		{100,30,50,20,70,80},
+		{100,30,50,20,70,80},
+		{100,30,50,20,70,80}};
 
 	public Dado(final LudoBusiness ludo) {
 		this.ludo = ludo;
@@ -45,8 +56,12 @@ public class Dado implements GLEventListener, MouseListener {
 	}
 
 	private int rolarDado() {
-		// TODO Animação do dado rolando, retorna o valor do dado
-		return 0;
+		Random random = new Random();
+		int retorno = random.nextInt(7);
+		while(retorno == 0){
+			retorno = random.nextInt(7);
+		}
+		return retorno;
 	}
 
 	@Override
@@ -76,14 +91,24 @@ public class Dado implements GLEventListener, MouseListener {
 
 		especificaParametrosVisualizacao();
 
-		drawCube();
-
-		if ((mouse != null) && (mouse.getButton() == MouseEvent.BUTTON1)){
+		if (((mouse != null) && (mouse.getButton() == MouseEvent.BUTTON1)) || firstTime){
 			if (ludo.podeRolarDado()) {//TODO:validar também se foi clicado no mouse
-				int valor = rolarDado();
-				ludo.dadoRolado(valor);
+				novaPosicao = rolarDado();
+				ludo.dadoRolado(novaPosicao);
+				mudouPosicao = true;
+				firstTime = false;
 			}
 		}
+
+		gl.glPushMatrix();
+		if(mudouPosicao){
+			gl.glRotatef(rotates[posicaoAtual-1][novaPosicao-1], 0, 1, 0);
+			gl.glCallList(gear); // Display List
+			posicaoAtual = novaPosicao;
+			novaPosicao = 0;
+			mudouPosicao = false;
+		}
+		gl.glPopMatrix();
 
 		gl.glFlush();
 	}
@@ -119,29 +144,18 @@ public class Dado implements GLEventListener, MouseListener {
 
 		// Gera identificador de textura
 		idTexture = new int[10];
-		//		gl.glGenTextures(1, idTexture, 1);
-		//		gl.glGenTextures(1, idTexture, 2);
-		//		gl.glGenTextures(1, idTexture, 3);
-		//		gl.glGenTextures(1, idTexture, 4);
-		//		gl.glGenTextures(1, idTexture, 5);
 		gl.glGenTextures(1, idTexture, 6);
-
-		// Especifica qual é a textura corrente pelo identificador
-		//		for (int i = 0; i < QUANT_FACES_CUBO; i++) {
-		//			gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[i]);
-		//		}
-
-		// Envio da textura para OpenGL
-		//		for (int i = 0; i < QUANT_FACES_CUBO; i++) {
-		//			gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width, height, 0, GL.GL_BGR,
-		//					GL.GL_UNSIGNED_BYTE, buffer[i]);
-		//		}
 
 		// Define os filtros de magnificação e minificação
 		gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER,
 				GL.GL_LINEAR);
 		gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER,
 				GL.GL_LINEAR);
+
+		gear = gl.glGenLists(1);
+		gl.glNewList(gear, GL.GL_COMPILE);
+		drawCube();
+		gl.glEndList();
 	}
 
 	@Override

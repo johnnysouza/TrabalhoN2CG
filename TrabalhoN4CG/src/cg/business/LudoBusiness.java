@@ -5,7 +5,7 @@ import cg.mundos.Tabuleiro;
 
 public class LudoBusiness {
 
-	private boolean minhaVez;
+	private final boolean minhaVez = true;
 	private boolean escolherPeca;
 	private int valorDado;
 	private Tabuleiro tabuleiro;
