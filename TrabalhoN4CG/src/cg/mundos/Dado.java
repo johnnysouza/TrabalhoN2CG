@@ -220,9 +220,9 @@ public class Dado implements GLEventListener, MouseListener {
 		gl.glEnd();
 		
 		// Face superior
-		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[2]);
+		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[1]);
 		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width, height, 0, GL.GL_BGR,
-				GL.GL_UNSIGNED_BYTE, buffer[2]);
+				GL.GL_UNSIGNED_BYTE, buffer[1]);
 		gl.glBegin(GL.GL_QUADS);
 		
 		gl.glNormal3f(0.0f, 1.0f, 0.0f);
@@ -237,9 +237,9 @@ public class Dado implements GLEventListener, MouseListener {
 		gl.glEnd();
 		
 		// Face inferior
-		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[3]);
+		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[4]);
 		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width, height, 0, GL.GL_BGR,
-				GL.GL_UNSIGNED_BYTE, buffer[3]);
+				GL.GL_UNSIGNED_BYTE, buffer[4]);
 		gl.glBegin(GL.GL_QUADS);
 		
 		gl.glNormal3f(0.0f, -1.0f, 0.0f);
@@ -254,9 +254,9 @@ public class Dado implements GLEventListener, MouseListener {
 		gl.glEnd();
 		
 		// Face lateral direita
-		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[4]);
+		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[3]);
 		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width, height, 0, GL.GL_BGR,
-				GL.GL_UNSIGNED_BYTE, buffer[4]);
+				GL.GL_UNSIGNED_BYTE, buffer[3]);
 		gl.glBegin(GL.GL_QUADS);
 		
 		gl.glNormal3f(1.0f, 0.0f, 0.0f);
@@ -271,9 +271,9 @@ public class Dado implements GLEventListener, MouseListener {
 		gl.glEnd();
 		
 		// Face lateral esquerda
-		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[5]);
+		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[2]);
 		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width, height, 0, GL.GL_BGR,
-				GL.GL_UNSIGNED_BYTE, buffer[5]);
+				GL.GL_UNSIGNED_BYTE, buffer[2]);
 		gl.glBegin(GL.GL_QUADS);
 		
 		gl.glNormal3f(-1.0f, 0.0f, 0.0f);
