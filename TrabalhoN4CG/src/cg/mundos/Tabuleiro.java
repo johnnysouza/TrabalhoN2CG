@@ -7,9 +7,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 import javax.imageio.ImageIO;
@@ -18,19 +16,14 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
-import javax.media.opengl.glu.GLUquadric;
-import javax.swing.JOptionPane;
 
 import cg.base.Cor;
 import cg.business.LudoBusiness;
 
-import com.sun.opengl.util.GLUT;
-import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;
-import com.sun.opengl.util.texture.TextureIO;
 
 public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
-		MouseMotionListener {
+MouseMotionListener {
 
 	private GL gl;
 	private GLU glu;
@@ -38,23 +31,16 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 	private double xEye, yEye, zEye;
 	private double xCenter, yCenter, zCenter;
 	private final LudoBusiness ludo;
-	private boolean aguardandoSelecao;
 	private BufferedImage image;
 	private int idTexture[];
 	private int width, height;
 	private TextureData td;
 	private ByteBuffer buffer;
-	private float rotX, rotY, obsZ;
+	private boolean aguardandoSelecao;
 
 	public Tabuleiro(final LudoBusiness ludo) {
 		this.ludo = ludo;
 		ludo.setTabuleiro(this);
-
-		// Inicializa os atributos usados para alterar a posição do
-		// observador virtual (=câmera)
-		rotX = 0;
-		rotY = 0;
-		obsZ = 200;
 	}
 
 	@Override
@@ -172,12 +158,12 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 				GL.GL_LINEAR);
 
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		xEye = 20.0f;
-		yEye = 20.0f;
-		zEye = 20.0f;
-		xCenter = 0.0f;
-		yCenter = 0.0f;
-		zCenter = 0.0f;
+		xEye = -30.0f;
+		yEye = -20.0f;
+		zEye = 35.0f;
+		xCenter = -30.0f;
+		yCenter = 4.0f;
+		zCenter = -10.0f;
 
 		gl.glEnable(GL.GL_CULL_FACE);
 		// gl.glDisable(GL.GL_CULL_FACE);
@@ -206,18 +192,28 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 				0.0f);
 
 		ligarLuz();
-		especificaParametrosVisualizacao();
 		defineIluminacao();
 
-		drawAxis();
 		gl.glColor3f(1.0f, 0.0f, 0.0f);
 
 		float translacaoCubo1[] = { 0.0f, 0.0f, 0.0f };
 		float escalaCubo1[] = { 2.0f, 2.0f, 2.0f };
 
 		drawCube(translacaoCubo1, escalaCubo1, Cor.AMARELO);
+		drawCircle();
 
 		gl.glFlush();
+	}
+
+	private void drawCircle() {
+		gl.glBegin(GL.GL_LINE_LOOP);
+		for(int i =0; i <= 300; i++){
+			double angle = (2 * Math.PI * i) / 300;
+			double x = Math.cos(angle);
+			double y = Math.sin(angle);
+			gl.glVertex2d(x,y);
+		}
+		gl.glEnd();
 	}
 
 	private void drawCube(final float translacao[], final float escala[],
@@ -226,7 +222,7 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		gl.glEnable(GL.GL_TEXTURE_2D); // Primeiro habilita uso de textura
 		gl.glPushMatrix();
 		gl.glTranslatef(-30.0f, 0.0f, 0.0f);
-		gl.glScalef(16.0f, 16.0f, 16.0f);
+		gl.glScalef(16.0f, 16.0f, 3.0f);
 		gl.glColor3f(1.0f, 1.0f, 1.0f);
 		gl.glBegin(GL.GL_QUADS);
 		// Especifica a coordenada de textura para cada vértice
@@ -338,7 +334,7 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		gl.glEnable(GL.GL_LIGHT0);
 	}
 
-	public void loadImage(String fileName) {
+	public void loadImage(final String fileName) {
 		// Tenta carregar o arquivo
 		image = null;
 		try {
@@ -356,70 +352,44 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		buffer = (ByteBuffer) td.getBuffer();
 	}
 
-	public void especificaParametrosVisualizacao() {
-		// Especifica sistema de coordenadas de projeção
-		gl.glMatrixMode(GL.GL_PROJECTION);
-		// Inicializa sistema de coordenadas de projeção
-		gl.glLoadIdentity();
-
-		double angle = 50;
-		double fAspect = 1;
-		// Especifica a projeção perspectiva(angulo,aspecto,zMin,zMax)
-		glu.gluPerspective(angle, fAspect, 0.2, 500);
-
-		posicionaObservador();
-	}
-
-	public void posicionaObservador() {
-		// Especifica sistema de coordenadas do modelo
-		gl.glMatrixMode(GL.GL_MODELVIEW);
-		// Inicializa sistema de coordenadas do modelo
-		gl.glLoadIdentity();
-		// Especifica posição do observador e do alvo
-		gl.glTranslatef(0, 0, -obsZ);
-		gl.glRotatef(rotX, 1, 0, 0);
-		gl.glRotatef(rotY, 0, 1, 0);
-		
-	}
-	
 	/**
 	 * Método usado para especificar os parâmetros de iluminação.
-	 */    	
+	 */
 	public void defineIluminacao()
 	{
 		//Define os parâmetros através de vetores RGBA - o último valor deve ser sempre 1.0f
-		float luzAmbiente[]={0.2f, 0.2f, 0.2f, 1.0f}; 
-		float luzDifusa[]={1.0f, 1.0f, 1.0f, 1.0f};  
+		float luzAmbiente[]={0.2f, 0.2f, 0.2f, 1.0f};
+		float luzDifusa[]={1.0f, 1.0f, 1.0f, 1.0f};
 		float luzEspecular[]={1.0f, 1.0f, 1.0f, 1.0f};
-		float posicaoLuz[]={40.0f, 60.0f, 0.0f, 1.0f}; // último parâmetro: 0-direcional, 1-pontual/posicional 
+		float posicaoLuz[]={40.0f, 60.0f, 0.0f, 1.0f}; // último parâmetro: 0-direcional, 1-pontual/posicional
 
 		float posicaoLuz2[]={-40.0f, 60.0f, 0.0f, 1.0f};
 		float luzEspecular2[]={1.0f, 1.0f, 1.0f, 0.0f};
 		float luzDifusa2[]={1.0f, 1.0f, 1.0f, 1.0f};
-		
-		//Ativa o uso da luz ambiente 
+
+		//Ativa o uso da luz ambiente
 		gl.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT, luzAmbiente, 0);
 
 		//Define os parâmetros da luz de número 0
-		gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, luzAmbiente, 0); 
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, luzAmbiente, 0);
 		gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, luzDifusa, 0 );
 		gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR, luzEspecular, 0);
-		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, posicaoLuz, 0 ); 	
-		
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, posicaoLuz, 0 );
+
 		//Define os parâmetros da luz de número 1
-		gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, luzAmbiente, 0); 
+		gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, luzAmbiente, 0);
 		gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, luzDifusa2, 0 );
 		gl.glLightfv(GL.GL_LIGHT1, GL.GL_SPECULAR, luzEspecular2, 0);
-		gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, posicaoLuz2, 0 ); 
-		
+		gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, posicaoLuz2, 0 );
+
 		// Brilho do material
 		float especularidade[]={1.0f, 1.0f, 1.0f, 1.0f};
 		int especMaterial = 60;
 
-		// Define a reflectância do material 
+		// Define a reflectância do material
 		gl.glMaterialfv(GL.GL_FRONT, GL.GL_SPECULAR, especularidade, 0);
 		// Define a concentração do brilho
-		gl.glMateriali(GL.GL_FRONT, GL.GL_SHININESS, especMaterial);		
+		gl.glMateriali(GL.GL_FRONT, GL.GL_SHININESS, especMaterial);
 	}
 
 	@Override
