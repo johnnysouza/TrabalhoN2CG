@@ -17,13 +17,12 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
-import cg.base.Cor;
 import cg.business.LudoBusiness;
 
 import com.sun.opengl.util.texture.TextureData;
 
 public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
-MouseMotionListener {
+		MouseMotionListener {
 
 	private GL gl;
 	private GLU glu;
@@ -33,9 +32,10 @@ MouseMotionListener {
 	private final LudoBusiness ludo;
 	private BufferedImage image;
 	private int idTexture[];
-	private int width, height;
-	private TextureData td;
-	private ByteBuffer buffer;
+	private int width[] = new int[2];
+	private int height[] = new int[2];
+	private TextureData[] td = new TextureData[2];
+	private ByteBuffer[] buffer = new ByteBuffer[2];
 	private boolean aguardandoSelecao;
 
 	public Tabuleiro(final LudoBusiness ludo) {
@@ -127,6 +127,8 @@ MouseMotionListener {
 		gl = drawable.getGL();
 		glu = new GLU();
 		glDrawable.setGL(new DebugGL(gl));
+		
+		gl.glEnable(GL.GL_DEPTH_TEST);
 
 		gl.glEnable(GL.GL_LIGHT0);
 		gl.glEnable(GL.GL_LIGHT1);
@@ -138,18 +140,12 @@ MouseMotionListener {
 		// Habilita o modelo de colorização de Gouraud
 		gl.glShadeModel(GL.GL_SMOOTH);
 
-		loadImage("resources\\ludo_board.jpg");
+		loadImage("resources\\ludo_board.jpg", 0);
+		loadImage("resources\\madeira.jpg", 1);
 
 		// Gera identificador de textura
 		idTexture = new int[10];
-		gl.glGenTextures(1, idTexture, 1);
-
-		// Especifica qual é a textura corrente pelo identificador
-		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[0]);
-
-		// Envio da textura para OpenGL
-		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width, height, 0, GL.GL_BGR,
-				GL.GL_UNSIGNED_BYTE, buffer);
+		gl.glGenTextures(1, idTexture, 2);
 
 		// Define os filtros de magnificação e minificação
 		gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER,
@@ -157,19 +153,12 @@ MouseMotionListener {
 		gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER,
 				GL.GL_LINEAR);
 
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		xEye = -30.0f;
 		yEye = -20.0f;
 		zEye = 35.0f;
 		xCenter = -30.0f;
 		yCenter = 4.0f;
 		zCenter = -10.0f;
-
-		gl.glEnable(GL.GL_CULL_FACE);
-		// gl.glDisable(GL.GL_CULL_FACE);
-
-		gl.glEnable(GL.GL_DEPTH_TEST);
-		// gl.glDisable(GL.GL_DEPTH_TEST);
 	}
 
 	@Override
@@ -194,36 +183,23 @@ MouseMotionListener {
 		ligarLuz();
 		defineIluminacao();
 
-		gl.glColor3f(1.0f, 0.0f, 0.0f);
-
-		float translacaoCubo1[] = { 0.0f, 0.0f, 0.0f };
-		float escalaCubo1[] = { 2.0f, 2.0f, 2.0f };
-
-		drawCube(translacaoCubo1, escalaCubo1, Cor.AMARELO);
-		drawCircle();
+		drawCube();
+		//TODO desenhar peças
 
 		gl.glFlush();
 	}
 
-	private void drawCircle() {
-		gl.glBegin(GL.GL_LINE_LOOP);
-		for(int i =0; i <= 300; i++){
-			double angle = (2 * Math.PI * i) / 300;
-			double x = Math.cos(angle);
-			double y = Math.sin(angle);
-			gl.glVertex2d(x,y);
-		}
-		gl.glEnd();
-	}
-
-	private void drawCube(final float translacao[], final float escala[],
-			final Cor cor) {
+	private void drawCube() {
 		// Desenha um cubo no qual a textura é aplicada
 		gl.glEnable(GL.GL_TEXTURE_2D); // Primeiro habilita uso de textura
 		gl.glPushMatrix();
 		gl.glTranslatef(-30.0f, 0.0f, 0.0f);
 		gl.glScalef(16.0f, 16.0f, 3.0f);
 		gl.glColor3f(1.0f, 1.0f, 1.0f);
+		
+		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[0]);
+		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width[0], height[0], 0, GL.GL_BGR,
+				GL.GL_UNSIGNED_BYTE, buffer[0]);
 		gl.glBegin(GL.GL_QUADS);
 		// Especifica a coordenada de textura para cada vértice
 		// Face frontal
@@ -236,7 +212,13 @@ MouseMotionListener {
 		gl.glVertex3f(1.0f, 1.0f, 1.0f);
 		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex3f(-1.0f, 1.0f, 1.0f);
+		gl.glEnd();
+		
+		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[1]);
+		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width[1], height[1], 0, GL.GL_BGR,
+				GL.GL_UNSIGNED_BYTE, buffer[1]);
 		// Face posterior
+		gl.glBegin(GL.GL_QUADS);
 		gl.glNormal3f(0.0f, 0.0f, 1.0f);
 		gl.glTexCoord2f(1.0f, 0.0f);
 		gl.glVertex3f(-1.0f, -1.0f, -1.0f);
@@ -246,7 +228,10 @@ MouseMotionListener {
 		gl.glVertex3f(1.0f, 1.0f, -1.0f);
 		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex3f(1.0f, -1.0f, -1.0f);
+		gl.glEnd();
+		
 		// Face superior
+		gl.glBegin(GL.GL_QUADS);
 		gl.glNormal3f(0.0f, 1.0f, 0.0f);
 		gl.glTexCoord2f(0.0f, 1.0f);
 		gl.glVertex3f(-1.0f, 1.0f, -1.0f);
@@ -256,7 +241,10 @@ MouseMotionListener {
 		gl.glVertex3f(1.0f, 1.0f, 1.0f);
 		gl.glTexCoord2f(1.0f, 1.0f);
 		gl.glVertex3f(1.0f, 1.0f, -1.0f);
+		gl.glEnd();
+		
 		// Face inferior
+		gl.glBegin(GL.GL_QUADS);
 		gl.glNormal3f(0.0f, -1.0f, 0.0f);
 		gl.glTexCoord2f(1.0f, 1.0f);
 		gl.glVertex3f(-1.0f, -1.0f, -1.0f);
@@ -266,7 +254,10 @@ MouseMotionListener {
 		gl.glVertex3f(1.0f, -1.0f, 1.0f);
 		gl.glTexCoord2f(1.0f, 0.0f);
 		gl.glVertex3f(-1.0f, -1.0f, 1.0f);
+		gl.glEnd();
+		
 		// Face lateral direita
+		gl.glBegin(GL.GL_QUADS);
 		gl.glNormal3f(1.0f, 0.0f, 0.0f);
 		gl.glTexCoord2f(1.0f, 0.0f);
 		gl.glVertex3f(1.0f, -1.0f, -1.0f);
@@ -276,7 +267,10 @@ MouseMotionListener {
 		gl.glVertex3f(1.0f, 1.0f, 1.0f);
 		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex3f(1.0f, -1.0f, 1.0f);
+		gl.glEnd();
+		
 		// Face lateral esquerda
+		gl.glBegin(GL.GL_QUADS);
 		gl.glNormal3f(-1.0f, 0.0f, 0.0f);
 		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex3f(-1.0f, -1.0f, -1.0f);
@@ -289,43 +283,6 @@ MouseMotionListener {
 		gl.glEnd();
 		gl.glPopMatrix();
 		gl.glDisable(GL.GL_TEXTURE_2D); // Desabilita uso de textura
-
-		// gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE,
-		// cor.toFloatArray(), 0);
-		// float[] rgba = { 1f, 1f, 1f };
-		// gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT, rgba, 0);
-		// gl.glMaterialfv(GL.GL_FRONT, GL.GL_SPECULAR, rgba, 0);
-		// gl.glMaterialf(GL.GL_FRONT, GL.GL_SHININESS, 0.5f);
-		// gl.glEnable(GL.GL_LIGHTING);
-		//
-		// gl.glPushMatrix();
-		// gl.glScalef(escala[0], escala[1], escala[2]);
-		// gl.glTranslated(translacao[0], translacao[1], translacao[2]);
-		// glut.glutSolidCube(1.0f);
-		// gl.glPopMatrix();
-		//
-		// gl.glDisable(GL.GL_LIGHTING);
-	}
-
-	public void drawAxis() {
-		// eixo X - Red
-		gl.glColor3f(1.0f, 0.0f, 0.0f);
-		gl.glBegin(GL.GL_LINES);
-		gl.glVertex3f(0.0f, 0.0f, 0.0f);
-		gl.glVertex3f(10.0f, 0.0f, 0.0f);
-		gl.glEnd();
-		// eixo Y - Green
-		gl.glColor3f(0.0f, 1.0f, 0.0f);
-		gl.glBegin(GL.GL_LINES);
-		gl.glVertex3f(0.0f, 0.0f, 0.0f);
-		gl.glVertex3f(0.0f, 10.0f, 0.0f);
-		gl.glEnd();
-		// eixo Z - Blue
-		gl.glColor3f(0.0f, 0.0f, 1.0f);
-		gl.glBegin(GL.GL_LINES);
-		gl.glVertex3f(0.0f, 0.0f, 0.0f);
-		gl.glVertex3f(0.0f, 0.0f, 10.0f);
-		gl.glEnd();
 	}
 
 	private void ligarLuz() {
@@ -334,7 +291,7 @@ MouseMotionListener {
 		gl.glEnable(GL.GL_LIGHT0);
 	}
 
-	public void loadImage(final String fileName) {
+	public void loadImage(final String fileName, int pos) {
 		// Tenta carregar o arquivo
 		image = null;
 		try {
@@ -344,46 +301,48 @@ MouseMotionListener {
 		}
 
 		// Obtém largura e altura
-		width = image.getWidth();
-		height = image.getHeight();
+		width[pos] = image.getWidth();
+		height[pos] = image.getHeight();
 		// Gera uma nova TextureData...
-		td = new TextureData(0, 0, false, image);
+		td[pos] = new TextureData(0, 0, false, image);
 		// ...e obtém um ByteBuffer a partir dela
-		buffer = (ByteBuffer) td.getBuffer();
+		buffer[pos] = (ByteBuffer) td[pos].getBuffer();
 	}
 
 	/**
 	 * Método usado para especificar os parâmetros de iluminação.
 	 */
-	public void defineIluminacao()
-	{
-		//Define os parâmetros através de vetores RGBA - o último valor deve ser sempre 1.0f
-		float luzAmbiente[]={0.2f, 0.2f, 0.2f, 1.0f};
-		float luzDifusa[]={1.0f, 1.0f, 1.0f, 1.0f};
-		float luzEspecular[]={1.0f, 1.0f, 1.0f, 1.0f};
-		float posicaoLuz[]={40.0f, 60.0f, 0.0f, 1.0f}; // último parâmetro: 0-direcional, 1-pontual/posicional
+	public void defineIluminacao() {
+		// Define os parâmetros através de vetores RGBA - o último valor deve
+		// ser sempre 1.0f
+		float luzAmbiente[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+		float luzDifusa[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		float luzEspecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		float posicaoLuz[] = { 40.0f, 60.0f, 0.0f, 1.0f }; // último parâmetro:
+															// 0-direcional,
+															// 1-pontual/posicional
 
-		float posicaoLuz2[]={-40.0f, 60.0f, 0.0f, 1.0f};
-		float luzEspecular2[]={1.0f, 1.0f, 1.0f, 0.0f};
-		float luzDifusa2[]={1.0f, 1.0f, 1.0f, 1.0f};
+		float posicaoLuz2[] = { -40.0f, 60.0f, 0.0f, 1.0f };
+		float luzEspecular2[] = { 1.0f, 1.0f, 1.0f, 0.0f };
+		float luzDifusa2[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-		//Ativa o uso da luz ambiente
+		// Ativa o uso da luz ambiente
 		gl.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT, luzAmbiente, 0);
 
-		//Define os parâmetros da luz de número 0
+		// Define os parâmetros da luz de número 0
 		gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, luzAmbiente, 0);
-		gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, luzDifusa, 0 );
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, luzDifusa, 0);
 		gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR, luzEspecular, 0);
-		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, posicaoLuz, 0 );
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, posicaoLuz, 0);
 
-		//Define os parâmetros da luz de número 1
+		// Define os parâmetros da luz de número 1
 		gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, luzAmbiente, 0);
-		gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, luzDifusa2, 0 );
+		gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, luzDifusa2, 0);
 		gl.glLightfv(GL.GL_LIGHT1, GL.GL_SPECULAR, luzEspecular2, 0);
-		gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, posicaoLuz2, 0 );
+		gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, posicaoLuz2, 0);
 
 		// Brilho do material
-		float especularidade[]={1.0f, 1.0f, 1.0f, 1.0f};
+		float especularidade[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		int especMaterial = 60;
 
 		// Define a reflectância do material
