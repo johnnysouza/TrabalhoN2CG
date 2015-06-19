@@ -20,14 +20,16 @@ import com.sun.opengl.util.texture.TextureData;
 
 public class Dado implements GLEventListener, MouseListener {
 
+	private static final int QUANT_FACES_CUBO = 6;
+	
 	private GL gl;
 	private GLU glu;
 	private GLAutoDrawable glDrawable;
 	private BufferedImage image;
 	private int idTexture[];
 	private int width, height;
-	private TextureData td;
-	private ByteBuffer buffer;
+	private TextureData[] td = new TextureData[6];
+	private ByteBuffer[] buffer = new ByteBuffer[6];
 
 	private final LudoBusiness ludo;
 
@@ -110,18 +112,29 @@ public class Dado implements GLEventListener, MouseListener {
 
 		ligarLuz();
 
-		loadImage("resources\\dado_1.jpg");
+		for (int i = 0; i < QUANT_FACES_CUBO; i++) {
+			loadImage("resources\\dado_" + (i + 1) + ".jpg", i);
+		}
 
 		// Gera identificador de textura
 		idTexture = new int[10];
-		gl.glGenTextures(1, idTexture, 1);
+//		gl.glGenTextures(1, idTexture, 1);
+//		gl.glGenTextures(1, idTexture, 2);
+//		gl.glGenTextures(1, idTexture, 3);
+//		gl.glGenTextures(1, idTexture, 4);
+//		gl.glGenTextures(1, idTexture, 5);
+		gl.glGenTextures(1, idTexture, 6);
 
 		// Especifica qual é a textura corrente pelo identificador
-		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[0]);
+//		for (int i = 0; i < QUANT_FACES_CUBO; i++) {
+//			gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[i]);
+//		}
 
 		// Envio da textura para OpenGL
-		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width, height, 0, GL.GL_BGR,
-				GL.GL_UNSIGNED_BYTE, buffer);
+//		for (int i = 0; i < QUANT_FACES_CUBO; i++) {
+//			gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width, height, 0, GL.GL_BGR,
+//					GL.GL_UNSIGNED_BYTE, buffer[i]);
+//		}
 
 		// Define os filtros de magnificação e minificação
 		gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER,
@@ -140,7 +153,7 @@ public class Dado implements GLEventListener, MouseListener {
 		glu.gluPerspective(60, width / height, 0.1, 100); // projecao Perpectiva
 	}
 
-	public void loadImage(String fileName) {
+	public void loadImage(String fileName, int pos) {
 		// Tenta carregar o arquivo
 		image = null;
 		try {
@@ -153,9 +166,9 @@ public class Dado implements GLEventListener, MouseListener {
 		width = image.getWidth();
 		height = image.getHeight();
 		// Gera uma nova TextureData...
-		td = new TextureData(0, 0, false, image);
+		td[pos] = new TextureData(0, 0, false, image);
 		// ...e obtém um ByteBuffer a partir dela
-		buffer = (ByteBuffer) td.getBuffer();
+		buffer[pos] = (ByteBuffer) td[pos].getBuffer();
 	}
 
 	private void ligarLuz() {
@@ -170,6 +183,11 @@ public class Dado implements GLEventListener, MouseListener {
 		gl.glPushMatrix();
 		gl.glScalef(0.5f, 0.5f, 0.5f);
 		gl.glColor3f(1.0f, 1.0f, 1.0f);
+		
+		
+		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[0]);
+		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width, height, 0, GL.GL_BGR,
+				GL.GL_UNSIGNED_BYTE, buffer[0]);
 		gl.glBegin(GL.GL_QUADS);
 		// Especifica a coordenada de textura para cada vértice
 		// Face frontal
@@ -182,7 +200,14 @@ public class Dado implements GLEventListener, MouseListener {
 		gl.glVertex3f(1.0f, 1.0f, 1.0f);
 		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex3f(-1.0f, 1.0f, 1.0f);
+		gl.glEnd();
+		
 		// Face posterior
+		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[5]);
+		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width, height, 0, GL.GL_BGR,
+				GL.GL_UNSIGNED_BYTE, buffer[5]);
+		gl.glBegin(GL.GL_QUADS);
+		
 		gl.glNormal3f(0.0f, 0.0f, 1.0f);
 		gl.glTexCoord2f(1.0f, 0.0f);
 		gl.glVertex3f(-1.0f, -1.0f, -1.0f);
@@ -192,7 +217,14 @@ public class Dado implements GLEventListener, MouseListener {
 		gl.glVertex3f(1.0f, 1.0f, -1.0f);
 		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex3f(1.0f, -1.0f, -1.0f);
+		gl.glEnd();
+		
 		// Face superior
+		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[2]);
+		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width, height, 0, GL.GL_BGR,
+				GL.GL_UNSIGNED_BYTE, buffer[2]);
+		gl.glBegin(GL.GL_QUADS);
+		
 		gl.glNormal3f(0.0f, 1.0f, 0.0f);
 		gl.glTexCoord2f(0.0f, 1.0f);
 		gl.glVertex3f(-1.0f, 1.0f, -1.0f);
@@ -202,7 +234,14 @@ public class Dado implements GLEventListener, MouseListener {
 		gl.glVertex3f(1.0f, 1.0f, 1.0f);
 		gl.glTexCoord2f(1.0f, 1.0f);
 		gl.glVertex3f(1.0f, 1.0f, -1.0f);
+		gl.glEnd();
+		
 		// Face inferior
+		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[3]);
+		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width, height, 0, GL.GL_BGR,
+				GL.GL_UNSIGNED_BYTE, buffer[3]);
+		gl.glBegin(GL.GL_QUADS);
+		
 		gl.glNormal3f(0.0f, -1.0f, 0.0f);
 		gl.glTexCoord2f(1.0f, 1.0f);
 		gl.glVertex3f(-1.0f, -1.0f, -1.0f);
@@ -212,7 +251,14 @@ public class Dado implements GLEventListener, MouseListener {
 		gl.glVertex3f(1.0f, -1.0f, 1.0f);
 		gl.glTexCoord2f(1.0f, 0.0f);
 		gl.glVertex3f(-1.0f, -1.0f, 1.0f);
+		gl.glEnd();
+		
 		// Face lateral direita
+		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[4]);
+		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width, height, 0, GL.GL_BGR,
+				GL.GL_UNSIGNED_BYTE, buffer[4]);
+		gl.glBegin(GL.GL_QUADS);
+		
 		gl.glNormal3f(1.0f, 0.0f, 0.0f);
 		gl.glTexCoord2f(1.0f, 0.0f);
 		gl.glVertex3f(1.0f, -1.0f, -1.0f);
@@ -222,7 +268,14 @@ public class Dado implements GLEventListener, MouseListener {
 		gl.glVertex3f(1.0f, 1.0f, 1.0f);
 		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex3f(1.0f, -1.0f, 1.0f);
+		gl.glEnd();
+		
 		// Face lateral esquerda
+		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[5]);
+		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width, height, 0, GL.GL_BGR,
+				GL.GL_UNSIGNED_BYTE, buffer[5]);
+		gl.glBegin(GL.GL_QUADS);
+		
 		gl.glNormal3f(-1.0f, 0.0f, 0.0f);
 		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex3f(-1.0f, -1.0f, -1.0f);
