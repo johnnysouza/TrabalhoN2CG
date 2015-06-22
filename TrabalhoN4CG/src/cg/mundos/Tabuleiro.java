@@ -177,8 +177,8 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 			pecasAmarelas[i] = new Peca(i + 1, Cor.AMARELO);
 		}
 		
-		pecasAmarelas[0].setPosicao(57);
-		pecasAmarelas[1].setPosicao(58);
+		pecasVerdes[0].setPosicao(57);
+		pecasVerdes[1].setPosicao(58);
 	}
 
 	@Override

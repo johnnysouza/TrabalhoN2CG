@@ -412,180 +412,294 @@ public class Peca {
 			}
 			break;
 		case 1:
-			translate[0] = -7.1f;
-			translate[1] = 4.5f;
+			translate[0] = 11.1f;
+			translate[1] = -5.8f;
 			translate[2] = 10.0f;
 			break;
 		case 2:
-			
+			translate[0] = 11.1f;
+			translate[1] = -4.2f;
+			translate[2] = 10.0f;
 			break;
 		case 3:
-			
+			translate[0] = 11.1f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 4:
-			
+			translate[0] = 9.5f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 5:
-			
+			translate[0] = 7.9f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 6:
-			
+			translate[0] = 6.3f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 7:
-			
+			translate[0] = 4.7f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 8:
-			
+			translate[0] = 3.1f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 9:
-			
+			translate[0] = 1.5f;
+			translate[1] = -1.1f;
+			translate[2] = 10.0f;
 			break;
 		case 10:
-			
+			translate[0] = 1.5f;
+			translate[1] = 0.5f;
+			translate[2] = 10.0f;
 			break;
 		case 11:
-			
+			translate[0] = 1.5f;
+			translate[1] = 2.1f;
+			translate[2] = 10.0f;
 			break;
 		case 12:
-			
+			translate[0] = 1.5f;
+			translate[1] = 3.7f;
+			translate[2] = 10.0f;
 			break;
 		case 13:
-			
+			translate[0] = 1.5f;
+			translate[1] = 5.3f;
+			translate[2] = 10.0f;
 			break;
 		case 14:
-			
+			translate[0] = 1.5f;
+			translate[1] = 6.9f;
+			translate[2] = 10.0f;
 			break;
 		case 15:
-			
+			translate[0] = -0.1f;
+			translate[1] = 6.9f;
+			translate[2] = 10.0f;
 			break;
 		case 16:
-			
+			translate[0] = -1.6f;
+			translate[1] = 6.9f;
+			translate[2] = 10.0f;
 			break;
 		case 17:
-			
+			translate[0] = -1.6f;
+			translate[1] = 5.3f;
+			translate[2] = 10.0f;
 			break;
 		case 18:
-			
+			translate[0] = -1.6f;
+			translate[1] = 3.7f;
+			translate[2] = 10.0f;
 			break;
 		case 19:
-			
+			translate[0] = -1.6f;
+			translate[1] = 2.1f;
+			translate[2] = 10.0f;
 			break;
 		case 20:
-			
+			translate[0] = -1.6f;
+			translate[1] = 0.5f;
+			translate[2] = 10.0f;
 			break;
 		case 21:
-			
+			translate[0] = -1.6f;
+			translate[1] = -1.1f;
+			translate[2] = 10.0f;
 			break;
 		case 22:
-			
+			translate[0] = -3.1f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 23:
-			
+			translate[0] = -4.7f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 24:
-			
+			translate[0] = -6.3f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 25:
-			
+			translate[0] = -7.9f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 26:
-			
+			translate[0] = -9.5f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 27:
-			
+			translate[0] = -11.1f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 28:
-			
+			translate[0] = -11.1f;
+			translate[1] = -4.3f;
+			translate[2] = 10.0f;
 			break;
 		case 29:
-			
+			translate[0] = -11.1f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 30:
-			
+			translate[0] = -9.5f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 31:
-			
+			translate[0] = -7.9f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 32:
-			
+			translate[0] = -6.3f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 33:
-			
+			translate[0] = -4.7f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 34:
-			
+			translate[0] = -3.1f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 35:
-			
+			translate[0] = -1.6f;
+			translate[1] = -7.4f;
+			translate[2] = 10.0f;
 			break;
 		case 36:
-			
+			translate[0] = -1.6f;
+			translate[1] = -9.0f;
+			translate[2] = 10.0f;
 			break;
 		case 37:
-			
+			translate[0] = -1.6f;
+			translate[1] = -10.6f;
+			translate[2] = 10.0f;
 			break;
 		case 38:
-			
+			translate[0] = -1.6f;
+			translate[1] = -12.2f;
+			translate[2] = 10.0f;
 			break;
 		case 39:
-			
+			translate[0] = -1.6f;
+			translate[1] = -13.8f;
+			translate[2] = 10.0f;
 			break;
 		case 40:
-			
+			translate[0] = -1.6f;
+			translate[1] = -15.3f;
+			translate[2] = 10.0f;
 			break;
 		case 41:
-			
+			translate[0] = 0.0f;
+			translate[1] = -15.3f;
+			translate[2] = 10.0f;
 			break;
 		case 42:
-			
+			translate[0] = 1.6f;
+			translate[1] = -15.3f;
+			translate[2] = 10.0f;
 			break;
 		case 43:
-			
+			translate[0] = 1.6f;
+			translate[1] = -13.7f;
+			translate[2] = 10.0f;
 			break;
 		case 44:
-			
+			translate[0] = 1.6f;
+			translate[1] = -12.1f;
+			translate[2] = 10.0f;
 			break;
 		case 45:
-			
+			translate[0] = 1.6f;
+			translate[1] = -10.5f;
+			translate[2] = 10.0f;
 			break;
 		case 46:
-			
+			translate[0] = 1.6f;
+			translate[1] = -8.9f;
+			translate[2] = 10.0f;
 			break;
 		case 47:
-			
+			translate[0] = 1.6f;
+			translate[1] = -7.3f;
+			translate[2] = 10.0f;
 			break;
 		case 48:
-		
+			translate[0] = 3.1f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 49:
-			
+			translate[0] = 4.7f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 50:
-			
+			translate[0] = 6.3f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 51:
-			
+			translate[0] = 7.9f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 52:
-
+			translate[0] = 9.5f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 53:
-			
+			translate[0] = 9.5f;
+			translate[1] = -4.2f;
+			translate[2] = 10.0f;
 			break;
 		case 54:
-			
+			translate[0] = 7.9f;
+			translate[1] = -4.2f;
+			translate[2] = 10.0f;
 			break;
 		case 55:
-			
+			translate[0] = 6.3f;
+			translate[1] = -4.2f;
+			translate[2] = 10.0f;
 			break;
 		case 56:
-			
+			translate[0] = 4.7f;
+			translate[1] = -4.2f;
+			translate[2] = 10.0f;
 			break;
 		case 57:
-			
+			translate[0] = 3.1f;
+			translate[1] = -4.2f;
+			translate[2] = 10.0f;
 			break;
 		case 58:
-			
+			translate[0] = 1.5f;
+			translate[1] = -4.2f;
+			translate[2] = 0.0f;
 			break;
 		default:
 			break;
@@ -614,180 +728,294 @@ public class Peca {
 			}
 			break;
 		case 1:
-			translate[0] = -7.1f;
-			translate[1] = 4.5f;
+			translate[0] = 1.5f;
+			translate[1] = 6.9f;
 			translate[2] = 10.0f;
 			break;
 		case 2:
-			
+			translate[0] = -0.1f;
+			translate[1] = 6.9f;
+			translate[2] = 10.0f;
 			break;
 		case 3:
-			
+			translate[0] = -1.6f;
+			translate[1] = 6.9f;
+			translate[2] = 10.0f;
 			break;
 		case 4:
-			
+			translate[0] = -1.6f;
+			translate[1] = 5.3f;
+			translate[2] = 10.0f;
 			break;
 		case 5:
-			
+			translate[0] = -1.6f;
+			translate[1] = 3.7f;
+			translate[2] = 10.0f;
 			break;
 		case 6:
-			
+			translate[0] = -1.6f;
+			translate[1] = 2.1f;
+			translate[2] = 10.0f;
 			break;
 		case 7:
-			
+			translate[0] = -1.6f;
+			translate[1] = 0.5f;
+			translate[2] = 10.0f;
 			break;
 		case 8:
-			
+			translate[0] = -1.6f;
+			translate[1] = -1.1f;
+			translate[2] = 10.0f;
 			break;
 		case 9:
-			
+			translate[0] = -3.1f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 10:
-			
+			translate[0] = -4.7f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 11:
-			
+			translate[0] = -6.3f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 12:
-			
+			translate[0] = -7.9f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 13:
-			
+			translate[0] = -9.5f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 14:
-			
+			translate[0] = -11.1f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 15:
-			
+			translate[0] = -11.1f;
+			translate[1] = -4.3f;
+			translate[2] = 10.0f;
 			break;
 		case 16:
-			
+			translate[0] = -11.1f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 17:
-			
+			translate[0] = -9.5f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 18:
-			
+			translate[0] = -7.9f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 19:
-			
+			translate[0] = -6.3f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 20:
-			
+			translate[0] = -4.7f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 21:
-			
+			translate[0] = -3.1f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 22:
-			
+			translate[0] = -1.6f;
+			translate[1] = -7.4f;
+			translate[2] = 10.0f;
 			break;
 		case 23:
-			
+			translate[0] = -1.6f;
+			translate[1] = -9.0f;
+			translate[2] = 10.0f;
 			break;
 		case 24:
-			
+			translate[0] = -1.6f;
+			translate[1] = -10.6f;
+			translate[2] = 10.0f;
 			break;
 		case 25:
-			
+			translate[0] = -1.6f;
+			translate[1] = -12.2f;
+			translate[2] = 10.0f;
 			break;
 		case 26:
-			
+			translate[0] = -1.6f;
+			translate[1] = -13.8f;
+			translate[2] = 10.0f;
 			break;
 		case 27:
-			
+			translate[0] = -1.6f;
+			translate[1] = -15.3f;
+			translate[2] = 10.0f;
 			break;
 		case 28:
-			
+			translate[0] = 0.0f;
+			translate[1] = -15.3f;
+			translate[2] = 10.0f;
 			break;
 		case 29:
-			
+			translate[0] = 1.6f;
+			translate[1] = -15.3f;
+			translate[2] = 10.0f;
 			break;
 		case 30:
-			
+			translate[0] = 1.6f;
+			translate[1] = -13.7f;
+			translate[2] = 10.0f;
 			break;
 		case 31:
-			
+			translate[0] = 1.6f;
+			translate[1] = -12.1f;
+			translate[2] = 10.0f;
 			break;
 		case 32:
-			
+			translate[0] = 1.6f;
+			translate[1] = -10.5f;
+			translate[2] = 10.0f;
 			break;
 		case 33:
-			
+			translate[0] = 1.6f;
+			translate[1] = -8.9f;
+			translate[2] = 10.0f;
 			break;
 		case 34:
-			
+			translate[0] = 1.6f;
+			translate[1] = -7.3f;
+			translate[2] = 10.0f;
 			break;
 		case 35:
-			
+			translate[0] = 3.1f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 36:
-			
+			translate[0] = 4.7f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 37:
-			
+			translate[0] = 6.3f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 38:
-			
+			translate[0] = 7.9f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 39:
-			
+			translate[0] = 9.5f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 40:
-			
+			translate[0] = 11.1f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 41:
-			
+			translate[0] = 11.1f;
+			translate[1] = -4.2f;
+			translate[2] = 10.0f;
 			break;
 		case 42:
-			
+			translate[0] = 11.1f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 43:
-			
+			translate[0] = 9.5f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 44:
-			
+			translate[0] = 7.9f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 45:
-			
+			translate[0] = 6.3f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 46:
-			
+			translate[0] = 4.7f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 47:
-			
+			translate[0] = 3.1f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 48:
-		
+			translate[0] = 1.5f;
+			translate[1] = -1.1f;
+			translate[2] = 10.0f;
 			break;
 		case 49:
-			
+			translate[0] = 1.5f;
+			translate[1] = 0.5f;
+			translate[2] = 10.0f;
 			break;
 		case 50:
-			
+			translate[0] = 1.5f;
+			translate[1] = 2.1f;
+			translate[2] = 10.0f;
 			break;
 		case 51:
-			
+			translate[0] = 1.5f;
+			translate[1] = 3.7f;
+			translate[2] = 10.0f;
 			break;
 		case 52:
-
+			translate[0] = 1.5f;
+			translate[1] = 5.3f;
+			translate[2] = 10.0f;
 			break;
 		case 53:
-			
+			translate[0] = 0.0f;
+			translate[1] = 5.3f;
+			translate[2] = 10.0f;
 			break;
 		case 54:
-			
+			translate[0] = 0.0f;
+			translate[1] = 3.7f;
+			translate[2] = 10.0f;
 			break;
 		case 55:
-			
+			translate[0] = 0.0f;
+			translate[1] = 2.1f;
+			translate[2] = 10.0f;
 			break;
 		case 56:
-			
+			translate[0] = 0.0f;
+			translate[1] = 0.5f;
+			translate[2] = 10.0f;
 			break;
 		case 57:
-			
+			translate[0] = 0.0f;
+			translate[1] = -1.1f;
+			translate[2] = 10.0f;
 			break;
 		case 58:
-			
+			translate[0] = 0.0f;
+			translate[1] = -2.7f;
+			translate[2] = 0.0f;
 			break;
 		default:
 			break;
@@ -816,180 +1044,294 @@ public class Peca {
 			}
 			break;
 		case 1:
-			translate[0] = -7.1f;
-			translate[1] = 4.5f;
+			translate[0] = -11.1f;
+			translate[1] = -2.7f;
 			translate[2] = 10.0f;
 			break;
 		case 2:
-			
+			translate[0] = -11.1f;
+			translate[1] = -4.3f;
+			translate[2] = 10.0f;
 			break;
 		case 3:
-			
+			translate[0] = -11.1f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 4:
-			
+			translate[0] = -9.5f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 5:
-			
+			translate[0] = -7.9f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 6:
-			
+			translate[0] = -6.3f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 7:
-			
+			translate[0] = -4.7f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 8:
-			
+			translate[0] = -3.1f;
+			translate[1] = -5.9f;
+			translate[2] = 10.0f;
 			break;
 		case 9:
-			
+			translate[0] = -1.6f;
+			translate[1] = -7.4f;
+			translate[2] = 10.0f;
 			break;
 		case 10:
-			
+			translate[0] = -1.6f;
+			translate[1] = -9.0f;
+			translate[2] = 10.0f;
 			break;
 		case 11:
-			
+			translate[0] = -1.6f;
+			translate[1] = -10.6f;
+			translate[2] = 10.0f;
 			break;
 		case 12:
-			
+			translate[0] = -1.6f;
+			translate[1] = -12.2f;
+			translate[2] = 10.0f;
 			break;
 		case 13:
-			
+			translate[0] = -1.6f;
+			translate[1] = -13.8f;
+			translate[2] = 10.0f;
 			break;
 		case 14:
-			
+			translate[0] = -1.6f;
+			translate[1] = -15.3f;
+			translate[2] = 10.0f;
 			break;
 		case 15:
-			
+			translate[0] = 0.0f;
+			translate[1] = -15.3f;
+			translate[2] = 10.0f;
 			break;
 		case 16:
-			
+			translate[0] = 1.6f;
+			translate[1] = -15.3f;
+			translate[2] = 10.0f;
 			break;
 		case 17:
-			
+			translate[0] = 1.6f;
+			translate[1] = -13.7f;
+			translate[2] = 10.0f;
 			break;
 		case 18:
-			
+			translate[0] = 1.6f;
+			translate[1] = -12.1f;
+			translate[2] = 10.0f;
 			break;
 		case 19:
-			
+			translate[0] = 1.6f;
+			translate[1] = -10.5f;
+			translate[2] = 10.0f;
 			break;
 		case 20:
-			
+			translate[0] = 1.6f;
+			translate[1] = -8.9f;
+			translate[2] = 10.0f;
 			break;
 		case 21:
-			
+			translate[0] = 1.6f;
+			translate[1] = -7.3f;
+			translate[2] = 10.0f;
 			break;
 		case 22:
-			
+			translate[0] = 3.1f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 23:
-			
+			translate[0] = 4.7f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 24:
-			
+			translate[0] = 6.3f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 25:
-			
+			translate[0] = 7.9f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 26:
-			
+			translate[0] = 9.5f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 27:
-			
+			translate[0] = 11.1f;
+			translate[1] = -5.8f;
+			translate[2] = 10.0f;
 			break;
 		case 28:
-			
+			translate[0] = 11.1f;
+			translate[1] = -4.2f;
+			translate[2] = 10.0f;
 			break;
 		case 29:
-			
+			translate[0] = 11.1f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 30:
-			
+			translate[0] = 9.5f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 31:
-			
+			translate[0] = 7.9f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 32:
-			
+			translate[0] = 6.3f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 33:
-			
+			translate[0] = 4.7f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 34:
-			
+			translate[0] = 3.1f;
+			translate[1] = -2.6f;
+			translate[2] = 10.0f;
 			break;
 		case 35:
-			
+			translate[0] = 1.5f;
+			translate[1] = -1.1f;
+			translate[2] = 10.0f;
 			break;
 		case 36:
-			
+			translate[0] = 1.5f;
+			translate[1] = 0.5f;
+			translate[2] = 10.0f;
 			break;
 		case 37:
-			
+			translate[0] = 1.5f;
+			translate[1] = 2.1f;
+			translate[2] = 10.0f;
 			break;
 		case 38:
-			
+			translate[0] = 1.5f;
+			translate[1] = 3.7f;
+			translate[2] = 10.0f;
 			break;
 		case 39:
-			
+			translate[0] = 1.5f;
+			translate[1] = 5.3f;
+			translate[2] = 10.0f;
 			break;
 		case 40:
-			
+			translate[0] = 1.5f;
+			translate[1] = 6.9f;
+			translate[2] = 10.0f;
 			break;
 		case 41:
-			
+			translate[0] = -0.1f;
+			translate[1] = 6.9f;
+			translate[2] = 10.0f;
 			break;
 		case 42:
-			
+			translate[0] = -1.6f;
+			translate[1] = 6.9f;
+			translate[2] = 10.0f;
 			break;
 		case 43:
-			
+			translate[0] = -1.6f;
+			translate[1] = 5.3f;
+			translate[2] = 10.0f;
 			break;
 		case 44:
-			
+			translate[0] = -1.6f;
+			translate[1] = 3.7f;
+			translate[2] = 10.0f;
 			break;
 		case 45:
-			
+			translate[0] = -1.6f;
+			translate[1] = 2.1f;
+			translate[2] = 10.0f;
 			break;
 		case 46:
-			
+			translate[0] = -1.6f;
+			translate[1] = 0.5f;
+			translate[2] = 10.0f;
 			break;
 		case 47:
-			
+			translate[0] = -1.6f;
+			translate[1] = -1.1f;
+			translate[2] = 10.0f;
 			break;
 		case 48:
-		
+			translate[0] = -3.1f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 49:
-			
+			translate[0] = -4.7f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 50:
-			
+			translate[0] = -6.3f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 51:
-			
+			translate[0] = -7.9f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 52:
-
+			translate[0] = -9.5f;
+			translate[1] = -2.7f;
+			translate[2] = 10.0f;
 			break;
 		case 53:
-			
+			translate[0] = -9.5f;
+			translate[1] = -4.3f;
+			translate[2] = 10.0f;
 			break;
 		case 54:
-			
+			translate[0] = -7.9f;
+			translate[1] = -4.3f;
+			translate[2] = 10.0f;
 			break;
 		case 55:
-			
+			translate[0] = -6.3f;
+			translate[1] = -4.3f;
+			translate[2] = 10.0f;
 			break;
 		case 56:
-			
+			translate[0] = -4.7f;
+			translate[1] = -4.3f;
+			translate[2] = 10.0f;
 			break;
 		case 57:
-			
+			translate[0] = -3.1f;
+			translate[1] = -4.3f;
+			translate[2] = 10.0f;
 			break;
 		case 58:
-			
+			translate[0] = -1.5f;
+			translate[1] = -4.3f;
+			translate[2] = 0.0f;
 			break;
 		default:
 			break;
