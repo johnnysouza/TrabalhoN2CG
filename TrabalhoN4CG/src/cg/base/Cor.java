@@ -5,20 +5,21 @@ package cg.base;
  */
 public class Cor {
 	
-	public static final Cor AZUL = new Cor(0, 0, 1);
-	public static final Cor VERDE = new Cor(0, 1, 0);
-	public static final Cor VERMELHO = new Cor(1, 0, 0);
-	public static final Cor AMARELO = new Cor(1, 1, 0);
+	public static final Cor AZUL = new Cor(0, 0, 1, "Azul");
+	public static final Cor VERDE = new Cor(0, 1, 0, "Verde");
+	public static final Cor VERMELHO = new Cor(1, 0, 0, "Vermelho");
+	public static final Cor AMARELO = new Cor(1, 1, 0, "Amarelo");
 	
 	private float R;
 	private float G;
 	private float B;
+	private String nome;
 	
-	public Cor(float r, float g, float b) {
-		super();
+	public Cor(float r, float g, float b, String nome) {
 		R = r;
 		G = g;
 		B = b;
+		this.nome = nome;
 	}
 	
 	public float getR() {
@@ -38,6 +39,14 @@ public class Cor {
 	}
 	public void setB(float b) {
 		B = b;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	@Override
@@ -75,5 +84,5 @@ public class Cor {
 	public float[] toFloatArray() {
 		return new float[]{R, G, B};
 	}
-
+	
 }

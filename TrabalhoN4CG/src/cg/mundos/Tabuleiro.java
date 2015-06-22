@@ -17,8 +17,11 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
+import cg.base.Cor;
+import cg.base.Peca;
 import cg.business.LudoBusiness;
 
+import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.texture.TextureData;
 
 public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
@@ -26,6 +29,7 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 
 	private GL gl;
 	private GLU glu;
+	private GLUT glut;
 	private GLAutoDrawable glDrawable;
 	private double xEye, yEye, zEye;
 	private double xCenter, yCenter, zCenter;
@@ -37,6 +41,11 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 	private TextureData[] td = new TextureData[2];
 	private ByteBuffer[] buffer = new ByteBuffer[2];
 	private boolean aguardandoSelecao;
+
+	private Peca[] pecasVerdes = new Peca[4];
+	private Peca[] pecasVermelhas = new Peca[4];
+	private Peca[] pecasAzuis = new Peca[4];
+	private Peca[] pecasAmarelas = new Peca[4];
 
 	public Tabuleiro(final LudoBusiness ludo) {
 		this.ludo = ludo;
@@ -126,16 +135,17 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		glDrawable = drawable;
 		gl = drawable.getGL();
 		glu = new GLU();
+		glut = new GLUT();
 		glDrawable.setGL(new DebugGL(gl));
-		
-		gl.glEnable(GL.GL_DEPTH_TEST);
 
-		gl.glEnable(GL.GL_LIGHT0);
-		gl.glEnable(GL.GL_LIGHT1);
-		gl.glEnable(GL.GL_LIGHTING);
+		gl.glEnable(GL.GL_CULL_FACE);
+		gl.glEnable(GL.GL_DEPTH_TEST);
 
 		gl.glEnable(GL.GL_COLOR_MATERIAL);
 		gl.glColorMaterial(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE);
+
+		ligarLuz();
+		defineIluminacao();
 
 		// Habilita o modelo de colorização de Gouraud
 		gl.glShadeModel(GL.GL_SMOOTH);
@@ -153,12 +163,22 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER,
 				GL.GL_LINEAR);
 
-		xEye = -30.0f;
+		xEye = 0.0f;
 		yEye = -20.0f;
 		zEye = 35.0f;
-		xCenter = -30.0f;
+		xCenter = 0.0f;
 		yCenter = 4.0f;
 		zCenter = -10.0f;
+
+		for (int i = 0; i < 4; i++) {
+			pecasVerdes[i] = new Peca(i + 1, Cor.VERDE);
+			pecasVermelhas[i] = new Peca(i + 1, Cor.VERMELHO);
+			pecasAzuis[i] = new Peca(i + 1, Cor.AZUL);
+			pecasAmarelas[i] = new Peca(i + 1, Cor.AMARELO);
+		}
+		
+		pecasAmarelas[0].setPosicao(57);
+		pecasAmarelas[1].setPosicao(58);
 	}
 
 	@Override
@@ -180,26 +200,29 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		glu.gluLookAt(xEye, yEye, zEye, xCenter, yCenter, zCenter, 0.0f, 1.0f,
 				0.0f);
 
-		ligarLuz();
-		defineIluminacao();
+		desenharTabuleiro();
 
-		drawCube();
-		//TODO desenhar peças
+		for (int i = 0; i < 4; i++) {
+			pecasVerdes[i].desenharPeca(gl, glut);
+			pecasVermelhas[i].desenharPeca(gl, glut);
+			pecasAzuis[i].desenharPeca(gl, glut);
+			pecasAmarelas[i].desenharPeca(gl, glut);
+		}
 
 		gl.glFlush();
 	}
 
-	private void drawCube() {
+	private void desenharTabuleiro() {
 		// Desenha um cubo no qual a textura é aplicada
 		gl.glEnable(GL.GL_TEXTURE_2D); // Primeiro habilita uso de textura
 		gl.glPushMatrix();
-		gl.glTranslatef(-30.0f, 0.0f, 0.0f);
+		gl.glTranslatef(0.0f, 0.0f, 0.0f);
 		gl.glScalef(16.0f, 16.0f, 3.0f);
 		gl.glColor3f(1.0f, 1.0f, 1.0f);
-		
+
 		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[0]);
-		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width[0], height[0], 0, GL.GL_BGR,
-				GL.GL_UNSIGNED_BYTE, buffer[0]);
+		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width[0], height[0], 0,
+				GL.GL_BGR, GL.GL_UNSIGNED_BYTE, buffer[0]);
 		gl.glBegin(GL.GL_QUADS);
 		// Especifica a coordenada de textura para cada vértice
 		// Face frontal
@@ -213,10 +236,10 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex3f(-1.0f, 1.0f, 1.0f);
 		gl.glEnd();
-		
+
 		gl.glBindTexture(GL.GL_TEXTURE_2D, idTexture[1]);
-		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width[1], height[1], 0, GL.GL_BGR,
-				GL.GL_UNSIGNED_BYTE, buffer[1]);
+		gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, width[1], height[1], 0,
+				GL.GL_BGR, GL.GL_UNSIGNED_BYTE, buffer[1]);
 		// Face posterior
 		gl.glBegin(GL.GL_QUADS);
 		gl.glNormal3f(0.0f, 0.0f, 1.0f);
@@ -229,7 +252,7 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex3f(1.0f, -1.0f, -1.0f);
 		gl.glEnd();
-		
+
 		// Face superior
 		gl.glBegin(GL.GL_QUADS);
 		gl.glNormal3f(0.0f, 1.0f, 0.0f);
@@ -242,7 +265,7 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		gl.glTexCoord2f(1.0f, 1.0f);
 		gl.glVertex3f(1.0f, 1.0f, -1.0f);
 		gl.glEnd();
-		
+
 		// Face inferior
 		gl.glBegin(GL.GL_QUADS);
 		gl.glNormal3f(0.0f, -1.0f, 0.0f);
@@ -255,7 +278,7 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		gl.glTexCoord2f(1.0f, 0.0f);
 		gl.glVertex3f(-1.0f, -1.0f, 1.0f);
 		gl.glEnd();
-		
+
 		// Face lateral direita
 		gl.glBegin(GL.GL_QUADS);
 		gl.glNormal3f(1.0f, 0.0f, 0.0f);
@@ -268,7 +291,7 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex3f(1.0f, -1.0f, 1.0f);
 		gl.glEnd();
-		
+
 		// Face lateral esquerda
 		gl.glBegin(GL.GL_QUADS);
 		gl.glNormal3f(-1.0f, 0.0f, 0.0f);
@@ -283,12 +306,6 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		gl.glEnd();
 		gl.glPopMatrix();
 		gl.glDisable(GL.GL_TEXTURE_2D); // Desabilita uso de textura
-	}
-
-	private void ligarLuz() {
-		// float posLight[] = { 5.0f, 5.0f, 10.0f, 0.0f };
-		// gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, posLight, 0);
-		gl.glEnable(GL.GL_LIGHT0);
 	}
 
 	public void loadImage(final String fileName, int pos) {
@@ -309,6 +326,12 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		buffer[pos] = (ByteBuffer) td[pos].getBuffer();
 	}
 
+	private void ligarLuz() {
+		gl.glEnable(GL.GL_LIGHT0);
+		gl.glEnable(GL.GL_LIGHT1);
+		gl.glEnable(GL.GL_LIGHTING);
+	}
+
 	/**
 	 * Método usado para especificar os parâmetros de iluminação.
 	 */
@@ -318,11 +341,10 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		float luzAmbiente[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 		float luzDifusa[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		float luzEspecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		float posicaoLuz[] = { 40.0f, 60.0f, 0.0f, 1.0f }; // último parâmetro:
+		float posicaoLuz[] = { 50.0f, 0.0f, 0.0f, 1.0f }; // último
+															// parâmetro:
 															// 0-direcional,
-															// 1-pontual/posicional
-
-		float posicaoLuz2[] = { -40.0f, 60.0f, 0.0f, 1.0f };
+		float posicaoLuz2[] = { 5.0f, 5.0f, 50.0f, 1.0f };
 		float luzEspecular2[] = { 1.0f, 1.0f, 1.0f, 0.0f };
 		float luzDifusa2[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
