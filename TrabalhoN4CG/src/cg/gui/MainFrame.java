@@ -19,7 +19,7 @@ import cg.mundos.Dado;
 import cg.mundos.Tabuleiro;
 
 public class MainFrame extends JFrame {
-	
+
 	private static final MainFrame JANELA = new MainFrame();
 
 	private final JPanel contentPane;
@@ -27,10 +27,10 @@ public class MainFrame extends JFrame {
 	private final Dado rendererDado;
 	private final JLabel activePLayer;
 	private final int currentPlayer = 0;
-	
+
 	private JLabel gameOver;
 	private JLabel vencedor;
-	
+
 	/**
 	 * Launch the application.
 	 */
@@ -119,14 +119,14 @@ public class MainFrame extends JFrame {
 		lblpts_4.setForeground(Color.YELLOW);
 		lblpts_4.setBounds(140, 180, 46, 18);
 		info.add(lblpts_4);
-		
+
 		JLabel gameOver = new JLabel("Fim de jogo");
 		gameOver.setFont(defaultFont);
 		gameOver.setForeground(Color.WHITE);
 		gameOver.setBounds(40, 280, 150, 30);
 		gameOver.setVisible(false);
 		info.add(gameOver);
-		
+
 		JLabel vencedor = new JLabel("Você venceu!");
 		vencedor.setFont(defaultFont);
 		vencedor.setForeground(Color.WHITE);
@@ -175,21 +175,22 @@ public class MainFrame extends JFrame {
 		dado.add(canvas2, BorderLayout.CENTER);
 		canvas2.addGLEventListener(rendererDado);
 		canvas2.addMouseListener(rendererDado);
+		canvas2.addKeyListener(rendererTabuleiro);
 		canvas2.requestFocus();
 
 		setResizable(false);
 	}
-	
-	public void encerrarJogo(Cor cor) {
+
+	public void encerrarJogo(final Cor cor) {
 		gameOver.setVisible(true);
-		
+
 		String vencedorStr = "";
 		if (cor == Cor.VERDE) {
 			vencedorStr = "Você venceu!";
 		} else {
 			vencedorStr = cor.getNome() + " venceu!";
 		}
-		
+
 		vencedor.setText(vencedorStr);
 		vencedor.setVisible(true);
 	}
@@ -197,7 +198,7 @@ public class MainFrame extends JFrame {
 	private void nextPlayer() {
 		activePLayer.setBounds(0, 30 + (currentPlayer * 50), 20, 14);
 	}
-	
+
 	public static MainFrame getInstance() {
 		return JANELA;
 	}

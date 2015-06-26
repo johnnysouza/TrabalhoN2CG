@@ -1,5 +1,7 @@
 package cg.business;
 
+import java.util.Random;
+
 import cg.base.Cor;
 import cg.base.Peca;
 import cg.mundos.Dado;
@@ -8,18 +10,27 @@ import cg.mundos.Tabuleiro;
 public class LudoBusiness {
 
 	private boolean minhaVez = true;
-	private boolean escolherPeca;
+	private boolean aguardandoSelecao;
 	private int valorDado;
 	private Tabuleiro tabuleiro;
 	private Dado dado;
 
 	public boolean podeRolarDado() {
-		return minhaVez && !escolherPeca;
+		return minhaVez && !aguardandoSelecao;
 	}
 
-	public void dadoRolado(final int valor) {
-		valorDado = valor;
-		tabuleiro.aguardarSelecao();
+	public int rolarDado() {
+		valorDado = valorAleatorio(7);
+		return valorDado;
+	}
+
+	public int valorAleatorio(final int max) {
+		Random random = new Random();
+		int retorno = random.nextInt(max);
+		while(retorno == 0){
+			retorno = random.nextInt(max);
+		}
+		return retorno;
 	}
 
 	public void setTabuleiro(final Tabuleiro tabuleiro) {
@@ -34,10 +45,10 @@ public class LudoBusiness {
 		return valorDado;
 	}
 
-	public void setValorDado(int valorDado) {
+	public void setValorDado(final int valorDado) {
 		this.valorDado = valorDado;
 	}
-	
+
 	public Cor verificarFimPartida() {
 		if (corVenceu(tabuleiro.getPecasAmarelas())) {
 			return Cor.AMARELO;
@@ -48,11 +59,11 @@ public class LudoBusiness {
 		} else if (corVenceu(tabuleiro.getPecasVermelhas())) {
 			return Cor.VERMELHO;
 		}
-		
+
 		return null;
 	}
-	
-	private boolean corVenceu(Peca[] pecas) {
+
+	private boolean corVenceu(final Peca[] pecas) {
 		boolean venceu = true;
 		for (Peca posicao : pecas) {
 			if (posicao.getPosicao() != 58) {
@@ -66,8 +77,16 @@ public class LudoBusiness {
 		return minhaVez;
 	}
 
-	public void setMinhaVez(boolean minhaVez) {
+	public void setMinhaVez(final boolean minhaVez) {
 		this.minhaVez = minhaVez;
 	}
-	
+
+	public void setAguardandoSelecao(final boolean aguardandoSelecao) {
+		this.aguardandoSelecao = aguardandoSelecao;
+	}
+
+	public boolean isAguardandoSelecao() {
+		return aguardandoSelecao;
+	}
+
 }

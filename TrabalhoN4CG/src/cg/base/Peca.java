@@ -8,15 +8,15 @@ public class Peca {
 
 	private static final double RAIO = 0.75;
 
-	private int id;
+	private final int id;
 	private int posicao;
-	private Cor cor;
-	private float[] translate;
+	private final Cor cor;
+	private final float[] translate;
 
-	public Peca(int id, Cor cor) {
+	public Peca(final int id, final Cor cor) {
 		this.id = id;
 		this.cor = cor;
-		this.posicao = 0;
+		posicao = 0;
 		translate = new float[3];
 	}
 
@@ -32,11 +32,11 @@ public class Peca {
 		return posicao;
 	}
 
-	public void setPosicao(int posicao) {
+	public void setPosicao(final int posicao) {
 		if (this.posicao == 58) {
 			throw new IllegalArgumentException("Peça já está fora de jogo");
 		}
-		if (posicao < 0 || posicao > 58) {
+		if ((posicao < 0) || (posicao > 58)) {
 			throw new IllegalArgumentException(
 					"Posição inválida para peça. O valor deve ser de 0 até 58");
 		}
@@ -55,45 +55,41 @@ public class Peca {
 		gl.glPopMatrix();
 	}
 
-	public boolean estaDentroPeca(double x, double y) {
+	public boolean estaDentroPeca(final double x, final double y) {
 		double xPeca = translate[0];
 		double yPeca = translate[1];
 
 		double dist = Math.pow(xPeca - x, 2) + Math.pow(yPeca - y, 2);
-		if (dist < RAIO * RAIO) {
+		if (dist < (RAIO * RAIO)) {
 			return true;
 		}
 		return false;
 	}
 
-	public void incrementarPosicao(int valor) {
-		if (valor < 1 || valor > 6) {
-			System.err.println("Valor inválido para movimentar a peça: "
-					+ valor);
-			return;
-		}
-
+	public boolean incrementarPosicao(int valor) throws ValorDadoInvalido {
 		if (posicao == 58) {
 			System.err.println("Essa peça está fora do jogo e não pode mais ser movimentada");
-			return;
+			return false;
 		}
 
-		if (posicao == 0 && (valor == 1 || valor == 6)) { // Peca encontrasse no inicio e pode ser movida apenas com valor 1 ou 6
-			posicao = 1; // Movimenta apenas uma casa
-			return;
+		if (posicao == 0){
+			if ((valor == 1) || (valor == 6)) { // Peca encontrasse no inicio e pode ser movida apenas com valor 1 ou 6
+				posicao = 1; // Movimenta apenas uma casa
+			}else{
+				throw new ValorDadoInvalido();
+			}
 		} else if (posicao < 53) { // Pode avançar sem problemas
 			posicao += valor;
-			return;
 		} else {
 			if (valor == 1) {
 				posicao += valor; // pode incrementar pois não precisa verificar retorno
-				return;
-			} else if (posicao + valor > 58) { // ajusta o valor para a peça retornar
+			} else if ((posicao + valor) > 58) { // ajusta o valor para a peça retornar
 				valor -= 2;
 				valor *= -1;
 			}
 			posicao += valor;
 		}
+		return true;
 	}
 
 	private void calcularTranslacao() {
@@ -1380,5 +1376,4 @@ public class Peca {
 			break;
 		}
 	}
-
 }

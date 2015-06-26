@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.media.opengl.DebugGL;
@@ -34,7 +33,6 @@ public class Dado implements GLEventListener, MouseListener {
 	private final LudoBusiness ludo;
 	private MouseEvent mouse;
 	private int dado;
-	private final int posicaoAtual = 1;
 	private int novaPosicao = 1;
 	private double countRotates = 1;
 	private static int[][] rotates = new int[][]{{0,0,90,-90,0,180}, {0,90,0,0,-90,0}};
@@ -46,15 +44,6 @@ public class Dado implements GLEventListener, MouseListener {
 
 	@Override
 	public void mouseClicked(final MouseEvent e) {
-	}
-
-	private int rolarDado() {
-		Random random = new Random();
-		int retorno = random.nextInt(7);
-		while(retorno == 0){
-			retorno = random.nextInt(7);
-		}
-		return retorno;
 	}
 
 	@Override
@@ -88,8 +77,8 @@ public class Dado implements GLEventListener, MouseListener {
 		RotateThread t = null;
 		if (((mouse != null) && (mouse.getButton() 	== MouseEvent.BUTTON1))){
 			if (ludo.podeRolarDado()) {//TODO:validar também se foi clicado no mouse
-				novaPosicao = rolarDado();
-				ludo.dadoRolado(novaPosicao);
+				novaPosicao = ludo.rolarDado();
+				ludo.setAguardandoSelecao(true);
 				t = new RotateThread(this, glDrawable);
 			}
 		}
@@ -356,7 +345,7 @@ class RotateThread extends Thread{
 			dado.setCountRotates(0.1 * i);
 			glDrawable.display();
 			try {
-				Thread.sleep(50);
+				Thread.sleep(25);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

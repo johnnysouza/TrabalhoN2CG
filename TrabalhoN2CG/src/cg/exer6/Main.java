@@ -20,20 +20,23 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private GL gl;
 	private GLU glu;
 	private GLAutoDrawable glDrawable;
-	private Ponto2D[] pontos = new Ponto2D[4];
+	private final Ponto2D[] pontos = new Ponto2D[4];
 	private int pontoSelecionado;
 	private int antigoX;
 	private int antigoY;
 	private int zoom = 100;
 
 	public Main() {
-		pontos[0] = new Ponto2D(-100, -100);
-		pontos[1] = new Ponto2D(-100, 100);
-		pontos[2] = new Ponto2D(100, 100);
-		pontos[3] = new Ponto2D(100, -100);
+		int x = 180;
+		int y = 75;
+		pontos[0] = new Ponto2D(x, y);
+		pontos[1] = new Ponto2D(x / 1.2, y);
+		pontos[2] = new Ponto2D(x / 1.2, 0);
+		pontos[3] = new Ponto2D(0, 0);
 	}
 
-	public void init(GLAutoDrawable drawable) {
+	@Override
+	public void init(final GLAutoDrawable drawable) {
 		System.out.println(" --- init ---");
 		glDrawable = drawable;
 		gl = drawable.getGL();
@@ -43,7 +46,8 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Branco de fundo
 	}
 
-	public void display(GLAutoDrawable arg0) {
+	@Override
+	public void display(final GLAutoDrawable arg0) {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
@@ -79,25 +83,26 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			Ponto2D p0p1 = calculaPontoSpline(pontos[0], pontos[1], t);
 			Ponto2D p1p2 = calculaPontoSpline(pontos[1], pontos[2], t);
 			Ponto2D p2p3 = calculaPontoSpline(pontos[2], pontos[3], t);
-			
+
 			Ponto2D p0p1p2 = calculaPontoSpline(p0p1, p1p2, t);
 			Ponto2D p1p2p3 = calculaPontoSpline(p1p2, p2p3, t);
-			
+
 			Ponto2D p0p1p2p3 = calculaPontoSpline(p0p1p2, p1p2p3, t);
 			gl.glVertex2d(p0p1p2p3.getX(), p0p1p2p3.getY());
 		}
-		
+
 		gl.glEnd();
 	}
 
-	private Ponto2D calculaPontoSpline(Ponto2D ponto1, Ponto2D ponto2, float t) {
-		double x = ponto1.getX() + (ponto2.getX() - ponto1.getX()) * t;
-		double y = ponto1.getY() + (ponto2.getY() - ponto1.getY()) * t;
+	private Ponto2D calculaPontoSpline(final Ponto2D ponto1, final Ponto2D ponto2, final float t) {
+		double x = ponto1.getX() + ((ponto2.getX() - ponto1.getX()) * t);
+		double y = ponto1.getY() + ((ponto2.getY() - ponto1.getY()) * t);
 
 		return new Ponto2D(x, y);
 	}
 
-	public void keyPressed(KeyEvent e) {
+	@Override
+	public void keyPressed(final KeyEvent e) {
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_I: // Mais zoom
 			if (zoom < 400) {
@@ -149,16 +154,20 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		glDrawable.display(); // redesenhar ...
 	}
 
-	public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
+	@Override
+	public void reshape(final GLAutoDrawable arg0, final int arg1, final int arg2, final int arg3, final int arg4) {
 	}
 
-	public void displayChanged(GLAutoDrawable arg0, boolean arg1, boolean arg2) {
+	@Override
+	public void displayChanged(final GLAutoDrawable arg0, final boolean arg1, final boolean arg2) {
 	}
 
-	public void keyReleased(KeyEvent arg0) {
+	@Override
+	public void keyReleased(final KeyEvent arg0) {
 	}
 
-	public void keyTyped(KeyEvent arg0) {
+	@Override
+	public void keyTyped(final KeyEvent arg0) {
 	}
 
 	public void SRU() {
@@ -183,29 +192,29 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
+	public void mouseClicked(final MouseEvent arg0) {
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
+	public void mouseEntered(final MouseEvent e) {
 	}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
+	public void mouseExited(final MouseEvent e) {
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
+	public void mousePressed(final MouseEvent e) {
 		antigoX = e.getX();
 		antigoY = e.getY();
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
+	public void mouseReleased(final MouseEvent e) {
 	}
 
 	@Override
-	public void mouseDragged(MouseEvent e) {
+	public void mouseDragged(final MouseEvent e) {
 		int movtoX = e.getX() - antigoX;
 		int movtoY = e.getY() - antigoY;
 		pontos[pontoSelecionado].setX(pontos[pontoSelecionado].getX() + movtoX);
@@ -218,7 +227,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e) {
+	public void mouseMoved(final MouseEvent e) {
 	}
 
 }

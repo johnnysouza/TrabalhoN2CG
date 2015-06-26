@@ -19,6 +19,7 @@ import javax.media.opengl.glu.GLU;
 
 import cg.base.Cor;
 import cg.base.Peca;
+import cg.base.ValorDadoInvalido;
 import cg.business.LudoBusiness;
 import cg.gui.MainFrame;
 
@@ -26,11 +27,8 @@ import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.texture.TextureData;
 
 public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
-		MouseMotionListener {
+MouseMotionListener {
 
-	private static double PROPORCAO_TELA_COORDENADAS_X = 0.32;
-	private static double PROPORCAO_TELA_COORDENADAS_Y = 0.4;
-	
 	private GL gl;
 	private GLU glu;
 	private GLUT glut;
@@ -40,17 +38,15 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 	private final LudoBusiness ludo;
 	private BufferedImage image;
 	private int idTexture[];
-	private int width[] = new int[2];
-	private int height[] = new int[2];
-	private TextureData[] td = new TextureData[2];
-	private ByteBuffer[] buffer = new ByteBuffer[2];
-	private boolean aguardandoSelecao;
-	private MouseEvent mouse;
+	private final int width[] = new int[2];
+	private final int height[] = new int[2];
+	private final TextureData[] td = new TextureData[2];
+	private final ByteBuffer[] buffer = new ByteBuffer[2];
 
-	private Peca[] pecasVerdes = new Peca[4];
-	private Peca[] pecasVermelhas = new Peca[4];
-	private Peca[] pecasAzuis = new Peca[4];
-	private Peca[] pecasAmarelas = new Peca[4];
+	private final Peca[] pecasVerdes = new Peca[4];
+	private final Peca[] pecasVermelhas = new Peca[4];
+	private final Peca[] pecasAzuis = new Peca[4];
+	private final Peca[] pecasAmarelas = new Peca[4];
 
 	public Peca[] getPecasVerdes() {
 		return pecasVerdes;
@@ -87,25 +83,31 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 
 	@Override
 	public void mouseClicked(final MouseEvent arg0) {
-//		Object pecaSelecionada = selecionarPeca(arg0);
-//		if (pecaSelecionada != null) {
-//			movimentarPeca(pecaSelecionada);
-//			terminouJogada();
-//			JogadaComputador();
-//		}
+		//		Object pecaSelecionada = selecionarPeca(arg0);
+		//		if (pecaSelecionada != null) {
+		//			movimentarPeca(pecaSelecionada);
+		//			terminouJogada();
+		//			JogadaComputador();
+		//		}
 	}
 
+	/**
+	 *
+	 */
 	private void JogadaComputador() {
-		
-		ludo.setMinhaVez(true);
+		jogadaComputador(pecasVermelhas);
+		jogadaComputador(pecasAzuis);
+		jogadaComputador(pecasAmarelas);
 	}
 
-	private void movimentarPeca(final Object pecaSelecionada) {
-	}
-
-	private Object selecionarPeca(final MouseEvent arg0) {
-		// necessário alterar classe de retorno quando definir
-		return null;
+	private void jogadaComputador(final Peca[] pecas) {
+		int valorDado = ludo.rolarDado();
+		int peca = ludo.valorAleatorio(5);
+		try {
+			movimentarPeca(pecas, peca, valorDado);
+		} catch (ValorDadoInvalido e) {
+			//nunca vai cair aqui
+		}
 	}
 
 	@Override
@@ -126,35 +128,49 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 
 	@Override
 	public void keyPressed(final KeyEvent e) {
-		if (aguardandoSelecao) {
+		if (ludo.isAguardandoSelecao()) {
 			int valor = ludo.getValorDado();
-			switch (e.getKeyCode()) {
-			case KeyEvent.VK_1:
-				pecasVerdes[0].incrementarPosicao(valor);
-				break;
-			case KeyEvent.VK_2:
-				pecasVerdes[1].incrementarPosicao(valor);
-				break;
-			case KeyEvent.VK_3:
-				pecasVerdes[2].incrementarPosicao(valor);
-				break;
-			case KeyEvent.VK_4:
-				pecasVerdes[3].incrementarPosicao(valor);
-				break;
-			default:
-				break;
+			boolean movimentou = false;
+			try{
+				movimentou = movimentarPeca(pecasVerdes, e.getKeyCode(), valor);
+			}catch(ValorDadoInvalido exp){
+				ludo.setAguardandoSelecao(false);
+				return;
 			}
-			
 			Cor corVencedora = ludo.verificarFimPartida();
 			if(corVencedora != null) {
 				//TODO tratar fim do jogo
 				MainFrame.getInstance().encerrarJogo(corVencedora);
 				return;
 			}
-			aguardandoSelecao = false;
-			glDrawable.display();
-			JogadaComputador();
+			if (movimentou){
+				ludo.setMinhaVez(false);
+				ludo.setAguardandoSelecao(false);
+				glDrawable.display();
+				JogadaComputador();
+			}
 		}
+	}
+
+	private boolean movimentarPeca(final Peca[] pecas, final int peca, final int valor) throws ValorDadoInvalido {
+		boolean movimentou = false;
+		switch (peca) {
+		case KeyEvent.VK_1:
+			movimentou = pecas[0].incrementarPosicao(valor);
+			break;
+		case KeyEvent.VK_2:
+			movimentou = pecas[1].incrementarPosicao(valor);
+			break;
+		case KeyEvent.VK_3:
+			movimentou = pecas[2].incrementarPosicao(valor);
+			break;
+		case KeyEvent.VK_4:
+			movimentou = pecas[3].incrementarPosicao(valor);
+			break;
+		default:
+			break;
+		}
+		return movimentou;
 	}
 
 	@Override
@@ -238,45 +254,45 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 
 		desenharTabuleiro();
 
-//		if (((mouse != null) && (mouse.getButton() == MouseEvent.BUTTON1))) {
-//			if (aguardandoSelecao) {// TODO
-//				int viewport[] = new int[4];
-//				double mvmatrix[] = new double[16];
-//				double projmatrix[] = new double[16];
-//				int realy = 0;// GL y coord pos
-//				double wcoord[] = new double[4];// wx, wy, wz;// returned xyz
-//												// coords
-//				int x = mouse.getX(), y = mouse.getY();
-//				gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
-//				gl.glGetDoublev(GL.GL_MODELVIEW_MATRIX, mvmatrix, 0);
-//				gl.glGetDoublev(GL.GL_PROJECTION_MATRIX, projmatrix, 0);
-//				/* note viewport[3] is height of window in pixels */
-//				realy = viewport[3] - (int) y - 1;
-//				System.out.println("Coordinates at cursor are (" + x + ", "
-//						+ realy);
-//				glu.gluUnProject((double) x, (double) realy, 1.0, //
-//						mvmatrix, 0,//
-//						projmatrix, 0,//
-//						viewport, 0, //
-//						wcoord, 0);
-//				System.out
-//						.println("World coords at z=1.0 are (" //
-//								+ wcoord[0] + ", " + wcoord[1]
-//								+ ", "
-//								+ wcoord[2] + ")");
-//				double mouseClikX = wcoord[0];
-//				double xTratado = (wcoord[0] + xEye) * 0.32;
-//				double mouseClikY = wcoord[1];
-//				double yTratado = ((-1 * wcoord[1]) - yEye) * 0.32;
-//				
-//				boolean estaDentro = false;
-//				for (int i = 0; i < 4  && !estaDentro; i++) {
-//					estaDentro = pecasVerdes[i].estaDentroPeca(xTratado, yTratado);
-//				}
-//				System.out.println(estaDentro);
-//			}
-//			mouse = null;
-//		}
+		//		if (((mouse != null) && (mouse.getButton() == MouseEvent.BUTTON1))) {
+		//			if (aguardandoSelecao) {// TODO
+		//				int viewport[] = new int[4];
+		//				double mvmatrix[] = new double[16];
+		//				double projmatrix[] = new double[16];
+		//				int realy = 0;// GL y coord pos
+		//				double wcoord[] = new double[4];// wx, wy, wz;// returned xyz
+		//												// coords
+		//				int x = mouse.getX(), y = mouse.getY();
+		//				gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
+		//				gl.glGetDoublev(GL.GL_MODELVIEW_MATRIX, mvmatrix, 0);
+		//				gl.glGetDoublev(GL.GL_PROJECTION_MATRIX, projmatrix, 0);
+		//				/* note viewport[3] is height of window in pixels */
+		//				realy = viewport[3] - (int) y - 1;
+		//				System.out.println("Coordinates at cursor are (" + x + ", "
+		//						+ realy);
+		//				glu.gluUnProject((double) x, (double) realy, 1.0, //
+		//						mvmatrix, 0,//
+		//						projmatrix, 0,//
+		//						viewport, 0, //
+		//						wcoord, 0);
+		//				System.out
+		//						.println("World coords at z=1.0 are (" //
+		//								+ wcoord[0] + ", " + wcoord[1]
+		//								+ ", "
+		//								+ wcoord[2] + ")");
+		//				double mouseClikX = wcoord[0];
+		//				double xTratado = (wcoord[0] + xEye) * 0.32;
+		//				double mouseClikY = wcoord[1];
+		//				double yTratado = ((-1 * wcoord[1]) - yEye) * 0.32;
+		//
+		//				boolean estaDentro = false;
+		//				for (int i = 0; i < 4  && !estaDentro; i++) {
+		//					estaDentro = pecasVerdes[i].estaDentroPeca(xTratado, yTratado);
+		//				}
+		//				System.out.println(estaDentro);
+		//			}
+		//			mouse = null;
+		//		}
 
 		for (int i = 0; i < 4; i++) {
 			pecasVerdes[i].desenharPeca(gl, glut);
@@ -384,7 +400,7 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		gl.glDisable(GL.GL_TEXTURE_2D); // Desabilita uso de textura
 	}
 
-	public void loadImage(final String fileName, int pos) {
+	public void loadImage(final String fileName, final int pos) {
 		// Tenta carregar o arquivo
 		image = null;
 		try {
@@ -418,8 +434,8 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		float luzDifusa[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		float luzEspecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		float posicaoLuz[] = { 50.0f, 0.0f, 0.0f, 1.0f }; // último
-															// parâmetro:
-															// 0-direcional,
+		// parâmetro:
+		// 0-direcional,
 		float posicaoLuz2[] = { 5.0f, 5.0f, 50.0f, 1.0f };
 		float luzEspecular2[] = { 1.0f, 1.0f, 1.0f, 0.0f };
 		float luzDifusa2[] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -455,9 +471,4 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		// TODO Auto-generated method stub
 
 	}
-
-	public void aguardarSelecao() {
-		aguardandoSelecao = true;
-	}
-
 }
