@@ -81,8 +81,4 @@ public class Cor {
 		return true;
 	}
 	
-	public float[] toFloatArray() {
-		return new float[]{R, G, B};
-	}
-	
 }
