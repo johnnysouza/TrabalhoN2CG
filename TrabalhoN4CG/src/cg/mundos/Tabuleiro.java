@@ -83,31 +83,51 @@ MouseMotionListener {
 
 	@Override
 	public void mouseClicked(final MouseEvent arg0) {
-		//		Object pecaSelecionada = selecionarPeca(arg0);
-		//		if (pecaSelecionada != null) {
-		//			movimentarPeca(pecaSelecionada);
-		//			terminouJogada();
-		//			JogadaComputador();
-		//		}
 	}
 
 	/**
 	 *
 	 */
-	private void JogadaComputador() {
-		jogadaComputador(pecasVermelhas);
-		jogadaComputador(pecasAzuis);
-		jogadaComputador(pecasAmarelas);
+	private void jogadasComputador() {
+		try {
+			Thread.sleep(1000);
+			int peca = jogadaComputador(pecasVermelhas);
+			comerPeca(pecasAzuis, peca, 39);
+			comerPeca(pecasAmarelas, peca, 26);
+			comerPeca(pecasVerdes, peca, 13);
+			glDrawable.display();
+			Thread.sleep(1000);
+
+			peca = jogadaComputador(pecasAzuis);
+			comerPeca(pecasAmarelas, peca, 39);
+			comerPeca(pecasVerdes, peca, 26);
+			comerPeca(pecasVermelhas, peca, 13);
+			glDrawable.display();
+			Thread.sleep(1000);
+
+			peca = jogadaComputador(pecasAmarelas);
+			comerPeca(pecasVerdes, peca, 39);
+			comerPeca(pecasVermelhas, peca, 26);
+			comerPeca(pecasAzuis, peca, 13);
+			glDrawable.display();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
-	private void jogadaComputador(final Peca[] pecas) {
-		int valorDado = ludo.rolarDado();
-		int peca = ludo.valorAleatorio(5);
-		try {
-			movimentarPeca(pecas, peca, valorDado);
-		} catch (ValorDadoInvalido e) {
-			//nunca vai cair aqui
-		}
+	private int jogadaComputador(final Peca[] pecas) {
+		boolean tentarNovamente = false;
+		int peca = -1;
+		do{
+			int valorDado = ludo.rolarDado();
+			peca = ludo.valorAleatorio(5);
+			try {
+				movimentarPeca(pecas, peca, valorDado);
+			} catch (ValorDadoInvalido e) {
+				tentarNovamente = selecionarNovamente();
+			}
+		}while(tentarNovamente);
+		return peca--;
 	}
 
 	@Override
@@ -130,12 +150,22 @@ MouseMotionListener {
 	public void keyPressed(final KeyEvent e) {
 		if (ludo.isAguardandoSelecao()) {
 			int valor = ludo.getValorDado();
-			boolean movimentou = false;
+			boolean proximaJogada = false;
 			try{
-				movimentou = movimentarPeca(pecasVerdes, e.getKeyCode(), valor);
+				int peca = e.getKeyCode() - KeyEvent.VK_0;
+				proximaJogada = movimentarPeca(pecasVerdes, peca, valor);
+				if(proximaJogada){
+					comerPeca(pecasVermelhas, peca, 39);
+					comerPeca(pecasAzuis, peca, 26);
+					comerPeca(pecasAmarelas, peca, 13);
+				}
 			}catch(ValorDadoInvalido exp){
-				ludo.setAguardandoSelecao(false);
-				return;
+				boolean podeRolarDadoNovamente = selecionarNovamente();
+				if(podeRolarDadoNovamente){
+					ludo.setAguardandoSelecao(false);
+					return;
+				}
+				proximaJogada = true;
 			}
 			Cor corVencedora = ludo.verificarFimPartida();
 			if(corVencedora != null) {
@@ -143,28 +173,47 @@ MouseMotionListener {
 				MainFrame.getInstance().encerrarJogo(corVencedora);
 				return;
 			}
-			if (movimentou){
+			if (proximaJogada){
 				ludo.setMinhaVez(false);
 				ludo.setAguardandoSelecao(false);
 				glDrawable.display();
-				JogadaComputador();
+				jogadasComputador();
+				ludo.setMinhaVez(true);
 			}
 		}
+	}
+
+	private void comerPeca(final Peca[] pecas, final int peca, final int diff) {
+		for (Peca p : pecas) {
+			if((p.getPosicao() + diff) == pecasVerdes[peca].getPosicao()){
+				p.setPosicao(0);
+			}
+		}
+	}
+
+	private boolean selecionarNovamente() {
+		boolean podeRolarDadoNovamente = true;
+		for(int i = 0; i < 4; i++){
+			if (pecasVerdes[i].getPosicao() == 0){
+				podeRolarDadoNovamente = false;
+			}
+		}
+		return podeRolarDadoNovamente;
 	}
 
 	private boolean movimentarPeca(final Peca[] pecas, final int peca, final int valor) throws ValorDadoInvalido {
 		boolean movimentou = false;
 		switch (peca) {
-		case KeyEvent.VK_1:
+		case 1:
 			movimentou = pecas[0].incrementarPosicao(valor);
 			break;
-		case KeyEvent.VK_2:
+		case 2:
 			movimentou = pecas[1].incrementarPosicao(valor);
 			break;
-		case KeyEvent.VK_3:
+		case 3:
 			movimentou = pecas[2].incrementarPosicao(valor);
 			break;
-		case KeyEvent.VK_4:
+		case 4:
 			movimentou = pecas[3].incrementarPosicao(valor);
 			break;
 		default:
@@ -226,10 +275,10 @@ MouseMotionListener {
 		zCenter = -10.0f;
 
 		for (int i = 0; i < 4; i++) {
-			pecasVerdes[i] = new Peca(i + 1, Cor.VERDE);
-			pecasVermelhas[i] = new Peca(i + 1, Cor.VERMELHO);
-			pecasAzuis[i] = new Peca(i + 1, Cor.AZUL);
-			pecasAmarelas[i] = new Peca(i + 1, Cor.AMARELO);
+			pecasVerdes[i] = new Peca(this, i + 1, Cor.VERDE);
+			pecasVermelhas[i] = new Peca(this, i + 1, Cor.VERMELHO);
+			pecasAzuis[i] = new Peca(this, i + 1, Cor.AZUL);
+			pecasAmarelas[i] = new Peca(this, i + 1, Cor.AMARELO);
 		}
 	}
 
@@ -253,46 +302,6 @@ MouseMotionListener {
 				0.0f);
 
 		desenharTabuleiro();
-
-		//		if (((mouse != null) && (mouse.getButton() == MouseEvent.BUTTON1))) {
-		//			if (aguardandoSelecao) {// TODO
-		//				int viewport[] = new int[4];
-		//				double mvmatrix[] = new double[16];
-		//				double projmatrix[] = new double[16];
-		//				int realy = 0;// GL y coord pos
-		//				double wcoord[] = new double[4];// wx, wy, wz;// returned xyz
-		//												// coords
-		//				int x = mouse.getX(), y = mouse.getY();
-		//				gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
-		//				gl.glGetDoublev(GL.GL_MODELVIEW_MATRIX, mvmatrix, 0);
-		//				gl.glGetDoublev(GL.GL_PROJECTION_MATRIX, projmatrix, 0);
-		//				/* note viewport[3] is height of window in pixels */
-		//				realy = viewport[3] - (int) y - 1;
-		//				System.out.println("Coordinates at cursor are (" + x + ", "
-		//						+ realy);
-		//				glu.gluUnProject((double) x, (double) realy, 1.0, //
-		//						mvmatrix, 0,//
-		//						projmatrix, 0,//
-		//						viewport, 0, //
-		//						wcoord, 0);
-		//				System.out
-		//						.println("World coords at z=1.0 are (" //
-		//								+ wcoord[0] + ", " + wcoord[1]
-		//								+ ", "
-		//								+ wcoord[2] + ")");
-		//				double mouseClikX = wcoord[0];
-		//				double xTratado = (wcoord[0] + xEye) * 0.32;
-		//				double mouseClikY = wcoord[1];
-		//				double yTratado = ((-1 * wcoord[1]) - yEye) * 0.32;
-		//
-		//				boolean estaDentro = false;
-		//				for (int i = 0; i < 4  && !estaDentro; i++) {
-		//					estaDentro = pecasVerdes[i].estaDentroPeca(xTratado, yTratado);
-		//				}
-		//				System.out.println(estaDentro);
-		//			}
-		//			mouse = null;
-		//		}
 
 		for (int i = 0; i < 4; i++) {
 			pecasVerdes[i].desenharPeca(gl, glut);
@@ -470,5 +479,31 @@ MouseMotionListener {
 			final boolean arg2) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public boolean posicaoDisponivel(final Cor cor, final int index, final int posicao) {
+		Peca[] pecas = null;
+		switch (cor.getNome()) {
+		case "Azul":
+			pecas = pecasAzuis;
+			break;
+		case "Verde":
+			pecas = pecasVerdes;
+			break;
+		case "Vermelho":
+			pecas = pecasVermelhas;
+			break;
+		case "Amarelo":
+			pecas = pecasAmarelas;
+			break;
+		}
+		for(int i = 0; i < pecas.length; i++){
+			if(i != index){
+				if(pecas[i].getPosicao() == posicao){
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }

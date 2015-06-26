@@ -2,6 +2,8 @@ package cg.base;
 
 import javax.media.opengl.GL;
 
+import cg.mundos.Tabuleiro;
+
 import com.sun.opengl.util.GLUT;
 
 public class Peca {
@@ -13,7 +15,10 @@ public class Peca {
 	private final Cor cor;
 	private final float[] translate;
 
-	public Peca(final int id, final Cor cor) {
+	private final Tabuleiro tabuleiro;
+
+	public Peca(final Tabuleiro tabuleiro, final int id, final Cor cor) {
+		this.tabuleiro = tabuleiro;
 		this.id = id;
 		this.cor = cor;
 		posicao = 0;
@@ -72,24 +77,29 @@ public class Peca {
 			return false;
 		}
 
+		int novaPosicao;
 		if (posicao == 0){
 			if ((valor == 1) || (valor == 6)) { // Peca encontrasse no inicio e pode ser movida apenas com valor 1 ou 6
-				posicao = 1; // Movimenta apenas uma casa
+				novaPosicao = 1; // Movimenta apenas uma casa
 			}else{
 				throw new ValorDadoInvalido();
 			}
 		} else if (posicao < 53) { // Pode avançar sem problemas
-			posicao += valor;
+			novaPosicao = posicao + valor;
 		} else {
 			if (valor == 1) {
-				posicao += valor; // pode incrementar pois não precisa verificar retorno
+				novaPosicao = posicao + valor; // pode incrementar pois não precisa verificar retorno
 			} else if ((posicao + valor) > 58) { // ajusta o valor para a peça retornar
 				valor -= 2;
 				valor *= -1;
 			}
-			posicao += valor;
+			novaPosicao = posicao + valor;
 		}
-		return true;
+		if (tabuleiro.posicaoDisponivel(cor,id - 1, novaPosicao)){
+			posicao = novaPosicao;
+			return true;
+		}
+		return false;
 	}
 
 	private void calcularTranslacao() {
