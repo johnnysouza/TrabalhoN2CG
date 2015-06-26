@@ -6,6 +6,8 @@ import com.sun.opengl.util.GLUT;
 
 public class Peca {
 
+	private static final double RAIO = 0.75;
+	
 	private int id;
 	private int posicao;
 	private Cor cor;
@@ -48,9 +50,37 @@ public class Peca {
 		gl.glColor3f(cor.getR(), cor.getG(), cor.getB());
 
 		gl.glTranslatef(translate[0], translate[1], translate[2]);
-		glut.glutSolidSphere(0.75, 30, 30);
+		glut.glutSolidSphere(RAIO, 30, 30);
 		gl.glPopMatrix();
-
+	}
+	
+	public boolean estaDentroPeca(double x, double y) {
+//		
+//		translate[0] = -7.1f;
+//		translate[1] = 4.5f;
+//		translate[2] = 10.0f;
+//	} else if (id == 2){
+//		translate[0] = -5.6f;
+//		translate[1] = 3.0f;
+//		translate[2] = 10.0f;
+//	} else if (id == 3){
+//		translate[0] = -7.1f;
+//		translate[1] = 1.5f;
+//		translate[2] = 10.0f;
+//	} else {
+//		translate[0] = -8.6f;
+//		translate[1] = 3.0f;
+//		translate[2] = 10.0f;
+		
+		
+		double xPeca = translate[0];
+		double yPeca = translate[1];
+		
+		double dist = Math.pow(xPeca - x, 2) + Math.pow(yPeca - y, 2);
+		if (dist < RAIO * RAIO) {
+			return true;
+		}
+		return false;
 	}
 
 	private void calcularTranslacao() {

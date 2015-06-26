@@ -28,4 +28,12 @@ public class LudoBusiness {
 		this.dado = dado;
 	}
 
+	public int getValorDado() {
+		return valorDado;
+	}
+
+	public void setValorDado(int valorDado) {
+		this.valorDado = valorDado;
+	}
+
 }

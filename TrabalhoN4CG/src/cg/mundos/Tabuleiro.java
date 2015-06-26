@@ -27,6 +27,9 @@ import com.sun.opengl.util.texture.TextureData;
 public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 		MouseMotionListener {
 
+	private static double PROPORCAO_TELA_COORDENADAS_X = 0.32;
+	private static double PROPORCAO_TELA_COORDENADAS_Y = 0.4;
+	
 	private GL gl;
 	private GLU glu;
 	private GLUT glut;
@@ -41,6 +44,7 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 	private TextureData[] td = new TextureData[2];
 	private ByteBuffer[] buffer = new ByteBuffer[2];
 	private boolean aguardandoSelecao;
+	private MouseEvent mouse;
 
 	private Peca[] pecasVerdes = new Peca[4];
 	private Peca[] pecasVermelhas = new Peca[4];
@@ -101,9 +105,11 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 	}
 
 	@Override
-	public void mousePressed(final MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
+	public void mousePressed(final MouseEvent e) {
+		if (aguardandoSelecao) {
+			mouse = e;
+			glDrawable.display();
+		}
 	}
 
 	@Override
@@ -176,9 +182,9 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 			pecasAzuis[i] = new Peca(i + 1, Cor.AZUL);
 			pecasAmarelas[i] = new Peca(i + 1, Cor.AMARELO);
 		}
-		
+
 		pecasVerdes[0].setPosicao(57);
-		pecasVerdes[1].setPosicao(58);
+		pecasVerdes[1].setPosicao(28);
 	}
 
 	@Override
@@ -201,6 +207,46 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 				0.0f);
 
 		desenharTabuleiro();
+
+		if (((mouse != null) && (mouse.getButton() == MouseEvent.BUTTON1))) {
+			if (aguardandoSelecao) {// TODO
+				int viewport[] = new int[4];
+				double mvmatrix[] = new double[16];
+				double projmatrix[] = new double[16];
+				int realy = 0;// GL y coord pos
+				double wcoord[] = new double[4];// wx, wy, wz;// returned xyz
+												// coords
+				int x = mouse.getX(), y = mouse.getY();
+				gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
+				gl.glGetDoublev(GL.GL_MODELVIEW_MATRIX, mvmatrix, 0);
+				gl.glGetDoublev(GL.GL_PROJECTION_MATRIX, projmatrix, 0);
+				/* note viewport[3] is height of window in pixels */
+				realy = viewport[3] - (int) y - 1;
+				System.out.println("Coordinates at cursor are (" + x + ", "
+						+ realy);
+				glu.gluUnProject((double) x, (double) realy, 1.0, //
+						mvmatrix, 0,//
+						projmatrix, 0,//
+						viewport, 0, //
+						wcoord, 0);
+				System.out
+						.println("World coords at z=1.0 are (" //
+								+ wcoord[0] + ", " + wcoord[1]
+								+ ", "
+								+ wcoord[2] + ")");
+				double mouseClikX = wcoord[0];
+				double xTratado = (wcoord[0] + xEye) * 0.32;
+				double mouseClikY = wcoord[1];
+				double yTratado = ((-1 * wcoord[1]) - yEye) * 0.32;
+				
+				boolean estaDentro = false;
+				for (int i = 0; i < 4  && !estaDentro; i++) {
+					estaDentro = pecasVerdes[i].estaDentroPeca(xTratado, yTratado);
+				}
+				System.out.println(estaDentro);
+			}
+			mouse = null;
+		}
 
 		for (int i = 0; i < 4; i++) {
 			pecasVerdes[i].desenharPeca(gl, glut);
