@@ -20,6 +20,7 @@ import javax.media.opengl.glu.GLU;
 import cg.base.Cor;
 import cg.base.Peca;
 import cg.business.LudoBusiness;
+import cg.gui.MainFrame;
 
 import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.texture.TextureData;
@@ -96,6 +97,8 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 
 	private void JogadaComputador() {
 		// TODO faz animação da movimentação dos dados e das peças dos players
+		
+		
 	}
 
 	private void movimentarPeca(final Object pecaSelecionada) {
@@ -154,8 +157,16 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 			default:
 				break;
 			}
-			ludo.verificarFimPartida();
+			
+			Cor corVencedora = ludo.verificarFimPartida();
+			if(corVencedora != null) {
+				//TODO tratar fim do jogo
+				MainFrame.getInstance().encerrarJogo(corVencedora);
+				return;
+			}
 			aguardandoSelecao = false;
+			glDrawable.display();
+			JogadaComputador();
 		}
 	}
 

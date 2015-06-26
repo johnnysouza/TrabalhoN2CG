@@ -1,5 +1,7 @@
 package cg.business;
 
+import cg.base.Cor;
+import cg.base.Peca;
 import cg.mundos.Dado;
 import cg.mundos.Tabuleiro;
 
@@ -36,21 +38,28 @@ public class LudoBusiness {
 		this.valorDado = valorDado;
 	}
 	
-	public boolean verificarFimPartida() {
-		int[] posicoes = new int[16];
-		for (int i = 0; i < 4; i++) {
-			posicoes[i] = tabuleiro.getPecasAmarelas()[i].getPosicao();
-			posicoes[i+1] = tabuleiro.getPecasAzuis()[i].getPosicao();
-			posicoes[i+2] = tabuleiro.getPecasVerdes()[i].getPosicao();
-			posicoes[i+3] = tabuleiro.getPecasVermelhas()[i].getPosicao();
+	public Cor verificarFimPartida() {
+		if (corVenceu(tabuleiro.getPecasAmarelas())) {
+			return Cor.AMARELO;
+		} else if (corVenceu(tabuleiro.getPecasAzuis())) {
+			return Cor.AZUL;
+		} else if (corVenceu(tabuleiro.getPecasVerdes())) {
+			return Cor.VERDE;
+		} else if (corVenceu(tabuleiro.getPecasVermelhas())) {
+			return Cor.VERMELHO;
 		}
 		
-		boolean fim = false;
-		for (int i = 0; i < posicoes.length && !fim; i++) {
-			fim = posicoes[i] == 58;
+		return null;
+	}
+	
+	private boolean corVenceu(Peca[] pecas) {
+		boolean venceu = true;
+		for (Peca posicao : pecas) {
+			if (posicao.getPosicao() != 58) {
+				venceu = false;
+			}
 		}
-		
-		return fim;
+		return venceu;
 	}
 	
 }
