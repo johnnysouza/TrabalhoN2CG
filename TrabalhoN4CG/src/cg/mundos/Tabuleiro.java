@@ -127,7 +127,7 @@ MouseMotionListener {
 				tentarNovamente = selecionarNovamente();
 			}
 		}while(tentarNovamente);
-		return peca--;
+		return peca - 1;
 	}
 
 	@Override
