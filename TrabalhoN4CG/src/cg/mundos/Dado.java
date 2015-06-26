@@ -33,18 +33,11 @@ public class Dado implements GLEventListener, MouseListener {
 	private final ByteBuffer[] buffer = new ByteBuffer[6];
 	private final LudoBusiness ludo;
 	private MouseEvent mouse;
-	private int gear;
-	private int posicaoAtual = 1;
-	private int novaPosicao;
-	private boolean mudouPosicao;
-	private boolean firstTime = true;
-	private static int[][] rotates = new int[][]{
-		{100,30,50,20,70,80},
-		{100,30,50,20,70,80},
-		{100,30,50,20,10,80},
-		{100,30,50,20,70,80},
-		{100,30,50,20,70,80},
-		{100,30,50,20,70,80}};
+	private int dado;
+	private final int posicaoAtual = 1;
+	private int novaPosicao = 1;
+	private double countRotates = 1;
+	private static int[][] rotates = new int[][]{{0,0,90,-90,0,180}, {0,90,0,0,-90,0}};
 
 	public Dado(final LudoBusiness ludo) {
 		this.ludo = ludo;
@@ -68,6 +61,7 @@ public class Dado implements GLEventListener, MouseListener {
 	public void mousePressed(final MouseEvent e) {
 		mouse = e;
 		glDrawable.display();
+		mouse = null;
 	}
 
 	@Override
@@ -91,26 +85,26 @@ public class Dado implements GLEventListener, MouseListener {
 
 		especificaParametrosVisualizacao();
 
-		if (((mouse != null) && (mouse.getButton() == MouseEvent.BUTTON1)) || firstTime){
+		RotateThread t = null;
+		if (((mouse != null) && (mouse.getButton() 	== MouseEvent.BUTTON1))){
 			if (ludo.podeRolarDado()) {//TODO:validar também se foi clicado no mouse
 				novaPosicao = rolarDado();
 				ludo.dadoRolado(novaPosicao);
-				mudouPosicao = true;
-				firstTime = false;
+				t = new RotateThread(this, glDrawable);
 			}
 		}
 
 		gl.glPushMatrix();
-		if(mudouPosicao){
-			gl.glRotatef(rotates[posicaoAtual-1][novaPosicao-1], 0, 1, 0);
-			gl.glCallList(gear); // Display List
-			posicaoAtual = novaPosicao;
-			novaPosicao = 0;
-			mudouPosicao = false;
-		}
+		gl.glRotatef((int) (countRotates * rotates[0][novaPosicao-1]), 0, 1, 0);
+		gl.glRotatef((int) (countRotates * rotates[1][novaPosicao-1]), 1, 0, 0);
+		gl.glCallList(dado);
 		gl.glPopMatrix();
 
 		gl.glFlush();
+
+		if(t != null){
+			t.start();
+		}
 	}
 
 	@Override
@@ -126,17 +120,9 @@ public class Dado implements GLEventListener, MouseListener {
 		glDrawable.setGL(new DebugGL(gl));
 
 		gl.glEnable(GL.GL_DEPTH_TEST);
-
-		gl.glEnable(GL.GL_LIGHT0);
-		gl.glEnable(GL.GL_LIGHT1);
-		gl.glEnable(GL.GL_LIGHTING);
-
-		//		gl.glEnable(GL.GL_COLOR_MATERIAL);
-		//		gl.glColorMaterial(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE);
+		ligarLuz();
 
 		gl.glShadeModel(GL.GL_SMOOTH);
-
-		ligarLuz();
 
 		for (int i = 0; i < QUANT_FACES_CUBO; i++) {
 			loadImage("resources\\dado_" + (i + 1) + ".jpg", i);
@@ -152,8 +138,26 @@ public class Dado implements GLEventListener, MouseListener {
 		gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER,
 				GL.GL_LINEAR);
 
-		gear = gl.glGenLists(1);
-		gl.glNewList(gear, GL.GL_COMPILE);
+		//		dado = gl.glGenLists(1);
+		//		gl.glNewList(dado, GL.GL_COMPILE);
+		//		drawCube();
+		//		gl.glEndList();
+
+		//		int dado;
+		//		IntBuffer lists;
+		//		lists = BufferUtil.newIntBuffer(1);
+		//		dado = gl.glGenLists(1);
+		//		gl.glNewList(dado, GL.GL_COMPILE);
+		//		drawCube();
+		//		gl.glEndList();
+		//		lists.put(0);
+		//		lists.flip();
+		//		gl.glListBase(dado);
+		//		gl.glCallLists(0,0, lists);
+
+		// create one display list
+		dado = gl.glGenLists(1);
+		gl.glNewList(dado, GL.GL_COMPILE);
 		drawCube();
 		gl.glEndList();
 	}
@@ -331,4 +335,31 @@ public class Dado implements GLEventListener, MouseListener {
 
 	}
 
+	public void setCountRotates(final double d) {
+		countRotates = d;
+	}
+}
+
+class RotateThread extends Thread{
+
+	private final GLAutoDrawable glDrawable;
+	private final Dado dado;
+
+	public RotateThread(final Dado dado, final GLAutoDrawable glDrawable) {
+		this.dado = dado;
+		this.glDrawable = glDrawable;
+	}
+	@Override
+	public void run() {
+
+		for(int i = 1; i < 11; i++){
+			dado.setCountRotates(0.1 * i);
+			glDrawable.display();
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
