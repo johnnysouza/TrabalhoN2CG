@@ -7,7 +7,7 @@ import cg.mundos.Tabuleiro;
 
 public class LudoBusiness {
 
-	private final boolean minhaVez = true;
+	private boolean minhaVez = true;
 	private boolean escolherPeca;
 	private int valorDado;
 	private Tabuleiro tabuleiro;
@@ -60,6 +60,14 @@ public class LudoBusiness {
 			}
 		}
 		return venceu;
+	}
+
+	public boolean isMinhaVez() {
+		return minhaVez;
+	}
+
+	public void setMinhaVez(boolean minhaVez) {
+		this.minhaVez = minhaVez;
 	}
 	
 }

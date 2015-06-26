@@ -96,45 +96,32 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 	}
 
 	private void JogadaComputador() {
-		// TODO faz animação da movimentação dos dados e das peças dos players
 		
-		
+		ludo.setMinhaVez(true);
 	}
 
 	private void movimentarPeca(final Object pecaSelecionada) {
-		// TODO faz animação da movimentação da peça
 	}
 
 	private Object selecionarPeca(final MouseEvent arg0) {
-		// TODO caso tenha selecinoado alguma peca do jogador, retorna ela,
 		// necessário alterar classe de retorno quando definir
 		return null;
 	}
 
 	@Override
 	public void mouseEntered(final MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseExited(final MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mousePressed(final MouseEvent e) {
-		if (aguardandoSelecao) {
-			mouse = e;
-			glDrawable.display();
-		}
 	}
 
 	@Override
 	public void mouseReleased(final MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

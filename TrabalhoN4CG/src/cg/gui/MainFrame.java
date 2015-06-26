@@ -75,62 +75,64 @@ public class MainFrame extends JFrame {
 		JLabel lblPlayer_1 = new JLabel("Player 1");
 		lblPlayer_1.setForeground(Color.GREEN);
 		lblPlayer_1.setFont(defaultFont);
-		lblPlayer_1.setBounds(20, 30, 90, 14);
+		lblPlayer_1.setBounds(20, 30, 90, 18);
 		info.add(lblPlayer_1);
 
 		JLabel lblPlayer_2 = new JLabel("Player 2");
 		lblPlayer_2.setForeground(Color.RED);
 		lblPlayer_2.setFont(defaultFont);
-		lblPlayer_2.setBounds(20, 80, 90, 14);
+		lblPlayer_2.setBounds(20, 80, 90, 18);
 		info.add(lblPlayer_2);
 
 		JLabel lblPlayer_3 = new JLabel("Player 3");
 		lblPlayer_3.setForeground(Color.BLUE);
 		lblPlayer_3.setFont(defaultFont);
-		lblPlayer_3.setBounds(20, 130, 90, 14);
+		lblPlayer_3.setBounds(20, 130, 90, 18);
 		info.add(lblPlayer_3);
 
 		JLabel lblPlayer_4 = new JLabel("Player 4");
 		lblPlayer_4.setFont(defaultFont);
 		lblPlayer_4.setForeground(Color.YELLOW);
-		lblPlayer_4.setBounds(20, 180, 90, 14);
+		lblPlayer_4.setBounds(20, 180, 90, 18);
 		info.add(lblPlayer_4);
 
 		JLabel lblpts_1 = new JLabel("0pts");
 		lblpts_1.setFont(defaultFont);
 		lblpts_1.setForeground(Color.GREEN);
-		lblpts_1.setBounds(140, 30, 46, 14);
+		lblpts_1.setBounds(140, 30, 46, 18);
 		info.add(lblpts_1);
 
 		JLabel lblpts_2 = new JLabel("0pts");
 		lblpts_2.setFont(defaultFont);
 		lblpts_2.setForeground(Color.RED);
-		lblpts_2.setBounds(140, 80, 46, 14);
+		lblpts_2.setBounds(140, 80, 46, 18);
 		info.add(lblpts_2);
 
 		JLabel lblpts_3 = new JLabel("0pts");
 		lblpts_3.setFont(defaultFont);
 		lblpts_3.setForeground(Color.BLUE);
-		lblpts_3.setBounds(140, 130, 46, 14);
+		lblpts_3.setBounds(140, 130, 46, 18);
 		info.add(lblpts_3);
 
 		JLabel lblpts_4 = new JLabel("0pts");
 		lblpts_4.setFont(defaultFont);
 		lblpts_4.setForeground(Color.YELLOW);
-		lblpts_4.setBounds(140, 180, 46, 14);
+		lblpts_4.setBounds(140, 180, 46, 18);
 		info.add(lblpts_4);
 		
 		JLabel gameOver = new JLabel("Fim de jogo");
-		lblPlayer_4.setFont(defaultFont);
-		lblPlayer_4.setForeground(Color.YELLOW);
-		lblPlayer_4.setBounds(20, 230, 90, 14);
-		info.add(lblPlayer_4);
+		gameOver.setFont(defaultFont);
+		gameOver.setForeground(Color.WHITE);
+		gameOver.setBounds(40, 280, 150, 30);
+		gameOver.setVisible(false);
+		info.add(gameOver);
 		
-		JLabel vencedor = new JLabel("Fim de jogo");
-		lblPlayer_4.setFont(defaultFont);
-		lblPlayer_4.setForeground(Color.YELLOW);
-		lblPlayer_4.setBounds(20, 230, 90, 14);
-		info.add(lblPlayer_4);
+		JLabel vencedor = new JLabel("Você venceu!");
+		vencedor.setFont(defaultFont);
+		vencedor.setForeground(Color.WHITE);
+		vencedor.setBounds(35, 330, 150, 20);
+		vencedor.setVisible(false);
+		info.add(vencedor);
 
 		ImageIcon img = new ImageIcon("resources\\seta.png");
 		activePLayer = new JLabel();
