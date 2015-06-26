@@ -7,7 +7,7 @@ import com.sun.opengl.util.GLUT;
 public class Peca {
 
 	private static final double RAIO = 0.75;
-	
+
 	private int id;
 	private int posicao;
 	private Cor cor;
@@ -37,14 +37,15 @@ public class Peca {
 			throw new IllegalArgumentException("Peça já está fora de jogo");
 		}
 		if (posicao < 0 || posicao > 58) {
-			throw new IllegalArgumentException("Posição inválida para peça. O valor deve ser de 0 até 58");
+			throw new IllegalArgumentException(
+					"Posição inválida para peça. O valor deve ser de 0 até 58");
 		}
 		this.posicao = posicao;
 	}
 
 	public void desenharPeca(final GL gl, final GLUT glut) {
 		calcularTranslacao();
-		
+
 		// Desenha uma esfera que representa uma peça
 		gl.glPushMatrix();
 		gl.glColor3f(cor.getR(), cor.getG(), cor.getB());
@@ -53,34 +54,46 @@ public class Peca {
 		glut.glutSolidSphere(RAIO, 30, 30);
 		gl.glPopMatrix();
 	}
-	
+
 	public boolean estaDentroPeca(double x, double y) {
-//		
-//		translate[0] = -7.1f;
-//		translate[1] = 4.5f;
-//		translate[2] = 10.0f;
-//	} else if (id == 2){
-//		translate[0] = -5.6f;
-//		translate[1] = 3.0f;
-//		translate[2] = 10.0f;
-//	} else if (id == 3){
-//		translate[0] = -7.1f;
-//		translate[1] = 1.5f;
-//		translate[2] = 10.0f;
-//	} else {
-//		translate[0] = -8.6f;
-//		translate[1] = 3.0f;
-//		translate[2] = 10.0f;
-		
-		
 		double xPeca = translate[0];
 		double yPeca = translate[1];
-		
+
 		double dist = Math.pow(xPeca - x, 2) + Math.pow(yPeca - y, 2);
 		if (dist < RAIO * RAIO) {
 			return true;
 		}
 		return false;
+	}
+
+	public void incrementarPosicao(int valor) {
+		if (valor < 1 || valor > 6) {
+			System.err.println("Valor inválido para movimentar a peça: "
+					+ valor);
+			return;
+		}
+
+		if (posicao == 58) {
+			System.err.println("Essa peça está fora do jogo e não pode mais ser movimentada");
+			return;
+		}
+
+		if (posicao == 0 && (valor == 1 || valor == 6)) { // Peca encontrasse no inicio e pode ser movida apenas com valor 1 ou 6
+			posicao = 1; // Movimenta apenas uma casa
+			return;
+		} else if (posicao < 53) { // Pode avançar sem problemas
+			posicao += valor;
+			return;
+		} else {
+			if (valor == 1) {
+				posicao += valor; // pode incrementar pois não precisa verificar retorno
+				return;
+			} else if (posicao + valor > 58) { // ajusta o valor para a peça retornar
+				valor -= 2;
+				valor *= -1;
+			}
+			posicao += valor;
+		}
 	}
 
 	private void calcularTranslacao() {
@@ -102,7 +115,7 @@ public class Peca {
 			break;
 		}
 	}
-	
+
 	private void calcularTranslacaoAmarelo() {
 		switch (posicao) {
 		case 0:
@@ -110,11 +123,11 @@ public class Peca {
 				translate[0] = -7.1f;
 				translate[1] = -9.8f;
 				translate[2] = 10.0f;
-			} else if (id == 2){
+			} else if (id == 2) {
 				translate[0] = -5.6f;
 				translate[1] = -11.3f;
 				translate[2] = 10.0f;
-			} else if (id == 3){
+			} else if (id == 3) {
 				translate[0] = -7.1f;
 				translate[1] = -12.8f;
 				translate[2] = 10.0f;
@@ -410,7 +423,7 @@ public class Peca {
 			translate[2] = 10.0f;
 			break;
 		case 58:
-			//Esconde pois terminou a jogo para essa peça, deve adicionar um pouco no placar após
+			// Esconde pois terminou a jogo para essa peça, deve adicionar um pouco no placar após
 			translate[0] = 0.0f;
 			translate[1] = -5.8f;
 			translate[2] = 0.0f;
@@ -427,11 +440,11 @@ public class Peca {
 				translate[0] = 7.1f;
 				translate[1] = -9.8f;
 				translate[2] = 10.0f;
-			} else if (id == 2){
+			} else if (id == 2) {
 				translate[0] = 8.6f;
 				translate[1] = -11.3f;
 				translate[2] = 10.0f;
-			} else if (id == 3){
+			} else if (id == 3) {
 				translate[0] = 7.1f;
 				translate[1] = -12.8f;
 				translate[2] = 10.0f;
@@ -743,11 +756,11 @@ public class Peca {
 				translate[0] = 7.1f;
 				translate[1] = 4.5f;
 				translate[2] = 10.0f;
-			} else if (id == 2){
+			} else if (id == 2) {
 				translate[0] = 8.6f;
 				translate[1] = 3.0f;
 				translate[2] = 10.0f;
-			} else if (id == 3){
+			} else if (id == 3) {
 				translate[0] = 7.1f;
 				translate[1] = 1.5f;
 				translate[2] = 10.0f;
@@ -1059,11 +1072,11 @@ public class Peca {
 				translate[0] = -7.1f;
 				translate[1] = 4.5f;
 				translate[2] = 10.0f;
-			} else if (id == 2){
+			} else if (id == 2) {
 				translate[0] = -5.6f;
 				translate[1] = 3.0f;
 				translate[2] = 10.0f;
-			} else if (id == 3){
+			} else if (id == 3) {
 				translate[0] = -7.1f;
 				translate[1] = 1.5f;
 				translate[2] = 10.0f;
