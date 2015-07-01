@@ -89,33 +89,33 @@ MouseMotionListener {
 	 *
 	 */
 	private void jogadasComputador() {
-		try {
-			Thread.sleep(1000);
-			int peca = jogadaComputador(pecasVermelhas);
-			comerPeca(pecasAzuis, peca, 39);
-			comerPeca(pecasAmarelas, peca, 26);
-			comerPeca(pecasVerdes, peca, 13);
+		//		try {
+		//			Thread.sleep(1000);
+		int peca = jogadaComputador(pecasVermelhas);
+		comerPeca(pecasVermelhas[peca].getPosicao(), pecasAzuis, 39);
+		comerPeca(pecasVermelhas[peca].getPosicao(), pecasAmarelas, 26);
+		comerPeca(pecasVermelhas[peca].getPosicao(), pecasVerdes, 13);
 			MainFrame.getInstance().nextPlayer();
 			glDrawable.display();
-			Thread.sleep(1000);
+		//			Thread.sleep(1000);
 
-			peca = jogadaComputador(pecasAzuis);
-			comerPeca(pecasAmarelas, peca, 39);
-			comerPeca(pecasVerdes, peca, 26);
-			comerPeca(pecasVermelhas, peca, 13);
-			MainFrame.getInstance().nextPlayer();
-			glDrawable.display();
-			Thread.sleep(1000);
+		peca = jogadaComputador(pecasAzuis);
+		comerPeca(pecasAzuis[peca].getPosicao(), pecasAmarelas, 39);
+		comerPeca(pecasAzuis[peca].getPosicao(), pecasVerdes, 26);
+		comerPeca(pecasAzuis[peca].getPosicao(), pecasVermelhas, 13);
+		MainFrame.getInstance().nextPlayer();
+		glDrawable.display();
+		//			Thread.sleep(1000);
 
-			peca = jogadaComputador(pecasAmarelas);
-			comerPeca(pecasVerdes, peca, 39);
-			comerPeca(pecasVermelhas, peca, 26);
-			comerPeca(pecasAzuis, peca, 13);
-			MainFrame.getInstance().nextPlayer();
-			glDrawable.display();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		peca = jogadaComputador(pecasAmarelas);
+		comerPeca(pecasAmarelas[peca].getPosicao(), pecasVerdes, 39);
+		comerPeca(pecasAmarelas[peca].getPosicao(), pecasVermelhas, 26);
+		comerPeca(pecasAmarelas[peca].getPosicao(), pecasAzuis, 13);
+		MainFrame.getInstance().nextPlayer();
+		glDrawable.display();
+		//		} catch (InterruptedException e) {
+		//			e.printStackTrace();
+		//		}
 	}
 
 	private int jogadaComputador(final Peca[] pecas) {
@@ -158,9 +158,10 @@ MouseMotionListener {
 				int peca = e.getKeyCode() - KeyEvent.VK_0;
 				proximaJogada = movimentarPeca(pecasVerdes, peca, valor);
 				if(proximaJogada){
-					comerPeca(pecasVermelhas, peca, 39);
-					comerPeca(pecasAzuis, peca, 26);
-					comerPeca(pecasAmarelas, peca, 13);
+					peca--;
+					comerPeca(pecasVerdes[peca].getPosicao(), pecasVermelhas, 39);
+					comerPeca(pecasVerdes[peca].getPosicao(), pecasAzuis, 26);
+					comerPeca(pecasVerdes[peca].getPosicao(), pecasAmarelas, 13);
 				}
 			}catch(ValorDadoInvalido exp){
 				boolean podeRolarDadoNovamente = selecionarNovamente();
@@ -187,9 +188,9 @@ MouseMotionListener {
 		}
 	}
 
-	private void comerPeca(final Peca[] pecas, final int peca, final int diff) {
+	private void comerPeca(final int posicao, final Peca[] pecas, final int diff) {
 		for (Peca p : pecas) {
-			if((p.getPosicao() + diff) == pecasVerdes[peca].getPosicao()){
+			if((p.getPosicao() + diff) == posicao){
 				p.setPosicao(0);
 			}
 		}
