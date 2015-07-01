@@ -95,6 +95,7 @@ MouseMotionListener {
 			comerPeca(pecasAzuis, peca, 39);
 			comerPeca(pecasAmarelas, peca, 26);
 			comerPeca(pecasVerdes, peca, 13);
+			MainFrame.getInstance().nextPlayer();
 			glDrawable.display();
 			Thread.sleep(1000);
 
@@ -102,6 +103,7 @@ MouseMotionListener {
 			comerPeca(pecasAmarelas, peca, 39);
 			comerPeca(pecasVerdes, peca, 26);
 			comerPeca(pecasVermelhas, peca, 13);
+			MainFrame.getInstance().nextPlayer();
 			glDrawable.display();
 			Thread.sleep(1000);
 
@@ -109,6 +111,7 @@ MouseMotionListener {
 			comerPeca(pecasVerdes, peca, 39);
 			comerPeca(pecasVermelhas, peca, 26);
 			comerPeca(pecasAzuis, peca, 13);
+			MainFrame.getInstance().nextPlayer();
 			glDrawable.display();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -173,6 +176,7 @@ MouseMotionListener {
 				MainFrame.getInstance().encerrarJogo(corVencedora);
 				return;
 			}
+			MainFrame.getInstance().nextPlayer();
 			if (proximaJogada){
 				ludo.setMinhaVez(false);
 				ludo.setAguardandoSelecao(false);

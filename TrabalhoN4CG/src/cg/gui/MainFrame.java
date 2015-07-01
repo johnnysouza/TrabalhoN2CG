@@ -26,8 +26,9 @@ public class MainFrame extends JFrame {
 	private final Tabuleiro rendererTabuleiro;
 	private final Dado rendererDado;
 	private final JLabel activePLayer;
-	private final int currentPlayer = 0;
+	private int currentPlayer = 0;
 
+	private JPanel info;
 	private JLabel gameOver;
 	private JLabel vencedor;
 
@@ -64,7 +65,7 @@ public class MainFrame extends JFrame {
 		dado.setLayout(new BorderLayout());
 		contentPane.add(dado);
 
-		JPanel info = new JPanel();
+		info = new JPanel();
 		info.setBounds(600, 0, 200, 400);
 		info.setBackground(new Color(140, 140, 140));
 		contentPane.add(info);
@@ -137,7 +138,7 @@ public class MainFrame extends JFrame {
 		ImageIcon img = new ImageIcon("resources\\seta.png");
 		activePLayer = new JLabel();
 		activePLayer.setIcon(img);
-		nextPlayer();
+		activePLayer.setBounds(0, 30 + (currentPlayer * 50), 20, 14);
 		info.add(activePLayer);
 
 		JPanel game = new JPanel();
@@ -194,9 +195,17 @@ public class MainFrame extends JFrame {
 		vencedor.setText(vencedorStr);
 		vencedor.setVisible(true);
 	}
-
-	private void nextPlayer() {
-		activePLayer.setBounds(0, 30 + (currentPlayer * 50), 20, 14);
+	
+	public void nextPlayer() {
+		activePLayer.setLocation(0, 30 + (currentPlayer * 50));
+		requestFocus();
+		info.revalidate();
+		info.repaint();
+		if (currentPlayer == 3) {
+			currentPlayer = 0;
+		} else {
+			currentPlayer++;
+		}
 	}
 
 	public static MainFrame getInstance() {
