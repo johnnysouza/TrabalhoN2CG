@@ -119,6 +119,7 @@ MouseMotionListener {
 			peca = ludo.valorAleatorio(5);
 			try {
 				movimentarPeca(pecas, peca, valorDado);
+				tentarNovamente = false;
 			} catch (ValorDadoInvalido e) {
 				tentarNovamente = selecionarNovamente();
 			}
@@ -170,8 +171,8 @@ MouseMotionListener {
 				MainFrame.getInstance().encerrarJogo(corVencedora);
 				return;
 			}
-			MainFrame.getInstance().nextPlayer();
 			if (proximaJogada) {
+				MainFrame.getInstance().nextPlayer();
 				ludo.setMinhaVez(false);
 				ludo.setAguardandoSelecao(false);
 				glDrawable.display();
