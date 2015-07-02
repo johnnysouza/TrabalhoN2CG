@@ -73,7 +73,6 @@ public class Peca {
 
 	public boolean incrementarPosicao(int valor) throws ValorDadoInvalido {
 		if (posicao == 58) {
-			System.err.println("Essa peça está fora do jogo e não pode mais ser movimentada");
 			return false;
 		}
 
