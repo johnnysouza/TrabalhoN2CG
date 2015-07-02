@@ -27,7 +27,7 @@ import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.texture.TextureData;
 
 public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
-		MouseMotionListener {
+MouseMotionListener {
 
 	private GL gl;
 	private GLU glu;
@@ -190,10 +190,10 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 	}
 
 	private boolean selecionarNovamente() {
-		boolean podeRolarDadoNovamente = true;
+		boolean podeRolarDadoNovamente = false;
 		for (int i = 0; i < 4; i++) {
-			if (pecasVerdes[i].getPosicao() == 0) {
-				podeRolarDadoNovamente = false;
+			if (pecasVerdes[i].getPosicao() != 0) {
+				podeRolarDadoNovamente = true;
 			}
 		}
 		return podeRolarDadoNovamente;
