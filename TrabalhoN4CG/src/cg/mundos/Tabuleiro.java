@@ -184,21 +184,21 @@ MouseMotionListener {
 	private void comerPeca(int posicao, final Peca[] pecas, final int grauVizinho) {
 		switch (grauVizinho) {
 		case 1:
-			if(posicao < 13){
+			if(posicao <= 13){
 				posicao += 39;
 			}else{
 				posicao -= 13;
 			}
 			break;
 		case 2:
-			if(posicao < 26){
+			if(posicao <= 26){
 				posicao += 26;
 			}else{
 				posicao -= 26;
 			}
 			break;
 		case 3:
-			if(posicao < 39){
+			if(posicao <= 39){
 				posicao += 13;
 			}else{
 				posicao -= 39;
