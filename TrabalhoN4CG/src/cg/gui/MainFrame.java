@@ -10,6 +10,7 @@ import javax.media.opengl.GLCapabilities;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -182,25 +183,19 @@ public class MainFrame extends JFrame {
 		setResizable(false);
 	}
 
-	public void encerrarJogo(final Cor cor) {
-		gameOver.setVisible(true);
-
-		String vencedorStr = "";
-		if (cor == Cor.VERDE) {
-			vencedorStr = "Você venceu!";
-		} else {
-			vencedorStr = cor.getNome() + " venceu!";
+	public void encerrarJogo(final Cor vencedor) {
+		int retorno = JOptionPane.showConfirmDialog(this, " O jogador " + vencedor.getNome() + " venceu!", "Fim de jogo", JOptionPane.CLOSED_OPTION);
+		if (retorno == JOptionPane.OK_OPTION || retorno == JOptionPane.CLOSED_OPTION) {
+			System.exit(0);
 		}
-
-		vencedor.setText(vencedorStr);
-		vencedor.setVisible(true);
 	}
 	
 	public void nextPlayer() {
 		activePLayer.setLocation(0, 30 + (currentPlayer * 50));
-		requestFocus();
+		info.requestFocus();
 		info.revalidate();
 		info.repaint();
+		info.requestFocus();
 		if (currentPlayer == 3) {
 			currentPlayer = 0;
 		} else {
