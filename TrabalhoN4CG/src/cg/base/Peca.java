@@ -90,7 +90,7 @@ public class Peca {
 			if (valor == 1) {
 				novaPosicao = posicao + valor; // pode incrementar pois não precisa verificar retorno
 			} else if ((posicao + valor) > 58) { // ajusta o valor para a peça retornar
-				valor -= 2;
+				valor -= (58 - posicao) * 2;
 				valor *= -1;
 			}
 			novaPosicao = posicao + valor;
