@@ -159,9 +159,9 @@ MouseMotionListener {
 					comerPeca(pecasVerdes[peca].getPosicao(), pecasAmarelas, 13);
 				}
 			} catch (ValorDadoInvalido exp) {
-				boolean podeRolarDadoNovamente = selecionarNovamente();
-				if (podeRolarDadoNovamente) {
-					ludo.setAguardandoSelecao(false);
+				boolean podeSelecionarNovamente = selecionarNovamente();
+				if (podeSelecionarNovamente) {
+					ludo.setAguardandoSelecao(true);
 					return;
 				}
 				proximaJogada = true;
