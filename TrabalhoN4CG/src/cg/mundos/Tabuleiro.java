@@ -27,7 +27,7 @@ import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.texture.TextureData;
 
 public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
-		MouseMotionListener {
+MouseMotionListener {
 
 	private GL gl;
 	private GLU glu;
@@ -153,9 +153,9 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 				proximaJogada = movimentarPeca(pecasVerdes, peca, valor);
 				if (proximaJogada) {
 					peca--;
-					comerPeca(pecasVerdes[peca].getPosicao(), pecasVermelhas, 1);
+					comerPeca(pecasVerdes[peca].getPosicao(), pecasVermelhas, 3);
 					comerPeca(pecasVerdes[peca].getPosicao(), pecasAzuis, 2);
-					comerPeca(pecasVerdes[peca].getPosicao(), pecasAmarelas, 3);
+					comerPeca(pecasVerdes[peca].getPosicao(), pecasAmarelas, 1);
 				}
 			} catch (ValorDadoInvalido exp) {
 				boolean podeSelecionarNovamente = selecionarNovamente();
@@ -215,8 +215,8 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 	private boolean selecionarNovamente() {
 		boolean podeRolarDadoNovamente = false;
 		for (int i = 0; i < 4; i++) {
-			if (pecasVerdes[i].getPosicao() != 0
-					&& pecasVerdes[i].getPosicao() != 58) {
+			if ((pecasVerdes[i].getPosicao() != 0)
+					&& (pecasVerdes[i].getPosicao() != 58)) {
 				podeRolarDadoNovamente = true;
 			}
 		}
@@ -504,8 +504,7 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 
 	}
 
-	public boolean posicaoDisponivel(final Cor cor, final int index,
-			final int posicao) {
+	public boolean posicaoDisponivel(final Cor cor, final int index, final int posicao) {
 		Peca[] pecas = null;
 		switch (cor.getNome()) {
 		case "Azul":
@@ -522,7 +521,7 @@ public class Tabuleiro implements GLEventListener, KeyListener, MouseListener,
 			break;
 		}
 		for (int i = 0; i < pecas.length; i++) {
-			if (i != index && posicao != 58) {
+			if ((i != index) && (posicao != 58)) {
 				if (pecas[i].getPosicao() == posicao) {
 					return false;
 				}
